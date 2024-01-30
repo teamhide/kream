@@ -1,0 +1,41 @@
+spring:
+  datasource:
+    writer:
+      hikari:
+        jdbc-url: jdbc:mysql://${DB_WRITER_HOST}:${DB_WRITER_PORT}/kream?useSSL=false&characterEncoding=UTF-8&serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true
+        username: ${DB_WRITER_USERNAME}
+        password: ${DB_WRITER_PASSWORD}
+        pool-name: 'read-write-pool'
+        driver-class-name: com.mysql.cj.jdbc.Driver
+    reader:
+      hikari:
+        jdbc-url: jdbc:mysql://${DB_WRITER_HOST}:${DB_WRITER_PORT}/kream?useSSL=false&characterEncoding=UTF-8&serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true
+        username: ${DB_READER_USERNAME}
+        password: ${DB_READER_PASSWORD}
+        pool-name: 'read-pool'
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        read-only: true
+  jpa:
+    show-sql: true
+    database-platform: org.hibernate.dialect.MySQLDialect
+    open-in-view: false
+    hibernate:
+      ddl-auto: none
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    url: jdbc:mysql://${DB_WRITER_HOST}:${DB_WRITER_PORT}/kream?useSSL=false&characterEncoding=UTF-8&serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true
+    user: ${DB_WRITER_USERNAME}
+    password: ${DB_WRITER_PASSWORD}
+    locations: classpath:db/migration
+  data:
+    redis:
+      host: ${REDIS_HOST}
+      port: ${REDIS_PORT}
+  kafka:
+    schema:
+      registry:
+        url: ${KAFKA_URL}
+    bootstrap-servers: ${BOOTSTRAP_SERVERS}
+    topic:
+      location-updated: ${TOPIC_LOCATION_UPDATED}

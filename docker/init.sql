@@ -1,0 +1,2 @@
+CREATE DATABASE kream_test;
+GRANT ALL PRIVILEGES ON kream_test.* TO kream@'%' WITH GRANT OPTION;

@@ -1,0 +1,44 @@
+spring:
+  datasource:
+    writer:
+      hikari:
+        jdbc-url: jdbc:mysql://localhost:33061/kream_test?useSSL=false&characterEncoding=UTF-8&serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true
+        username: kream
+        password: kream
+        pool-name: 'read-write-pool'
+        driver-class-name: com.mysql.cj.jdbc.Driver
+    reader:
+      hikari:
+        jdbc-url: jdbc:mysql://localhost:33061/kream_test?useSSL=false&characterEncoding=UTF-8&serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true
+        username: kream
+        password: kream
+        pool-name: 'read-pool'
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        read-only: true
+  jpa:
+    show-sql: true
+    database-platform: org.hibernate.dialect.MySQLDialect
+    open-in-view: false
+    hibernate:
+      ddl-auto: none
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    url: jdbc:mysql://localhost:33061/kream_test?useSSL=false&characterEncoding=UTF-8&serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true
+    user: kream
+    password: kream
+    locations: classpath:db/migration
+  data:
+    redis:
+      host: localhost
+      port: 63792
+    mongodb:
+      uri: mongodb://kream:kream@localhost:27017/kream_test?authSource=admin
+  kafka:
+    topic:
+      location-updated: location-updated
+    producer:
+      bootstrap-servers: localhost:9092
+    consumer:
+      auto-offset-reset: earliest
+      bootstrap-servers: localhost:9092

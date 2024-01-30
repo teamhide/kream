@@ -1,0 +1,14 @@
+#!/bin/bash
+
+./gradlew ktlintCheck
+status=$?
+./gradlew ktlintFormat
+
+if [ $status = 1 ]
+then
+  printf "\e[41m\e[97mKtlint fail. Retry commit.\e[0m\n"
+else
+  printf "\e[32mCommit success.\e[32m\n"
+fi
+
+exit $status

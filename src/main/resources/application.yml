@@ -1,0 +1,64 @@
+server:
+  port: 8080
+spring:
+  profiles:
+    group:
+      default: clients
+      test: clients-test
+      staging: clients-staging
+      prod: clients-prod
+  mvc:
+    static-path-pattern: /test/**
+  main:
+    banner-mode: off
+  datasource:
+    writer:
+      hikari:
+        jdbc-url: jdbc:mysql://localhost:33061/kream?useSSL=false&characterEncoding=UTF-8&serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true
+        username: kream
+        password: kream
+        pool-name: 'read-write-pool'
+        driver-class-name: com.mysql.cj.jdbc.Driver
+    reader:
+      hikari:
+        jdbc-url: jdbc:mysql://localhost:33061/kream?useSSL=false&characterEncoding=UTF-8&serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true
+        username: kream
+        password: kream
+        pool-name: 'read-pool'
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        read-only: true
+  jpa:
+    show-sql: true
+    database-platform: org.hibernate.dialect.MySQLDialect
+    open-in-view: false
+    hibernate:
+      ddl-auto: none
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    url: jdbc:mysql://localhost:33061/kream?useSSL=false&characterEncoding=UTF-8&serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true
+    user: kream
+    password: kream
+    locations: classpath:db/migration
+  data:
+    redis:
+      host: localhost
+      port: 63792
+    mongodb:
+      uri: mongodb://kream:kream@localhost:27017/kream?authSource=admin
+  kafka:
+    schema:
+      registry:
+        url: localhost:8081
+    bootstrap-servers: localhost:9092
+    topic:
+      location-updated: location-updated
+jwt:
+  secret-key: hidehidehidehidehidehidehidehidehide
+logging:
+  level:
+    org.springframework.kafka.*: OFF
+    org.springframework.kafka.listener.[KafkaMessageListenerContainer$ListenerConsumer]: OFF
+    org.apache.kafka.*: OFF
+    kafka.*: OFF
+    org.apache.zookeeper.*: OFF

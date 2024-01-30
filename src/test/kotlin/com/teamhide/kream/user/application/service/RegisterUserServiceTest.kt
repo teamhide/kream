@@ -1,8 +1,8 @@
 package com.teamhide.kream.user.application.service
 
+import com.teamhide.kream.user.adapter.out.persistence.UserRepositoryAdapter
 import com.teamhide.kream.user.application.exception.UserAlreadyExistException
-import com.teamhide.kream.user.application.port.out.GetUserPersistencePort
-import com.teamhide.kream.user.application.port.out.SaveUserPersistencePort
+import com.teamhide.kream.user.domain.model.PasswordDoesNotMatchException
 import com.teamhide.kream.user.makeRegisterUserCommand
 import com.teamhide.kream.user.makeUser
 import io.kotest.assertions.throwables.shouldThrow
@@ -12,16 +12,22 @@ import io.mockk.every
 import io.mockk.mockk
 
 internal class RegisterUserServiceTest : BehaviorSpec({
-    val getUserPersistencePort = mockk<GetUserPersistencePort>()
-    val saveUserPersistencePort = mockk<SaveUserPersistencePort>()
-    val registerUserService = RegisterUserService(
-        getUserPersistencePort = getUserPersistencePort, saveUserPersistencePort = saveUserPersistencePort,
-    )
+    val userRepositoryAdapter = mockk<UserRepositoryAdapter>()
+    val registerUserService = RegisterUserService(userRepositoryAdapter = userRepositoryAdapter)
 
-    Given("동일한 이메일 또는 닉네임을 가진 유저가 존재하는 경우") {
+    Given("password1과 password2가 동일하지 않은 경우") {
+        val command = makeRegisterUserCommand(password1 = "a", password2 = "b")
+
+        When("회원가입을 요청하면") {
+            Then("예외가 발생한다") {
+                shouldThrow<PasswordDoesNotMatchException> { registerUserService.execute(command) }
+            }
+        }
+    }
+
+    Given("동일한 이메일을 가진 유저가 존재하는 경우") {
         val command = makeRegisterUserCommand()
-        val user = makeUser()
-        every { getUserPersistencePort.findByEmailOrNickname(any(), any()) } returns user
+        every { userRepositoryAdapter.existsByEmail(any()) } returns true
 
         When("회원가입을 요청하면") {
             Then("예외가 발생한다") {
@@ -33,8 +39,8 @@ internal class RegisterUserServiceTest : BehaviorSpec({
     Given("동일한 이메일 또는 닉네임을 가진 유저가 존재하지 않는 경우") {
         val command = makeRegisterUserCommand()
         val user = makeUser()
-        every { getUserPersistencePort.findByEmailOrNickname(any(), any()) } returns null
-        every { saveUserPersistencePort.save(any()) } returns user
+        every { userRepositoryAdapter.existsByEmail(any()) } returns false
+        every { userRepositoryAdapter.save(any()) } returns user
 
         When("회원가입을 요청하면") {
             val sut = registerUserService.execute(command)
@@ -43,10 +49,8 @@ internal class RegisterUserServiceTest : BehaviorSpec({
                 sut.id shouldBe user.id
                 sut.nickname shouldBe user.nickname
                 sut.email shouldBe user.email
-                sut.location.lat shouldBe user.location.lat
-                sut.location.lng shouldBe user.location.lng
-                sut.stayedAt shouldBe user.stayedAt
-                sut.status shouldBe user.status
+                sut.password shouldBe user.password
+                sut.address shouldBe user.address
             }
         }
     }

@@ -3,8 +3,11 @@
 ## Overview
 This code clones the Cream app, and only the minimum functionality is implemented.
 
-## Architecture
+## System Architecture
 TBD
+
+## Code Architecture
+Basically, I adopted a hexagonal architecture, but not all structures were set equal. I found an appropriate compromise between theory and applied only those parts.
 
 ## Stack
 - Kotlin 1.9.20

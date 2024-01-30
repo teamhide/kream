@@ -18,7 +18,7 @@ allOpen {
     annotation("jakarta.persistence.Embeddable")
 }
 
-group = "com.sample"
+group = "com.teamhide.kream"
 version = "0.0.1"
 
 java {

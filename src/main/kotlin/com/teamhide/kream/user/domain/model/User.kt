@@ -11,7 +11,7 @@ import jakarta.persistence.Id
 import jakarta.persistence.Table
 
 @Entity
-@Table
+@Table(name = "user")
 class User(
     @Column(name = "email", nullable = false, length = 255)
     val email: String,

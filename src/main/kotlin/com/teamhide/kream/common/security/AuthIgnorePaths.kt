@@ -29,6 +29,8 @@ class AuthIgnorePaths private constructor() {
             conditions.add(AuthIgnorePath(authType = AuthType.JWT, method = HttpMethod.GET, path = "/actuator/health/readiness"))
             conditions.add(AuthIgnorePath(authType = AuthType.JWT, method = HttpMethod.GET, path = "/actuator/health/liveness"))
             conditions.add(AuthIgnorePath(authType = AuthType.JWT, method = HttpMethod.POST, path = "/api/v1/user"))
+            conditions.add(AuthIgnorePath(authType = AuthType.JWT, method = HttpMethod.POST, path = "/pg/payment"))
+            conditions.add(AuthIgnorePath(authType = AuthType.JWT, method = HttpMethod.POST, path = "/pg/cancel"))
 
             addToIgnorePaths(conditions = conditions)
             return conditions.groupBy { it.authType }

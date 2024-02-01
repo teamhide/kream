@@ -9,6 +9,8 @@ TBD
 ## Code Architecture
 Basically, I adopted a hexagonal architecture, but not all structures were set equal. I found an appropriate compromise between theory and applied only those parts.
 
+As a side note, I did my best to achieve 100% test coverage.
+
 ## Stack
 - Kotlin 1.9.20
 - Spring Boot 3.2.0

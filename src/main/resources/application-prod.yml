@@ -39,3 +39,7 @@ spring:
     bootstrap-servers: ${BOOTSTRAP_SERVERS}
     topic:
       location-updated: ${TOPIC_LOCATION_UPDATED}
+
+client:
+  pg:
+    url: ${PG_URL}

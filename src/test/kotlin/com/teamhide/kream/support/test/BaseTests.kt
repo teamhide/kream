@@ -1,18 +1,22 @@
 package com.teamhide.kream.support.test
 
 import com.querydsl.jpa.impl.JPAQueryFactory
+import com.teamhide.kream.client.FeignClientConfig
 import com.teamhide.kream.common.config.database.DataSourceConfig
+import com.teamhide.kream.pg.FakePgController
 import io.mockk.junit5.MockKExtension
 import jakarta.persistence.EntityManager
 import jakarta.persistence.PersistenceContext
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.boot.autoconfigure.ImportAutoConfiguration
+import org.springframework.boot.autoconfigure.http.HttpMessageConvertersAutoConfiguration
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.context.TestConfiguration
+import org.springframework.cloud.openfeign.FeignAutoConfiguration
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Import
 import org.springframework.restdocs.RestDocumentationExtension
@@ -69,3 +73,16 @@ annotation class MongoRepositoryTest
     mergeMode = TestExecutionListeners.MergeMode.MERGE_WITH_DEFAULTS
 )
 annotation class IntegrationTest
+
+@ImportAutoConfiguration(
+    HttpMessageConvertersAutoConfiguration::class,
+    FeignClientConfig::class,
+    FeignAutoConfiguration::class,
+)
+class FeignTestContext
+
+@Target(AnnotationTarget.CLASS)
+@Retention(AnnotationRetention.RUNTIME)
+@SpringBootTest(classes = [FeignTestContext::class, FakePgController::class])
+@TestEnvironment
+annotation class FeignTest

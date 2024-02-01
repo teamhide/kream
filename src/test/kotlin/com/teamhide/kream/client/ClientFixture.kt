@@ -1,5 +1,6 @@
 package com.teamhide.kream.client
 
+import com.teamhide.kream.bidding.domain.usecase.AttemptPaymentCommand
 import com.teamhide.kream.client.pg.AttemptPaymentRequest
 import com.teamhide.kream.client.pg.AttemptPaymentResponse
 import com.teamhide.kream.client.pg.CancelPaymentRequest
@@ -24,4 +25,11 @@ fun makePgCancelPaymentRequest(paymentId: String = "paymentId"): PgCancelPayment
 
 fun makePgAttemptPaymentResponse(paymentId: String = "paymentId"): PgAttemptPaymentResponse {
     return PgAttemptPaymentResponse(paymentId = paymentId)
+}
+
+fun makeAttemptPaymentCommand(biddingId: Long = 1L, price: Int = 20000): AttemptPaymentCommand {
+    return AttemptPaymentCommand(
+        biddingId = biddingId,
+        price = price,
+    )
 }

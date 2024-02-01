@@ -4,6 +4,7 @@ package com.teamhide.kream.user.adapter.out.persistence
 import com.teamhide.kream.user.adapter.out.persistence.jpa.UserRepository
 import com.teamhide.kream.user.makeUser
 import io.kotest.core.spec.style.StringSpec
+import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import io.mockk.clearAllMocks
 import io.mockk.every
@@ -55,9 +56,10 @@ class UserRepositoryAdapterTest : StringSpec({
         every { userRepository.findByIdOrNull(any()) } returns user
 
         // When
-        val sut = repositoryAdapter.findById(userId = userId)!!
+        val sut = repositoryAdapter.findById(userId = userId)
 
         // Then
+        sut.shouldNotBeNull()
         sut.id shouldBe user.id
         sut.password shouldBe user.password
         sut.email shouldBe user.email

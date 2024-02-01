@@ -1,9 +1,15 @@
 package com.teamhide.kream.bidding
 
+import com.teamhide.kream.bidding.adapter.`in`.api.v1.ImmediatePurchaseRequest
 import com.teamhide.kream.bidding.domain.model.Bidding
+import com.teamhide.kream.bidding.domain.model.Order
+import com.teamhide.kream.bidding.domain.model.SaleHistory
 import com.teamhide.kream.bidding.domain.usecase.BidCommand
+import com.teamhide.kream.bidding.domain.usecase.CompleteBidCommand
+import com.teamhide.kream.bidding.domain.usecase.ImmediatePurchaseCommand
 import com.teamhide.kream.bidding.domain.vo.BiddingStatus
 import com.teamhide.kream.bidding.domain.vo.BiddingType
+import com.teamhide.kream.bidding.domain.vo.OrderStatus
 import com.teamhide.kream.product.domain.model.Product
 import com.teamhide.kream.product.makeProduct
 import com.teamhide.kream.user.domain.model.User
@@ -43,4 +49,60 @@ fun makeBidCommand(
         biddingType = biddingType,
         userId = userId,
     )
+}
+
+fun makeOrder(
+    id: Long = 1L,
+    paymentId: String = "paymentId",
+    bidding: Bidding = makeBidding(),
+    user: User = makeUser(),
+    status: OrderStatus = OrderStatus.COMPLETE,
+): Order {
+    return Order(
+        id = id,
+        paymentId = paymentId,
+        bidding = bidding,
+        user = user,
+        status = status,
+    )
+}
+
+fun makeCompleteBidCommand(
+    paymentId: String = "paymentId",
+    biddingId: Long = 1L,
+    userId: Long = 1L,
+): CompleteBidCommand {
+    return CompleteBidCommand(
+        paymentId = paymentId,
+        biddingId = biddingId,
+        userId = userId,
+    )
+}
+
+fun makeSaleHistory(
+    bidding: Bidding = makeBidding(),
+    user: User = makeUser(),
+    price: Int = 20000,
+    size: String = "M"
+): SaleHistory {
+    return SaleHistory(
+        bidding = bidding,
+        user = user,
+        price = price,
+        size = size,
+    )
+}
+
+fun makeImmediatePurchaseCommand(
+    biddingId: Long = 1L,
+    userId: Long = 1L,
+): ImmediatePurchaseCommand {
+    return ImmediatePurchaseCommand(
+        biddingId = biddingId,
+        userId = userId,
+    )
+}
+
+fun makeImmediatePurchaseRequest(biddingId: Long = 1L): ImmediatePurchaseRequest {
+    return ImmediatePurchaseRequest(biddingId = biddingId)
 }

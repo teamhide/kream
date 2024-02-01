@@ -7,6 +7,7 @@ import com.teamhide.kream.product.makeProduct
 import com.teamhide.kream.product.makeProductBrand
 import com.teamhide.kream.product.makeProductCategory
 import io.kotest.core.spec.style.StringSpec
+import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
@@ -29,9 +30,10 @@ class ProductRepositoryAdapterTest : StringSpec({
         every { productRepository.findByIdOrNull(id) } returns product
 
         // When
-        val sut = productRepositoryAdapter.findById(id)!!
+        val sut = productRepositoryAdapter.findById(id)
 
         // Then
+        sut.shouldNotBeNull()
         sut.id shouldBe product.id
         sut.name shouldBe product.name
         sut.productCategory shouldBe product.productCategory
@@ -48,9 +50,10 @@ class ProductRepositoryAdapterTest : StringSpec({
         every { productRepositoryAdapter.findCategoryById(id) } returns productCategory
 
         // When
-        val sut = productRepositoryAdapter.findCategoryById(id)!!
+        val sut = productRepositoryAdapter.findCategoryById(id)
 
         // Then
+        sut.shouldNotBeNull()
         sut.id shouldBe productCategory.id
         sut.name shouldBe productCategory.name
         sut.parentCategoryId shouldBe productCategory.parentCategoryId
@@ -63,9 +66,10 @@ class ProductRepositoryAdapterTest : StringSpec({
         every { productRepositoryAdapter.findBrandById(id) } returns productBrand
 
         // When
-        val sut = productRepositoryAdapter.findBrandById(id)!!
+        val sut = productRepositoryAdapter.findBrandById(id)
 
         // Then
+        sut.shouldNotBeNull()
         sut.id shouldBe productBrand.id
         sut.name shouldBe productBrand.name
     }

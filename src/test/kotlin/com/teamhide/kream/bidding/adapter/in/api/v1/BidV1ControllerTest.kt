@@ -19,7 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpHeaders
 import org.springframework.test.web.servlet.post
 
-const val URL = "/v1/bid"
+private const val URL = "/v1/bid"
 
 class BidV1ControllerTest : BaseIntegrationTest() {
     @Autowired

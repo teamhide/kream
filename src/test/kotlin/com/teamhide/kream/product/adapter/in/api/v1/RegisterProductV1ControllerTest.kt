@@ -11,6 +11,7 @@ import com.teamhide.kream.product.makeProductCategory
 import com.teamhide.kream.product.makeRegisterProductRequest
 import com.teamhide.kream.support.test.BaseIntegrationTest
 import com.teamhide.kream.user.USER_ID_1_TOKEN
+import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -111,7 +112,8 @@ class RegisterProductV1ControllerTest : BaseIntegrationTest() {
                 jsonPath("category") { value(productCategory.name) }
             }
 
-        val product = productRepository.findByIdOrNull(1)!!
+        val product = productRepository.findByIdOrNull(1)
+        product.shouldNotBeNull()
         product.name shouldBe request.name
         product.sizeType shouldBe request.sizeType
         product.modelNumber shouldBe request.modelNumber

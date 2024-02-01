@@ -8,4 +8,9 @@ class PgClientConfig {
     fun errorDecoder(): ErrorDecoder {
         return PgClientErrorDecoder()
     }
+
+    @Bean
+    fun retryer(): feign.Retryer {
+        return PgClientRetryer()
+    }
 }

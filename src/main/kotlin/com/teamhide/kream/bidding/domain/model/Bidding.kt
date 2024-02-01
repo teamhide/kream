@@ -35,7 +35,7 @@ class Bidding(
 
     @Column(name = "status", nullable = false, length = 20)
     @Enumerated(EnumType.STRING)
-    val status: BiddingStatus,
+    var status: BiddingStatus,
 
     @Column(name = "bidding_type", nullable = false, length = 10)
     @Enumerated(EnumType.STRING)
@@ -49,5 +49,9 @@ class Bidding(
         if (price <= 0) {
             throw InvalidBiddingPriceException()
         }
+    }
+
+    fun changeStatus(status: BiddingStatus) {
+        this.status = status
     }
 }

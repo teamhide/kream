@@ -1,4 +1,4 @@
-package com.teamhide.kream.support
+package com.teamhide.kream.support.test
 
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.test.context.TestContext

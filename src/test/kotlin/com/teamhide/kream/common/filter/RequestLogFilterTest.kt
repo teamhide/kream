@@ -1,6 +1,6 @@
 package com.teamhide.kream.common.filter
 
-import com.teamhide.kream.support.UnitTest
+import com.teamhide.kream.support.test.UnitTest
 import io.mockk.every
 import io.mockk.mockk
 import org.assertj.core.api.Assertions.assertThat

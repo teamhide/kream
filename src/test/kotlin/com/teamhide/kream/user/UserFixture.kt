@@ -27,12 +27,13 @@ fun makeRegisterUserCommand(
 }
 
 fun makeUser(
+    id: Long = 0L,
     email: String = "h@id.e",
     nickname: String = "hide",
     password: String = "password",
     address: Address = Address(base = "base", detail = "detail"),
 ): User {
-    return User(email = email, nickname = nickname, password = password, address = address)
+    return User(id = id, email = email, nickname = nickname, password = password, address = address)
 }
 
 fun makeRegisterUserRequest(

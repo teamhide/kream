@@ -43,10 +43,10 @@ Basically, I adopted a hexagonal architecture, but not all structures were set e
     - 등록과 동시에 판매 시작
 
 ### 판매
-- [ ] 상품 판매
-- [ ] 상품 판매 입찰
-- [ ] 상품 구매
-- [ ] 상품 구매 입찰
+- [ ] 상품 즉시 판매
+- [ ] 상품 즉시 구매
+- [x] 상품 판매 입찰
+- [x] 상품 구매 입찰
 
 ### 배송
 - [ ] 판매자 상품 배송

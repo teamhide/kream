@@ -1,7 +1,7 @@
 
 package com.teamhide.kream.user.adapter.out.persistence.jpa
 
-import com.teamhide.kream.support.RepositoryTest
+import com.teamhide.kream.support.test.RepositoryTest
 import com.teamhide.kream.user.makeUser
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test

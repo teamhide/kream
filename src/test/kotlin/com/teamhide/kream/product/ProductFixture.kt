@@ -1,5 +1,7 @@
 package com.teamhide.kream.product
 
+import com.teamhide.kream.bidding.adapter.`in`.api.v1.BidRequest
+import com.teamhide.kream.bidding.domain.vo.BiddingType
 import com.teamhide.kream.product.adapter.`in`.api.v1.RegisterProductRequest
 import com.teamhide.kream.product.domain.model.Product
 import com.teamhide.kream.product.domain.model.ProductBrand
@@ -79,5 +81,19 @@ fun makeRegisterProductRequest(
         sizeType = sizeType,
         brandId = brandId,
         categoryId = categoryId,
+    )
+}
+
+fun makeBidRequest(
+    productId: Long = 1L,
+    price: Int = 50000,
+    size: String = "M",
+    biddingType: BiddingType = BiddingType.SALE,
+): BidRequest {
+    return BidRequest(
+        productId = productId,
+        price = price,
+        size = size,
+        biddingType = biddingType,
     )
 }

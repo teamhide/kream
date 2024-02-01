@@ -1,4 +1,4 @@
-package com.teamhide.kream.support
+package com.teamhide.kream.support.test
 
 import com.querydsl.jpa.impl.JPAQueryFactory
 import com.teamhide.kream.common.config.database.DataSourceConfig

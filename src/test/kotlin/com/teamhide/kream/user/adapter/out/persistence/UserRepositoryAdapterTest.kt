@@ -9,6 +9,7 @@ import io.mockk.clearAllMocks
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
+import org.springframework.data.repository.findByIdOrNull
 
 class UserRepositoryAdapterTest : StringSpec({
     val userRepository = mockk<UserRepository>()
@@ -45,5 +46,22 @@ class UserRepositoryAdapterTest : StringSpec({
         sut.nickname shouldBe user.nickname
         sut.address shouldBe user.address
         verify(exactly = 1) { userRepository.save(any()) }
+    }
+
+    "id로 유저를 조회한다" {
+        // Given
+        val userId = 1L
+        val user = makeUser()
+        every { userRepository.findByIdOrNull(any()) } returns user
+
+        // When
+        val sut = repositoryAdapter.findById(userId = userId)!!
+
+        // Then
+        sut.id shouldBe user.id
+        sut.password shouldBe user.password
+        sut.email shouldBe user.email
+        sut.nickname shouldBe user.nickname
+        sut.address shouldBe user.address
     }
 })

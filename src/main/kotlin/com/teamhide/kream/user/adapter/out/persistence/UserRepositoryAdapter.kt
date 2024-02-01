@@ -2,6 +2,7 @@ package com.teamhide.kream.user.adapter.out.persistence
 
 import com.teamhide.kream.user.adapter.out.persistence.jpa.UserRepository
 import com.teamhide.kream.user.domain.model.User
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Component
 
 @Component
@@ -14,5 +15,9 @@ class UserRepositoryAdapter(
 
     fun save(user: User): User {
         return userRepository.save(user)
+    }
+
+    fun findById(userId: Long): User? {
+        return userRepository.findByIdOrNull(userId)
     }
 }

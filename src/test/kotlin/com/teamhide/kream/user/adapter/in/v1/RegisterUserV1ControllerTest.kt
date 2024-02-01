@@ -1,7 +1,7 @@
 
 package com.teamhide.kream.user.adapter.`in`.v1
 
-import com.teamhide.kream.support.BaseIntegrationTest
+import com.teamhide.kream.support.test.BaseIntegrationTest
 import com.teamhide.kream.user.adapter.out.persistence.jpa.UserRepository
 import com.teamhide.kream.user.application.exception.UserAlreadyExistException
 import com.teamhide.kream.user.domain.model.PasswordDoesNotMatchException

@@ -1,4 +1,4 @@
-package com.teamhide.kream.support
+package com.teamhide.kream.support.test
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.teamhide.kream.common.security.JwtAuthenticationFilter

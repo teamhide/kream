@@ -9,7 +9,7 @@ import com.teamhide.kream.product.domain.model.InvalidReleasePriceException
 import com.teamhide.kream.product.makeProductBrand
 import com.teamhide.kream.product.makeProductCategory
 import com.teamhide.kream.product.makeRegisterProductRequest
-import com.teamhide.kream.support.BaseIntegrationTest
+import com.teamhide.kream.support.test.BaseIntegrationTest
 import com.teamhide.kream.user.USER_ID_1_TOKEN
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test

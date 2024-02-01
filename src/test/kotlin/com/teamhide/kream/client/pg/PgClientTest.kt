@@ -33,7 +33,7 @@ class PgClientTest(
 
     "결제를 시도한다" {
         // Given
-        val request = makeAttemptPaymentRequest(biddingId = 1L, price = 20000)
+        val request = makeAttemptPaymentRequest(biddingId = 1L, price = 20000, userId = 1L)
         val response = makeAttemptPaymentResponse(paymentId = "paymentId")
         mockWebServer.enqueue(
             MockResponse()

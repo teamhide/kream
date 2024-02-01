@@ -33,7 +33,7 @@ class BidServiceTest : BehaviorSpec({
         val purchaseBidding = makeBidding(price = price, biddingType = BiddingType.PURCHASE)
         every {
             biddingRepositoryAdapter
-                .findMostExpensiveBid(price = price, biddingType = BiddingType.PURCHASE)
+                .findMostExpensiveBid(biddingType = BiddingType.PURCHASE)
         } returns purchaseBidding
 
         val command = makeBidCommand(price = price, biddingType = BiddingType.SALE)
@@ -50,7 +50,7 @@ class BidServiceTest : BehaviorSpec({
         val purchaseBidding = makeBidding(price = price, biddingType = BiddingType.SALE)
         every {
             biddingRepositoryAdapter
-                .findMostExpensiveBid(price = price, biddingType = BiddingType.SALE)
+                .findMostExpensiveBid(biddingType = BiddingType.SALE)
         } returns purchaseBidding
 
         val command = makeBidCommand(price = price, biddingType = BiddingType.PURCHASE)
@@ -69,7 +69,7 @@ class BidServiceTest : BehaviorSpec({
         val purchaseBidding = makeBidding(price = 3000, biddingType = BiddingType.PURCHASE)
         every {
             biddingRepositoryAdapter
-                .findMostExpensiveBid(price = bidPrice, biddingType = BiddingType.PURCHASE)
+                .findMostExpensiveBid(biddingType = BiddingType.PURCHASE)
         } returns purchaseBidding
 
         When("판매 입찰을 시도하면") {
@@ -86,7 +86,7 @@ class BidServiceTest : BehaviorSpec({
         val purchaseBidding = makeBidding(price = 2000, biddingType = BiddingType.SALE)
         every {
             biddingRepositoryAdapter
-                .findMostExpensiveBid(price = bidPrice, biddingType = BiddingType.SALE)
+                .findMostExpensiveBid(biddingType = BiddingType.SALE)
         } returns purchaseBidding
 
         When("판매 입찰을 시도하면") {
@@ -101,7 +101,7 @@ class BidServiceTest : BehaviorSpec({
         val purchaseBidding = makeBidding(price = 2000, biddingType = BiddingType.SALE)
         every {
             biddingRepositoryAdapter
-                .findMostExpensiveBid(price = price, biddingType = BiddingType.SALE)
+                .findMostExpensiveBid(biddingType = BiddingType.SALE)
         } returns purchaseBidding
         val command = makeBidCommand(price = price, biddingType = BiddingType.PURCHASE)
 
@@ -118,7 +118,7 @@ class BidServiceTest : BehaviorSpec({
         val price = 1000
         every {
             biddingRepositoryAdapter
-                .findMostExpensiveBid(price = price, biddingType = BiddingType.SALE)
+                .findMostExpensiveBid(biddingType = BiddingType.SALE)
         } returns null
         val command = makeBidCommand(price = price, biddingType = BiddingType.PURCHASE)
 
@@ -138,7 +138,7 @@ class BidServiceTest : BehaviorSpec({
         val price = -1
         every {
             biddingRepositoryAdapter
-                .findMostExpensiveBid(price = price, biddingType = BiddingType.SALE)
+                .findMostExpensiveBid(biddingType = BiddingType.SALE)
         } returns null
         val command = makeBidCommand(price = price, biddingType = BiddingType.PURCHASE)
 
@@ -159,7 +159,7 @@ class BidServiceTest : BehaviorSpec({
         val price = 1000
         every {
             biddingRepositoryAdapter
-                .findMostExpensiveBid(price = price, biddingType = BiddingType.SALE)
+                .findMostExpensiveBid(biddingType = BiddingType.SALE)
         } returns null
 
         val command = makeBidCommand(price = price, biddingType = BiddingType.PURCHASE)

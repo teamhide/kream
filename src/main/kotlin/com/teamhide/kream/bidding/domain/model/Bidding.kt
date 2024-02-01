@@ -54,4 +54,8 @@ class Bidding(
     fun changeStatus(status: BiddingStatus) {
         this.status = status
     }
+
+    fun canBid(): Boolean {
+        return this.status == BiddingStatus.IN_PROGRESS
+    }
 }

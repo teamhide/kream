@@ -7,8 +7,8 @@ import com.teamhide.kream.client.pg.CancelPaymentRequest
 import com.teamhide.kream.pg.PgAttemptPaymentResponse
 import com.teamhide.kream.pg.PgCancelPaymentRequest
 
-fun makeAttemptPaymentRequest(biddingId: Long = 1L, price: Int = 50000): AttemptPaymentRequest {
-    return AttemptPaymentRequest(biddingId = biddingId, price = price)
+fun makeAttemptPaymentRequest(biddingId: Long = 1L, price: Int = 50000, userId: Long = 1L): AttemptPaymentRequest {
+    return AttemptPaymentRequest(biddingId = biddingId, price = price, userId = userId)
 }
 
 fun makeAttemptPaymentResponse(paymentId: String = "paymentId"): AttemptPaymentResponse {
@@ -27,9 +27,10 @@ fun makePgAttemptPaymentResponse(paymentId: String = "paymentId"): PgAttemptPaym
     return PgAttemptPaymentResponse(paymentId = paymentId)
 }
 
-fun makeAttemptPaymentCommand(biddingId: Long = 1L, price: Int = 20000): AttemptPaymentCommand {
+fun makeAttemptPaymentCommand(biddingId: Long = 1L, price: Int = 20000, userId: Long = 1L): AttemptPaymentCommand {
     return AttemptPaymentCommand(
         biddingId = biddingId,
         price = price,
+        userId = userId,
     )
 }

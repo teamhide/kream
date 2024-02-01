@@ -14,6 +14,7 @@ class AttemptPaymentService(
             pgClientAdapter.attemptPayment(
                 biddingId = it.biddingId,
                 price = it.price,
+                userId = it.userId,
             )
         }
     }

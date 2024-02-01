@@ -58,9 +58,7 @@ class BidService(
         }
 
         val mostExpensiveBidding = (
-            biddingRepositoryAdapter.findMostExpensiveBid(
-                price = price, biddingType = biddingTypeCondition
-            )
+            biddingRepositoryAdapter.findMostExpensiveBid(biddingType = biddingTypeCondition)
                 ?: return true
             )
 

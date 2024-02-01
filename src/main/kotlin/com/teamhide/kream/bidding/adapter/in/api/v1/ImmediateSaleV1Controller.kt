@@ -1,7 +1,7 @@
 package com.teamhide.kream.bidding.adapter.`in`.api.v1
 
-import com.teamhide.kream.bidding.domain.usecase.ImmediatePurchaseCommand
-import com.teamhide.kream.bidding.domain.usecase.ImmediatePurchaseUseCase
+import com.teamhide.kream.bidding.domain.usecase.ImmediateSaleCommand
+import com.teamhide.kream.bidding.domain.usecase.ImmediateSaleUseCase
 import com.teamhide.kream.common.response.ApiResponse
 import com.teamhide.kream.common.security.CurrentUser
 import jakarta.validation.Valid
@@ -13,29 +13,30 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
-data class ImmediatePurchaseRequest(
+data class ImmediateSaleRequest(
     @field:NotNull
     val biddingId: Long,
 )
 
-data class ImmediatePurchaseResponse(
+data class ImmediateSaleResponse(
     val biddingId: Long,
     val price: Int,
 )
 
 @RestController
 @RequestMapping("/v1/bid")
-class ImmediatePurchaseV1Controller(
-    private val immediatePurchaseUseCase: ImmediatePurchaseUseCase,
+class ImmediateSaleV1Controller(
+    private val immediateSaleUseCase: ImmediateSaleUseCase,
 ) {
-    @PostMapping("/purchase")
-    fun immediatePurchase(
+
+    @PostMapping("/sale")
+    fun immediateSale(
         @AuthenticationPrincipal currentUser: CurrentUser,
-        @RequestBody @Valid body: ImmediatePurchaseRequest
-    ): ApiResponse<ImmediatePurchaseResponse> {
-        val command = ImmediatePurchaseCommand(biddingId = body.biddingId, userId = currentUser.id)
-        val response = immediatePurchaseUseCase.execute(command = command).let {
-            ImmediatePurchaseResponse(
+        @RequestBody @Valid body: ImmediateSaleRequest,
+    ): ApiResponse<ImmediateSaleResponse> {
+        val command = ImmediateSaleCommand(biddingId = body.biddingId, userId = currentUser.id)
+        val response = immediateSaleUseCase.execute(command = command).let {
+            ImmediateSaleResponse(
                 biddingId = it.biddingId,
                 price = it.price,
             )

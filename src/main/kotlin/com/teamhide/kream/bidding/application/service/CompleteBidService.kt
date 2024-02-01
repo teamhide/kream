@@ -25,7 +25,7 @@ class CompleteBidService(
             ?: throw BiddingNotFoundException()
 
         bidding.changeStatus(status = BiddingStatus.COMPLETE)
-        biddingRepositoryAdapter.saveSaleHistory(bidding = bidding, user = user)
+        biddingRepositoryAdapter.saveSaleHistory(bidding = bidding, user = bidding.user)
 
         val order = Order(
             paymentId = command.paymentId,

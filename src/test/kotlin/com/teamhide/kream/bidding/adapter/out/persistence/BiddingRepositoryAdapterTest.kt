@@ -72,10 +72,10 @@ class BiddingRepositoryAdapterTest : StringSpec({
         val price = 1000
         val biddingType = BiddingType.SALE
         val bidding = makeBidding()
-        every { biddingRepository.findMostExpensiveBidding(any(), any()) } returns bidding
+        every { biddingRepository.findMostExpensiveBidding(any()) } returns bidding
 
         // When
-        val sut = biddingRepositoryAdapter.findMostExpensiveBid(price = price, biddingType = biddingType)
+        val sut = biddingRepositoryAdapter.findMostExpensiveBid(biddingType = biddingType)
 
         // Then
         sut.shouldNotBeNull()
@@ -86,7 +86,7 @@ class BiddingRepositoryAdapterTest : StringSpec({
         sut.price shouldBe bidding.price
         sut.size shouldBe bidding.size
         sut.status shouldBe bidding.status
-        verify(exactly = 1) { biddingRepository.findMostExpensiveBidding(any(), any()) }
+        verify(exactly = 1) { biddingRepository.findMostExpensiveBidding(any()) }
     }
 
     "id로 Bidding을 조회한다" {

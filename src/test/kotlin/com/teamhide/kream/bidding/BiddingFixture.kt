@@ -1,12 +1,14 @@
 package com.teamhide.kream.bidding
 
 import com.teamhide.kream.bidding.adapter.`in`.api.v1.ImmediatePurchaseRequest
+import com.teamhide.kream.bidding.adapter.`in`.api.v1.ImmediateSaleRequest
 import com.teamhide.kream.bidding.domain.model.Bidding
 import com.teamhide.kream.bidding.domain.model.Order
 import com.teamhide.kream.bidding.domain.model.SaleHistory
 import com.teamhide.kream.bidding.domain.usecase.BidCommand
 import com.teamhide.kream.bidding.domain.usecase.CompleteBidCommand
 import com.teamhide.kream.bidding.domain.usecase.ImmediatePurchaseCommand
+import com.teamhide.kream.bidding.domain.usecase.ImmediateSaleCommand
 import com.teamhide.kream.bidding.domain.vo.BiddingStatus
 import com.teamhide.kream.bidding.domain.vo.BiddingType
 import com.teamhide.kream.bidding.domain.vo.OrderStatus
@@ -105,4 +107,18 @@ fun makeImmediatePurchaseCommand(
 
 fun makeImmediatePurchaseRequest(biddingId: Long = 1L): ImmediatePurchaseRequest {
     return ImmediatePurchaseRequest(biddingId = biddingId)
+}
+
+fun makeImmediateSaleCommand(
+    biddingId: Long = 1L,
+    userId: Long = 1L,
+): ImmediateSaleCommand {
+    return ImmediateSaleCommand(
+        biddingId = biddingId,
+        userId = userId,
+    )
+}
+
+fun makeImmediateSaleRequest(biddingId: Long = 1L): ImmediateSaleRequest {
+    return ImmediateSaleRequest(biddingId = biddingId)
 }

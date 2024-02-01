@@ -13,7 +13,7 @@ class AttemptPaymentServiceTest : BehaviorSpec({
 
     Given("특정 건에 대해") {
         val command = makeAttemptPaymentCommand()
-        every { pgClientAdapter.attemptPayment(biddingId = command.biddingId, price = command.price) } returns "uuid"
+        every { pgClientAdapter.attemptPayment(biddingId = command.biddingId, price = command.price, userId = command.userId) } returns "uuid"
 
         When("결제 요청을 진행하면") {
             val sut = attemptPaymentService.execute(command = command)

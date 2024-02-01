@@ -9,7 +9,7 @@ import com.teamhide.kream.bidding.domain.vo.BiddingStatus
 import com.teamhide.kream.bidding.domain.vo.BiddingType
 import com.teamhide.kream.bidding.domain.vo.OrderStatus
 import com.teamhide.kream.bidding.makeBidding
-import com.teamhide.kream.bidding.makeImmediatePurchaseRequest
+import com.teamhide.kream.bidding.makeImmediateSaleRequest
 import com.teamhide.kream.client.pg.AttemptPaymentResponse
 import com.teamhide.kream.client.pg.PgClient
 import com.teamhide.kream.product.adapter.out.persistence.jpa.ProductRepository
@@ -29,9 +29,9 @@ import org.springframework.data.repository.findByIdOrNull
 import org.springframework.http.HttpHeaders
 import org.springframework.test.web.servlet.post
 
-private const val URL = "/v1/bid/purchase"
+private const val URL = "/v1/bid/sale"
 
-class ImmediatePurchaseV1ControllerTest : BaseIntegrationTest() {
+class ImmediateSaleV1ControllerTest : BaseIntegrationTest() {
     @Autowired
     lateinit var biddingRepository: BiddingRepository
 
@@ -53,7 +53,7 @@ class ImmediatePurchaseV1ControllerTest : BaseIntegrationTest() {
     @Test
     fun `존재하지 않는 입찰인 경우 404를 리턴한다`() {
         // Given
-        val request = makeImmediatePurchaseRequest()
+        val request = makeImmediateSaleRequest()
         val exc = BiddingNotFoundException()
 
         // When, Then
@@ -70,7 +70,7 @@ class ImmediatePurchaseV1ControllerTest : BaseIntegrationTest() {
     @Test
     fun `존재하지 않는 유저인 경우 404를 리턴한다`() {
         // Given
-        val request = makeImmediatePurchaseRequest()
+        val request = makeImmediateSaleRequest()
 
         val user = userRepository.save(makeUser(id = 100L))
         val product = productRepository.save(makeProduct(id = 1L))
@@ -91,18 +91,19 @@ class ImmediatePurchaseV1ControllerTest : BaseIntegrationTest() {
     }
 
     @Test
-    fun `즉시 구매에 성공하면 200을 리턴한다`() {
+    fun `즉시 판매에 성공하면 200을 리턴한다`() {
         // Given
-        val request = makeImmediatePurchaseRequest()
+        val request = makeImmediateSaleRequest()
 
         val seller = userRepository.save(makeUser(id = 1L))
         val purchaser = userRepository.save(makeUser(id = 2L))
+
         val product = productRepository.save(makeProduct(id = 1L))
         val bidding = makeBidding(
             id = request.biddingId,
             product = product,
             user = seller,
-            biddingType = BiddingType.SALE,
+            biddingType = BiddingType.PURCHASE,
             status = BiddingStatus.IN_PROGRESS,
         )
         val savedBidding = biddingRepository.save(bidding)
@@ -130,7 +131,7 @@ class ImmediatePurchaseV1ControllerTest : BaseIntegrationTest() {
         val saleHistory = saleHistoryRepository.findByBiddingId(biddingId = savedBidding.id)
         saleHistory.shouldNotBeNull()
         saleHistory.bidding.id shouldBe savedBidding.id
-        saleHistory.user.id shouldBe bidding.user.id
+        saleHistory.user.id shouldBe seller.id
         saleHistory.price shouldBe savedBidding.price
         saleHistory.size shouldBe savedBidding.size
 
@@ -139,7 +140,7 @@ class ImmediatePurchaseV1ControllerTest : BaseIntegrationTest() {
         order.shouldNotBeNull()
         order.paymentId shouldBe paymentId
         order.bidding.id shouldBe savedBidding.id
-        order.user.id shouldBe purchaser.id
+        order.user.id shouldBe seller.id
         order.status shouldBe OrderStatus.COMPLETE
     }
 }

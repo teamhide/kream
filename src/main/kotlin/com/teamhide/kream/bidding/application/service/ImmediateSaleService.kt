@@ -7,9 +7,9 @@ import com.teamhide.kream.bidding.domain.usecase.AttemptPaymentCommand
 import com.teamhide.kream.bidding.domain.usecase.AttemptPaymentUseCase
 import com.teamhide.kream.bidding.domain.usecase.CompleteBidCommand
 import com.teamhide.kream.bidding.domain.usecase.CompleteBidUseCase
-import com.teamhide.kream.bidding.domain.usecase.ImmediatePurchaseCommand
-import com.teamhide.kream.bidding.domain.usecase.ImmediatePurchaseResponseDto
-import com.teamhide.kream.bidding.domain.usecase.ImmediatePurchaseUseCase
+import com.teamhide.kream.bidding.domain.usecase.ImmediateSaleCommand
+import com.teamhide.kream.bidding.domain.usecase.ImmediateSaleResponseDto
+import com.teamhide.kream.bidding.domain.usecase.ImmediateSaleUseCase
 import com.teamhide.kream.user.adapter.out.persistence.UserRepositoryAdapter
 import com.teamhide.kream.user.application.exception.UserNotFoundException
 import org.springframework.stereotype.Service
@@ -17,25 +17,24 @@ import org.springframework.transaction.annotation.Transactional
 
 @Service
 @Transactional(readOnly = true)
-class ImmediatePurchaseService(
+class ImmediateSaleService(
     private val biddingRepositoryAdapter: BiddingRepositoryAdapter,
+    private val userRepositoryAdapter: UserRepositoryAdapter,
     private val attemptPaymentUseCase: AttemptPaymentUseCase,
     private val completeBidUseCase: CompleteBidUseCase,
-    private val userRepositoryAdapter: UserRepositoryAdapter,
-) : ImmediatePurchaseUseCase {
-    override fun execute(command: ImmediatePurchaseCommand): ImmediatePurchaseResponseDto {
+) : ImmediateSaleUseCase {
+    override fun execute(command: ImmediateSaleCommand): ImmediateSaleResponseDto {
         val bidding =
             biddingRepositoryAdapter.findById(biddingId = command.biddingId) ?: throw BiddingNotFoundException()
         if (!bidding.canBid()) {
             throw AlreadyCompleteBidException()
         }
 
-        val user =
-            userRepositoryAdapter.findById(userId = command.userId) ?: throw UserNotFoundException()
+        userRepositoryAdapter.findById(userId = command.userId) ?: throw UserNotFoundException()
 
         // TODO: Lock
 
-        val purchaserId = user.id
+        val purchaserId = bidding.user.id
         val paymentId = AttemptPaymentCommand(biddingId = bidding.id, price = bidding.price, userId = purchaserId).let {
             attemptPaymentUseCase.execute(command = it)
         }
@@ -44,6 +43,6 @@ class ImmediatePurchaseService(
             completeBidUseCase.execute(command = it)
         }
 
-        return ImmediatePurchaseResponseDto(biddingId = bidding.id, price = bidding.price)
+        return ImmediateSaleResponseDto(biddingId = bidding.id, price = bidding.price)
     }
 }

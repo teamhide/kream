@@ -4,5 +4,5 @@ import com.teamhide.kream.bidding.domain.model.Bidding
 import com.teamhide.kream.bidding.domain.vo.BiddingType
 
 interface BiddingQuerydslRepository {
-    fun findMostExpensiveBidding(price: Int, biddingType: BiddingType): Bidding?
+    fun findMostExpensiveBidding(biddingType: BiddingType): Bidding?
 }

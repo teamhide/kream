@@ -36,7 +36,8 @@ spring:
       uri: mongodb://kream:kream@localhost:27017/kream_test?authSource=admin
   kafka:
     topic:
-      location-updated: location-updated
+      bidding-created: kream.bidding.created
+      bidding-completed: kream.bidding.completed
     producer:
       bootstrap-servers: localhost:9092
     consumer:

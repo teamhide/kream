@@ -52,7 +52,8 @@ spring:
         url: localhost:8081
     bootstrap-servers: localhost:9092
     topic:
-      location-updated: location-updated
+      bidding-created: kream.bidding.created
+      bidding-completed: kream.bidding.completed
 jwt:
   secret-key: hidehidehidehidehidehidehidehidehide
 logging:

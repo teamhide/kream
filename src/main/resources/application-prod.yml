@@ -38,7 +38,8 @@ spring:
         url: ${KAFKA_URL}
     bootstrap-servers: ${BOOTSTRAP_SERVERS}
     topic:
-      location-updated: ${TOPIC_LOCATION_UPDATED}
+      bidding-created: ${BIDDING_CREATED}
+      bidding-completed: ${BIDDING_COMPLETED}
 
 client:
   pg:

@@ -19,8 +19,16 @@ class KafkaTopicConfig(
     }
 
     @Bean
-    fun topics() = KafkaAdmin.NewTopics(
-        TopicBuilder.name("locationUpdated")
+    fun biddingCreatedTopic() = KafkaAdmin.NewTopics(
+        TopicBuilder.name("kream.bidding.created")
+            .partitions(3)
+            .compact()
+            .build()
+    )
+
+    @Bean
+    fun biddingCompletedTopic() = KafkaAdmin.NewTopics(
+        TopicBuilder.name("kream.bidding.completed")
             .partitions(3)
             .compact()
             .build()

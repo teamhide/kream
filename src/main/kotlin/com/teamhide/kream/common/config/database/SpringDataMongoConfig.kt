@@ -11,7 +11,7 @@ import org.springframework.data.mongodb.config.EnableMongoAuditing
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories
 
 @Configuration
-@EnableMongoRepositories(basePackages = ["com.teamhide.kream.product.adapter.out.persistence"])
+@EnableMongoRepositories(basePackages = ["com.teamhide.kream.product.adapter.out.persistence.mongo"])
 @EnableMongoAuditing
 class SpringDataMongoConfig(
     @Value("\${spring.data.mongodb.uri}")

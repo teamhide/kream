@@ -1,15 +1,12 @@
 # Kream
 
 ## Overview
-This code clones the Cream app, and only the minimum functionality is implemented.
+This project is used as a playground while creating an app similar to Kream.
+
+As a side note, I did my best to achieve 100% test coverage.
 
 ## System Architecture
 TBD
-
-## Code Architecture
-Basically, I adopted a hexagonal architecture, but not all structures were set equal. I found an appropriate compromise between theory and applied only those parts.
-
-As a side note, I did my best to achieve 100% test coverage.
 
 ## Stack
 - Kotlin 1.9.20
@@ -45,8 +42,8 @@ As a side note, I did my best to achieve 100% test coverage.
     - 등록과 동시에 판매 시작
 
 ### 판매
-- [ ] 상품 즉시 판매
-- [ ] 상품 즉시 구매
+- [x] 상품 즉시 판매
+- [x] 상품 즉시 구매
 - [x] 상품 판매 입찰
 - [x] 상품 구매 입찰
 

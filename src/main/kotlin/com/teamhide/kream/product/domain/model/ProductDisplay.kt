@@ -12,7 +12,7 @@ class ProductDisplay(
     val productId: Long,
 
     @Field(name = "last_bidding_id")
-    val lastBiddingId: Long,
+    var lastBiddingId: Long,
 
     @Field(name = "name")
     val name: String,
@@ -31,5 +31,9 @@ class ProductDisplay(
 ) : BaseTimestampEntity() {
     fun changePrice(price: Int) {
         this.price = price
+    }
+
+    fun changeLastBiddingId(biddingId: Long) {
+        this.lastBiddingId = lastBiddingId
     }
 }

@@ -17,11 +17,7 @@ class BiddingCreatedConsumer(
         containerFactory = "kafkaListenerContainerFactory"
     )
     fun listen(message: BiddingCreatedEvent) {
-        try {
-            if (BiddingType.valueOf(message.biddingType) == BiddingType.PURCHASE) {
-                return
-            }
-        } catch (e: IllegalArgumentException) {
+        if (!isValidBiddingType(biddingType = message.biddingType)) {
             return
         }
         val command = message.let {
@@ -32,5 +28,13 @@ class BiddingCreatedConsumer(
             )
         }
         saveOrUpdateProductDisplayUseCase.execute(command = command)
+    }
+
+    private fun isValidBiddingType(biddingType: String): Boolean {
+        return try {
+            BiddingType.valueOf(biddingType) == BiddingType.PURCHASE
+        } catch (e: IllegalArgumentException) {
+            return false
+        }
     }
 }

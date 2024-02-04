@@ -37,5 +37,6 @@ class SaveOrUpdateProductDisplayService(
             return
         }
         existProductDisplay.changePrice(price = command.price)
+        existProductDisplay.changeLastBiddingId(biddingId = command.biddingId)
     }
 }

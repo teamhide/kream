@@ -1,6 +1,7 @@
 package com.teamhide.kream.product
 
 import com.teamhide.kream.bidding.adapter.`in`.api.v1.BidRequest
+import com.teamhide.kream.bidding.domain.event.BiddingCreatedEvent
 import com.teamhide.kream.bidding.domain.vo.BiddingType
 import com.teamhide.kream.product.adapter.`in`.api.v1.RegisterProductRequest
 import com.teamhide.kream.product.domain.model.Product
@@ -125,6 +126,20 @@ fun makeSaveOrUpdateProductDisplayCommand(
 ): SaveOrUpdateProductDisplayCommand {
     return SaveOrUpdateProductDisplayCommand(
         productId = productId,
+        price = price,
+        biddingId = biddingId,
+    )
+}
+
+fun makeBiddingCreatedEvent(
+    productId: Long = 1L,
+    biddingType: String = "PURCHASE",
+    price: Int = 10000,
+    biddingId: Long = 1L,
+): BiddingCreatedEvent {
+    return BiddingCreatedEvent(
+        productId = productId,
+        biddingType = biddingType,
         price = price,
         biddingId = biddingId,
     )

@@ -3,6 +3,8 @@ package com.teamhide.kream.common.filter
 import com.teamhide.kream.support.test.UnitTest
 import io.mockk.every
 import io.mockk.mockk
+import jakarta.servlet.DispatcherType
+import jakarta.servlet.FilterChain
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -198,5 +200,27 @@ internal class RequestLogFilterTest {
 
         // Then
         assertThat(sut).isEqualTo("abc")
+    }
+
+    @Test
+    fun `Req Res 로그를 출력한다`() {
+        // Given
+        val filter = RequestLogFilter()
+        val filterChain = mockk<FilterChain>()
+
+        every { requestMock.getAttribute(any()) } returns null
+        every { requestMock.dispatcherType } returns DispatcherType.REQUEST
+        every { filterChain.doFilter(any(), any()) } returns Unit
+        every { requestMock.setAttribute(any(), any()) } returns Unit
+        every { requestMock.removeAttribute(any()) } returns Unit
+        every { responseMock.contentInputStream } returns InputStream.nullInputStream()
+        every { requestMock.method } returns HttpMethod.POST.name()
+        every { requestMock.requestURI } returns "URI"
+        every { requestMock.queryString } returns "id=hide"
+        every { responseMock.status } returns HttpStatus.OK.value()
+        every { responseMock.copyBodyToResponse() } returns Unit
+
+        // When, Then
+        filter.doFilter(requestMock, responseMock, filterChain)
     }
 }

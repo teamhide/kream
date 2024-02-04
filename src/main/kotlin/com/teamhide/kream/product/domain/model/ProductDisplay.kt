@@ -1,6 +1,8 @@
 package com.teamhide.kream.product.domain.model
 
 import com.teamhide.kream.common.config.database.BaseTimestampEntity
+import jakarta.persistence.Id
+import org.bson.types.ObjectId
 import org.springframework.data.mongodb.core.mapping.Document
 import org.springframework.data.mongodb.core.mapping.Field
 
@@ -13,11 +15,18 @@ class ProductDisplay(
     val name: String,
 
     @Field(name = "price")
-    val price: Int,
+    var price: Int,
 
     @Field(name = "brand")
     val brand: String,
 
     @Field(name = "category")
     val category: String,
-) : BaseTimestampEntity()
+
+    @Id
+    val id: ObjectId = ObjectId(),
+) : BaseTimestampEntity() {
+    fun changePrice(price: Int) {
+        this.price = price
+    }
+}

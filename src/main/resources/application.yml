@@ -46,6 +46,7 @@ spring:
       port: 63792
     mongodb:
       uri: mongodb://kream:kream@localhost:27017/kream?authSource=admin
+      database: kream
   kafka:
     schema:
       registry:

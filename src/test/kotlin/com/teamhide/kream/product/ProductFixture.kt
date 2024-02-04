@@ -6,7 +6,9 @@ import com.teamhide.kream.product.adapter.`in`.api.v1.RegisterProductRequest
 import com.teamhide.kream.product.domain.model.Product
 import com.teamhide.kream.product.domain.model.ProductBrand
 import com.teamhide.kream.product.domain.model.ProductCategory
+import com.teamhide.kream.product.domain.model.ProductDisplay
 import com.teamhide.kream.product.domain.usecase.RegisterProductCommand
+import com.teamhide.kream.product.domain.usecase.SaveOrUpdateProductDisplayCommand
 import com.teamhide.kream.product.domain.vo.SizeType
 
 fun makeProductCategory(
@@ -95,5 +97,31 @@ fun makeBidRequest(
         price = price,
         size = size,
         biddingType = biddingType,
+    )
+}
+
+fun makeProductDisplay(
+    productId: Long = 1L,
+    name: String = "name",
+    price: Int = 10000,
+    brand: String = "Nike",
+    category: String = "SHOES"
+): ProductDisplay {
+    return ProductDisplay(
+        productId = productId,
+        name = name,
+        price = price,
+        brand = brand,
+        category = category,
+    )
+}
+
+fun makeSaveOrUpdateProductDisplayCommand(
+    productId: Long = 1L,
+    price: Int = 20000,
+): SaveOrUpdateProductDisplayCommand {
+    return SaveOrUpdateProductDisplayCommand(
+        productId = productId,
+        price = price,
     )
 }

@@ -16,8 +16,10 @@ class PgClientAdapter(
         maxAttempts = 2,
         backoff = Backoff(delay = 300L)
     )
-    fun attemptPayment(biddingId: Long, price: Int, userId: Long): String {
+    fun attemptPayment(biddingId: Long, price: Int, userId: Long): Result<String> {
         val request = AttemptPaymentRequest(biddingId = biddingId, price = price, userId = userId)
-        return pgClient.attemptPayment(request = request).paymentId
+        return runCatching {
+            pgClient.attemptPayment(request = request).paymentId
+        }
     }
 }

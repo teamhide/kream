@@ -96,7 +96,8 @@ class ImmediateSaleV1ControllerTest : BaseIntegrationTest() {
         val request = makeImmediateSaleRequest()
 
         val seller = userRepository.save(makeUser(id = 1L))
-        val purchaser = userRepository.save(makeUser(id = 2L))
+        // purchaser
+        userRepository.save(makeUser(id = 2L))
 
         val product = productRepository.save(makeProduct(id = 1L))
         val bidding = makeBidding(

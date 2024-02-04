@@ -69,7 +69,6 @@ class BiddingRepositoryAdapterTest : StringSpec({
 
     "price와 biddingType으로 가장 금액이 큰 Bidding을 조회한다" {
         // Given
-        val price = 1000
         val biddingType = BiddingType.SALE
         val bidding = makeBidding()
         every { biddingRepository.findMostExpensiveBidding(any()) } returns bidding

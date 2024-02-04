@@ -1,4 +1,4 @@
-package com.teamhide.kream.bidding.adapter.out.messaging
+package com.teamhide.kream.common.kafka
 
 import io.github.oshai.kotlinlogging.KotlinLogging
 import org.apache.kafka.clients.producer.ProducerRecord
@@ -8,8 +8,8 @@ import org.springframework.stereotype.Component
 private val logger = KotlinLogging.logger { }
 
 @Component
-class BiddingKafkaProducer<T>(
-    private val kafkaTemplate: KafkaTemplate<String, T>,
+class KafkaBaseProducer<T>(
+    private val kafkaTemplate: KafkaTemplate<String, T>
 ) {
     fun send(topic: String, key: String, message: T) {
         val record = ProducerRecord(topic, key, message)

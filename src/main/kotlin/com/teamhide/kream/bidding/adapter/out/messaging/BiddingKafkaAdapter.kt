@@ -2,13 +2,14 @@ package com.teamhide.kream.bidding.adapter.out.messaging
 
 import com.teamhide.kream.bidding.domain.event.BiddingCompletedEvent
 import com.teamhide.kream.bidding.domain.event.BiddingCreatedEvent
+import com.teamhide.kream.common.kafka.KafkaBaseProducer
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 
 @Component
 class BiddingKafkaAdapter(
-    private val biddingCreatedProducer: BiddingKafkaProducer<BiddingCreatedEvent>,
-    private val biddingCompletedProducer: BiddingKafkaProducer<BiddingCompletedEvent>,
+    private val biddingCreatedProducer: KafkaBaseProducer<BiddingCreatedEvent>,
+    private val biddingCompletedProducer: KafkaBaseProducer<BiddingCompletedEvent>,
 
     @Value("\${spring.kafka.topic.bidding-completed}")
     private val biddingCompletedTopic: String,

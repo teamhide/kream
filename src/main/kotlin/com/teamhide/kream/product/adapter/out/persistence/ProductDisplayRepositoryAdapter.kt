@@ -15,4 +15,8 @@ class ProductDisplayRepositoryAdapter(
     fun save(productDisplay: ProductDisplay): ProductDisplay {
         return productDisplayRepository.save(productDisplay)
     }
+
+    fun findAll(): List<ProductDisplay> {
+        return productDisplayRepository.findAll()
+    }
 }

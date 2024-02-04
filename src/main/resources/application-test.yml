@@ -34,6 +34,7 @@ spring:
       port: 63792
     mongodb:
       uri: mongodb://kream:kream@localhost:27017/kream_test?authSource=admin
+      database: kream_test
   kafka:
     topic:
       bidding-created: kream.bidding.created

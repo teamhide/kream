@@ -6,7 +6,7 @@ import org.springframework.test.context.support.AbstractTestExecutionListener
 import java.sql.DatabaseMetaData
 import java.sql.SQLException
 
-class IntegrationTestExecutionListener : AbstractTestExecutionListener() {
+class MySqlTestExecutionListener : AbstractTestExecutionListener() {
 
     override fun afterTestMethod(testContext: TestContext) {
         val jdbcTemplate = getJdbcTemplate(testContext)

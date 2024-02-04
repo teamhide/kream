@@ -19,7 +19,7 @@ import org.springframework.data.repository.findByIdOrNull
 import org.springframework.http.HttpHeaders
 import org.springframework.test.web.servlet.post
 
-const val URL = "/v1/product"
+private const val URL = "/v1/product"
 
 class RegisterProductV1ControllerTest : BaseIntegrationTest() {
     @Autowired

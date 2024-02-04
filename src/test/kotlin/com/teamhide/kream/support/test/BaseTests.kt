@@ -57,7 +57,10 @@ annotation class MongoRepositoryTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @ExtendWith(RestDocumentationExtension::class)
 @TestExecutionListeners(
-    value = [IntegrationTestExecutionListener::class],
+    value = [
+        MySqlTestExecutionListener::class,
+        MongoTestExecutionListener::class,
+    ],
     mergeMode = TestExecutionListeners.MergeMode.MERGE_WITH_DEFAULTS
 )
 annotation class IntegrationTest
@@ -82,7 +85,7 @@ annotation class FeignTest
 @AutoConfigureMockMvc
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @TestExecutionListeners(
-    value = [IntegrationTestExecutionListener::class],
+    value = [MySqlTestExecutionListener::class],
     mergeMode = TestExecutionListeners.MergeMode.MERGE_WITH_DEFAULTS
 )
 annotation class JpaRepositoryTest

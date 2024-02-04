@@ -105,7 +105,8 @@ fun makeProductDisplay(
     name: String = "name",
     price: Int = 10000,
     brand: String = "Nike",
-    category: String = "SHOES"
+    category: String = "SHOES",
+    lastBiddingId: Long = 1L,
 ): ProductDisplay {
     return ProductDisplay(
         productId = productId,
@@ -113,15 +114,18 @@ fun makeProductDisplay(
         price = price,
         brand = brand,
         category = category,
+        lastBiddingId = lastBiddingId,
     )
 }
 
 fun makeSaveOrUpdateProductDisplayCommand(
     productId: Long = 1L,
     price: Int = 20000,
+    biddingId: Long = 1L,
 ): SaveOrUpdateProductDisplayCommand {
     return SaveOrUpdateProductDisplayCommand(
         productId = productId,
         price = price,
+        biddingId = biddingId,
     )
 }

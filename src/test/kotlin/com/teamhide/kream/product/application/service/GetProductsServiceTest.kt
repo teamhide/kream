@@ -20,6 +20,7 @@ class GetProductsServiceTest : BehaviorSpec({
             price = 20000,
             brand = "NIKE",
             category = "SHOES",
+            lastBiddingId = 1L,
         )
         val product2 = makeProductDisplay(
             productId = 2L,
@@ -27,6 +28,7 @@ class GetProductsServiceTest : BehaviorSpec({
             price = 30000,
             brand = "MONCLER",
             category = "CLOTHES",
+            lastBiddingId = 2L,
         )
         val products = listOf(product1, product2)
         every { productDisplayRepositoryAdapter.findAll() } returns products

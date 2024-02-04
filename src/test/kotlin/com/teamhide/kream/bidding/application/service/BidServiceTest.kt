@@ -2,6 +2,7 @@ package com.teamhide.kream.bidding.application.service
 
 import com.teamhide.kream.bidding.adapter.out.persistence.BiddingRepositoryAdapter
 import com.teamhide.kream.bidding.application.exception.ImmediateTradeAvailableException
+import com.teamhide.kream.bidding.domain.event.BiddingCreatedEvent
 import com.teamhide.kream.bidding.domain.model.InvalidBiddingPriceException
 import com.teamhide.kream.bidding.domain.vo.BiddingType
 import com.teamhide.kream.bidding.makeBidCommand
@@ -17,15 +18,19 @@ import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.verify
+import org.springframework.context.ApplicationEventPublisher
 
 class BidServiceTest : BehaviorSpec({
     val biddingRepositoryAdapter = mockk<BiddingRepositoryAdapter>()
     val userRepositoryAdapter = mockk<UserRepositoryAdapter>()
     val productRepositoryAdapter = mockk<ProductRepositoryAdapter>()
+    val applicationEventPublisher = mockk<ApplicationEventPublisher>()
     val bidService = BidService(
         biddingRepositoryAdapter = biddingRepositoryAdapter,
         userRepositoryAdapter = userRepositoryAdapter,
         productRepositoryAdapter = productRepositoryAdapter,
+        applicationEventPublisher = applicationEventPublisher,
     )
 
     Given("동일한 가격의 구매 입찰이 있을 때") {
@@ -173,6 +178,8 @@ class BidServiceTest : BehaviorSpec({
         val bidding = makeBidding()
         every { biddingRepositoryAdapter.save(any()) } returns bidding
 
+        every { applicationEventPublisher.publishEvent(any<BiddingCreatedEvent>()) } returns Unit
+
         When("구매 입찰을 시도하면") {
             Then("입찰에 성공한다") {
                 val sut = bidService.execute(command = command)
@@ -180,6 +187,7 @@ class BidServiceTest : BehaviorSpec({
                 sut.biddingType shouldBe bidding.biddingType
                 sut.price shouldBe bidding.price
                 sut.size shouldBe bidding.size
+                verify(exactly = 1) { applicationEventPublisher.publishEvent(any<BiddingCreatedEvent>()) }
             }
         }
     }

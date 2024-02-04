@@ -28,6 +28,7 @@ class BiddingCreatedConsumer(
             SaveOrUpdateProductDisplayCommand(
                 productId = it.productId,
                 price = it.price,
+                biddingId = it.biddingId,
             )
         }
         saveOrUpdateProductDisplayUseCase.execute(command = command)

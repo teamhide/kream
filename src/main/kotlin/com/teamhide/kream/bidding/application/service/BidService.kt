@@ -2,6 +2,7 @@ package com.teamhide.kream.bidding.application.service
 
 import com.teamhide.kream.bidding.adapter.out.persistence.BiddingRepositoryAdapter
 import com.teamhide.kream.bidding.application.exception.ImmediateTradeAvailableException
+import com.teamhide.kream.bidding.domain.event.BiddingCreatedEvent
 import com.teamhide.kream.bidding.domain.model.Bidding
 import com.teamhide.kream.bidding.domain.usecase.BidCommand
 import com.teamhide.kream.bidding.domain.usecase.BidResponseDto
@@ -12,6 +13,7 @@ import com.teamhide.kream.product.adapter.out.persistence.ProductRepositoryAdapt
 import com.teamhide.kream.product.application.exception.ProductNotFoundException
 import com.teamhide.kream.user.adapter.out.persistence.UserRepositoryAdapter
 import com.teamhide.kream.user.application.exception.UserNotFoundException
+import org.springframework.context.ApplicationEventPublisher
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -21,6 +23,7 @@ class BidService(
     private val biddingRepositoryAdapter: BiddingRepositoryAdapter,
     private val userRepositoryAdapter: UserRepositoryAdapter,
     private val productRepositoryAdapter: ProductRepositoryAdapter,
+    private val applicationEventPublisher: ApplicationEventPublisher,
 ) : BidUseCase {
     override fun execute(command: BidCommand): BidResponseDto {
         if (!canBid(price = command.price, biddingType = command.biddingType)) {
@@ -40,7 +43,7 @@ class BidService(
             status = BiddingStatus.IN_PROGRESS,
             biddingType = command.biddingType,
         )
-        return biddingRepositoryAdapter.save(bidding).let {
+        val response = biddingRepositoryAdapter.save(bidding).let {
             BidResponseDto(
                 biddingId = it.id,
                 price = it.price,
@@ -48,6 +51,15 @@ class BidService(
                 biddingType = it.biddingType,
             )
         }
+
+        val event = BiddingCreatedEvent(
+            productId = command.productId,
+            biddingType = bidding.biddingType.name,
+            biddingId = bidding.id,
+            price = bidding.price,
+        )
+        applicationEventPublisher.publishEvent(event)
+        return response
     }
 
     private fun canBid(price: Int, biddingType: BiddingType): Boolean {

@@ -27,6 +27,7 @@ class SaveOrUpdateProductDisplayService(
                 price = command.price,
                 brand = brand.name,
                 category = category.name,
+                lastBiddingId = command.biddingId,
             )
             productDisplayRepositoryAdapter.save(productDisplay = productDisplay)
             return

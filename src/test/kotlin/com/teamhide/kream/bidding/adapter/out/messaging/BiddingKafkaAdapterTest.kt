@@ -64,7 +64,9 @@ class BiddingKafkaAdapterTest(
     @Test
     fun `입찰 생성 메시지를 발송한다`() {
         // Given
-        val message = BiddingCreatedEvent(productId = 1L, price = 2000, biddingType = BiddingType.SALE.name)
+        val message = BiddingCreatedEvent(
+            productId = 1L, price = 2000, biddingType = BiddingType.SALE.name, biddingId = 1L
+        )
 
         // When
         biddingKafkaAdapter.sendBiddingCreated(event = message)
@@ -81,7 +83,7 @@ class BiddingKafkaAdapterTest(
     @Test
     fun `입찰 종료 메시지를 발송한다`() {
         // Given
-        val message = BiddingCompletedEvent(productId = 1L)
+        val message = BiddingCompletedEvent(biddingId = 1L, productId = 1L)
 
         // When
         biddingKafkaAdapter.sendBiddingCompleted(event = message)

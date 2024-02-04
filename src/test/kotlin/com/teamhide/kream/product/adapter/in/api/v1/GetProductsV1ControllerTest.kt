@@ -24,6 +24,7 @@ class GetProductsV1ControllerTest : BaseIntegrationTest() {
             price = 20000,
             brand = "NIKE",
             category = "SHOES",
+            lastBiddingId = 1L,
         )
         val product2 = makeProductDisplay(
             productId = 2L,
@@ -31,6 +32,7 @@ class GetProductsV1ControllerTest : BaseIntegrationTest() {
             price = 30000,
             brand = "MONCLER",
             category = "CLOTHES",
+            lastBiddingId = 2L,
         )
         productDisplayRepository.saveAll(listOf(product1, product2))
 

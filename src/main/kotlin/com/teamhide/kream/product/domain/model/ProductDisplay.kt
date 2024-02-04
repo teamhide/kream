@@ -11,6 +11,9 @@ class ProductDisplay(
     @Field(name = "product_id")
     val productId: Long,
 
+    @Field(name = "last_bidding_id")
+    val lastBiddingId: Long,
+
     @Field(name = "name")
     val name: String,
 

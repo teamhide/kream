@@ -2,7 +2,6 @@ package com.teamhide.kream.support.test
 
 import com.querydsl.jpa.impl.JPAQueryFactory
 import com.teamhide.kream.client.FeignClientConfig
-import com.teamhide.kream.common.config.database.DataSourceConfig
 import com.teamhide.kream.pg.FakePgController
 import io.mockk.junit5.MockKExtension
 import jakarta.persistence.EntityManager
@@ -12,13 +11,11 @@ import org.springframework.boot.autoconfigure.ImportAutoConfiguration
 import org.springframework.boot.autoconfigure.http.HttpMessageConvertersAutoConfiguration
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.context.TestConfiguration
 import org.springframework.cloud.openfeign.FeignAutoConfiguration
 import org.springframework.context.annotation.Bean
-import org.springframework.context.annotation.Import
 import org.springframework.restdocs.RestDocumentationExtension
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.TestConstructor
@@ -45,15 +42,6 @@ class RepositoryTestConfig(
         return JPAQueryFactory(entityManager)
     }
 }
-
-@Target(AnnotationTarget.CLASS)
-@Retention(AnnotationRetention.RUNTIME)
-@TestEnvironment
-@DataJpaTest
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@ImportAutoConfiguration(DataSourceConfig::class)
-@Import(RepositoryTestConfig::class)
-annotation class RepositoryTest
 
 @Target(AnnotationTarget.CLASS)
 @Retention(AnnotationRetention.RUNTIME)
@@ -86,3 +74,15 @@ class FeignTestContext
 @SpringBootTest(classes = [FeignTestContext::class, FakePgController::class])
 @TestEnvironment
 annotation class FeignTest
+
+@Target(AnnotationTarget.CLASS)
+@Retention(AnnotationRetention.RUNTIME)
+@TestEnvironment
+@SpringBootTest
+@AutoConfigureMockMvc
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@TestExecutionListeners(
+    value = [IntegrationTestExecutionListener::class],
+    mergeMode = TestExecutionListeners.MergeMode.MERGE_WITH_DEFAULTS
+)
+annotation class JpaRepositoryTest

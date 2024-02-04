@@ -4,7 +4,7 @@ import com.teamhide.kream.bidding.domain.vo.BiddingType
 import com.teamhide.kream.bidding.makeBidding
 import com.teamhide.kream.product.adapter.out.persistence.jpa.ProductRepository
 import com.teamhide.kream.product.makeProduct
-import com.teamhide.kream.support.test.RepositoryTest
+import com.teamhide.kream.support.test.JpaRepositoryTest
 import com.teamhide.kream.user.adapter.out.persistence.jpa.UserRepository
 import com.teamhide.kream.user.makeUser
 import io.kotest.matchers.nulls.shouldNotBeNull
@@ -12,7 +12,7 @@ import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 
-@RepositoryTest
+@JpaRepositoryTest
 class BiddingQuerydslRepositoryImplTest {
     @Autowired
     lateinit var biddingRepository: BiddingRepository

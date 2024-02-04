@@ -1,13 +1,13 @@
 
 package com.teamhide.kream.user.adapter.out.persistence.jpa
 
-import com.teamhide.kream.support.test.RepositoryTest
+import com.teamhide.kream.support.test.JpaRepositoryTest
 import com.teamhide.kream.user.makeUser
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 
-@RepositoryTest
+@JpaRepositoryTest
 class UserQuerydslRepositoryImplTest {
     @Autowired
     lateinit var userRepository: UserRepository

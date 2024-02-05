@@ -6,7 +6,7 @@ import com.teamhide.kream.product.adapter.out.persistence.jpa.ProductRepository
 import com.teamhide.kream.product.makeProduct
 import com.teamhide.kream.product.makeProductBrand
 import com.teamhide.kream.product.makeProductCategory
-import com.teamhide.kream.product.makeProductDetailDto
+import com.teamhide.kream.product.makeProductInfoDto
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
@@ -77,8 +77,8 @@ class ProductRepositoryAdapterTest : StringSpec({
 
     "id로 ProductInfo를 조회한다" {
         // Given
-        val productDetailDto = makeProductDetailDto()
-        every { productRepository.findDetailById(any()) } returns productDetailDto
+        val productDetailDto = makeProductInfoDto()
+        every { productRepository.findInfoById(any()) } returns productDetailDto
 
         // When
         val sut = productRepositoryAdapter.findInfoById(productId = 1L)

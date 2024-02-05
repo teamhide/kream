@@ -33,7 +33,7 @@ class ProductRepositoryAdapter(
     }
 
     fun findInfoById(productId: Long): ProductInfo? {
-        val product = productRepository.findDetailById(productId = productId) ?: return null
+        val product = productRepository.findInfoById(productId = productId) ?: return null
         return product.let {
             ProductInfo(
                 productId = it.productId,

@@ -2,7 +2,7 @@ package com.teamhide.kream.product.adapter.out.persistence.jpa
 
 import com.querydsl.core.annotations.QueryProjection
 
-data class ProductDetailDto @QueryProjection constructor(
+data class ProductInfoDto @QueryProjection constructor(
     val productId: Long,
     val releasePrice: Int,
     val modelNumber: String,
@@ -12,5 +12,5 @@ data class ProductDetailDto @QueryProjection constructor(
 )
 
 interface ProductQuerydslRepository {
-    fun findDetailById(productId: Long): ProductDetailDto?
+    fun findInfoById(productId: Long): ProductInfoDto?
 }

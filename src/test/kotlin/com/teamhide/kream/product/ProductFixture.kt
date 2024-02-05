@@ -4,7 +4,7 @@ import com.teamhide.kream.bidding.adapter.`in`.api.v1.BidRequest
 import com.teamhide.kream.bidding.domain.event.BiddingCreatedEvent
 import com.teamhide.kream.bidding.domain.vo.BiddingType
 import com.teamhide.kream.product.adapter.`in`.api.v1.RegisterProductRequest
-import com.teamhide.kream.product.adapter.out.persistence.jpa.ProductDetailDto
+import com.teamhide.kream.product.adapter.out.persistence.jpa.ProductInfoDto
 import com.teamhide.kream.product.domain.model.Product
 import com.teamhide.kream.product.domain.model.ProductBrand
 import com.teamhide.kream.product.domain.model.ProductCategory
@@ -165,15 +165,15 @@ fun makeProductInfo(
     )
 }
 
-fun makeProductDetailDto(
+fun makeProductInfoDto(
     productId: Long = 1L,
     releasePrice: Int = 20000,
     modelNumber: String = "A-123",
     name: String = "SAKAI",
     brand: String = "NIKE",
     category: String = "SHOES",
-): ProductDetailDto {
-    return ProductDetailDto(
+): ProductInfoDto {
+    return ProductInfoDto(
         productId = productId,
         releasePrice = releasePrice,
         modelNumber = modelNumber,

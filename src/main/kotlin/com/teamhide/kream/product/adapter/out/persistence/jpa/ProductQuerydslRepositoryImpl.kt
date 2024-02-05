@@ -12,10 +12,10 @@ class ProductQuerydslRepositoryImpl(
     private val productCategory = QProductCategory.productCategory
     private val productBrand = QProductBrand.productBrand
 
-    override fun findDetailById(productId: Long): ProductDetailDto? {
+    override fun findInfoById(productId: Long): ProductInfoDto? {
         return queryFactory
             .select(
-                QProductDetailDto(
+                QProductInfoDto(
                     product.id,
                     product.releasePrice,
                     product.modelNumber,

@@ -26,7 +26,7 @@ class BidService(
     private val applicationEventPublisher: ApplicationEventPublisher,
 ) : BidUseCase {
     override fun execute(command: BidCommand): BidResponseDto {
-        if (!canBid(price = command.price, biddingType = command.biddingType)) {
+        if (!canBid(productId = command.productId, price = command.price, biddingType = command.biddingType)) {
             throw ImmediateTradeAvailableException()
         }
 
@@ -62,27 +62,30 @@ class BidService(
         return response
     }
 
-    private fun canBid(price: Int, biddingType: BiddingType): Boolean {
-        val biddingTypeCondition = if (biddingType == BiddingType.SALE) {
-            BiddingType.PURCHASE
+    private fun canBid(productId: Long, price: Int, biddingType: BiddingType): Boolean {
+        // 판매 입찰인 경우 가장 비싼 구매 입찰 조회
+        val bidding = if (biddingType == BiddingType.SALE) {
+            biddingRepositoryAdapter.findMostExpensiveBidding(
+                productId = productId, biddingType = BiddingType.PURCHASE
+            ) ?: return true
+            // 구매 입찰인 경우 가장 저렴한 판매 입찰 조회
         } else {
-            BiddingType.SALE
+            biddingRepositoryAdapter.findMostCheapestBidding(
+                productId = productId, biddingType = BiddingType.SALE
+            ) ?: return true
         }
 
-        val mostExpensiveBidding = (
-            biddingRepositoryAdapter.findMostExpensiveBid(biddingType = biddingTypeCondition)
-                ?: return true
-            )
-
-        if (price == mostExpensiveBidding.price) {
+        if (price == bidding.price) {
             return false
         }
 
-        if (biddingType == BiddingType.PURCHASE && mostExpensiveBidding.price < price) {
+        // 구매 입찰하려는 가격이 가장 높은 판매 입찰 가격보다 높은 경우
+        if (biddingType == BiddingType.PURCHASE && price > bidding.price) {
             return false
         }
 
-        if (biddingType == BiddingType.SALE && mostExpensiveBidding.price > price) {
+        // 판매 입찰하려는 가격이 가장 낮은 구매 입찰 가격보다 낮은 경우
+        if (biddingType == BiddingType.SALE && price < bidding.price) {
             return false
         }
 

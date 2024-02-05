@@ -24,36 +24,6 @@ class BiddingQuerydslRepositoryImplTest {
     lateinit var productRepository: ProductRepository
 
     @Test
-    fun `가장 비싼 입찰을 조회한다`() {
-        // Given
-        val user = userRepository.save(makeUser(id = 100L))
-        val product = productRepository.save(makeProduct(id = 1L))
-        biddingRepository.save(makeBidding(biddingType = BiddingType.SALE, price = 1000, product = product, user = user))
-        biddingRepository.save(makeBidding(biddingType = BiddingType.SALE, price = 2000, product = product, user = user))
-        val mostExpensiveBidding = biddingRepository.save(
-            makeBidding(
-                biddingType = BiddingType.SALE,
-                price = 3000,
-                product = product,
-                user = user
-            )
-        )
-
-        // When
-        val sut = biddingRepository.findMostExpensiveBidding(biddingType = BiddingType.SALE)
-
-        // Then
-        sut.shouldNotBeNull()
-        sut.id shouldBe mostExpensiveBidding.id
-        sut.biddingType shouldBe mostExpensiveBidding.biddingType
-        sut.price shouldBe mostExpensiveBidding.price
-        sut.status shouldBe mostExpensiveBidding.status
-        sut.size shouldBe mostExpensiveBidding.size
-        sut.product.id shouldBe mostExpensiveBidding.product.id
-        sut.user.id shouldBe mostExpensiveBidding.user.id
-    }
-
-    @Test
     fun `특정 상품에 대해 가장 비싼 입찰을 조회한다`() {
         // Given
         val user = userRepository.save(makeUser(id = 100L))

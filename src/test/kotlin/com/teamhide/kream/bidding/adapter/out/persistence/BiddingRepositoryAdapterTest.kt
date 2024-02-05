@@ -67,27 +67,6 @@ class BiddingRepositoryAdapterTest : StringSpec({
         verify(exactly = 1) { biddingRepository.save(any()) }
     }
 
-    "price와 biddingType으로 가장 금액이 큰 Bidding을 조회한다" {
-        // Given
-        val biddingType = BiddingType.SALE
-        val bidding = makeBidding()
-        every { biddingRepository.findMostExpensiveBidding(any()) } returns bidding
-
-        // When
-        val sut = biddingRepositoryAdapter.findMostExpensiveBid(biddingType = biddingType)
-
-        // Then
-        sut.shouldNotBeNull()
-        sut.id shouldBe bidding.id
-        sut.biddingType shouldBe bidding.biddingType
-        sut.user shouldBe bidding.user
-        sut.product shouldBe bidding.product
-        sut.price shouldBe bidding.price
-        sut.size shouldBe bidding.size
-        sut.status shouldBe bidding.status
-        verify(exactly = 1) { biddingRepository.findMostExpensiveBidding(any()) }
-    }
-
     "id로 Bidding을 조회한다" {
         // Given
         val biddingId = 1L

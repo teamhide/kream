@@ -21,10 +21,6 @@ class BiddingRepositoryAdapter(
         return biddingRepository.findByPriceAndBiddingType(price = price, biddingType = biddingType)
     }
 
-    fun findMostExpensiveBid(biddingType: BiddingType): Bidding? {
-        return biddingRepository.findMostExpensiveBidding(biddingType = biddingType)
-    }
-
     fun save(bidding: Bidding): Bidding {
         return biddingRepository.save(bidding)
     }

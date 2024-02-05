@@ -11,17 +11,6 @@ class BiddingQuerydslRepositoryImpl(
 ) : BiddingQuerydslRepository {
     private val bidding = QBidding.bidding
 
-    override fun findMostExpensiveBidding(biddingType: BiddingType): Bidding? {
-        return queryFactory
-            .selectFrom(bidding)
-            .where(
-                bidding.biddingType.eq(biddingType),
-                bidding.status.eq(BiddingStatus.IN_PROGRESS)
-            )
-            .orderBy(bidding.price.desc())
-            .fetchFirst()
-    }
-
     override fun findMostExpensiveBidding(productId: Long, biddingType: BiddingType): Bidding? {
         return queryFactory
             .selectFrom(bidding)

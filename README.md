@@ -8,6 +8,9 @@ As a side note, I did my best to achieve 100% test coverage.
 ## System Architecture
 TBD
 
+## ERD
+![ERD](./erd.png)
+
 ## Stack
 - Kotlin 1.9.20
 - Spring Boot 3.2.0
@@ -17,18 +20,7 @@ TBD
 - Redis
 
 ## Test
-
-### Test all
-
 `./gradlew testAll`
-
-### Unit test
-
-`./gradlew testUnit`
-
-### E2E test
-
-`./gradlew teste2e`
 
 ## Functional requirements
 

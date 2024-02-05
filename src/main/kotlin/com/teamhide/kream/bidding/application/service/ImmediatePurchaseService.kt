@@ -11,6 +11,7 @@ import com.teamhide.kream.bidding.domain.usecase.CompleteBidUseCase
 import com.teamhide.kream.bidding.domain.usecase.ImmediatePurchaseCommand
 import com.teamhide.kream.bidding.domain.usecase.ImmediatePurchaseResponseDto
 import com.teamhide.kream.bidding.domain.usecase.ImmediatePurchaseUseCase
+import com.teamhide.kream.common.util.lock.RedisLock
 import com.teamhide.kream.user.adapter.out.persistence.UserRepositoryAdapter
 import com.teamhide.kream.user.application.exception.UserNotFoundException
 import org.springframework.context.ApplicationEventPublisher
@@ -26,6 +27,7 @@ class ImmediatePurchaseService(
     private val userRepositoryAdapter: UserRepositoryAdapter,
     private val applicationEventPublisher: ApplicationEventPublisher,
 ) : ImmediatePurchaseUseCase {
+    @RedisLock(key = "#command.biddingId")
     override fun execute(command: ImmediatePurchaseCommand): ImmediatePurchaseResponseDto {
         val bidding =
             biddingRepositoryAdapter.findById(biddingId = command.biddingId) ?: throw BiddingNotFoundException()
@@ -35,8 +37,6 @@ class ImmediatePurchaseService(
 
         val user =
             userRepositoryAdapter.findById(userId = command.userId) ?: throw UserNotFoundException()
-
-        // TODO: Lock
 
         val purchaserId = user.id
         val paymentId = AttemptPaymentCommand(biddingId = bidding.id, price = bidding.price, userId = purchaserId).let {

@@ -1,97 +1,147 @@
 package com.teamhide.kream.common.aop
 
-import com.ninjasquad.springmockk.MockkBean
-import com.teamhide.kream.common.exception.GlobalExceptionHandler
-import com.teamhide.kream.common.response.ApiResponse
 import com.teamhide.kream.common.util.lock.LockAcquireFailException
-import com.teamhide.kream.common.util.lock.LockKeys
 import com.teamhide.kream.common.util.lock.RedisLock
+import io.kotest.assertions.throwables.shouldThrow
+import io.kotest.core.spec.IsolationMode
+import io.kotest.core.spec.style.BehaviorSpec
 import io.mockk.every
 import io.mockk.mockk
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test
+import io.mockk.verify
+import org.aspectj.lang.ProceedingJoinPoint
+import org.aspectj.lang.reflect.MethodSignature
 import org.redisson.api.RLock
 import org.redisson.api.RedissonClient
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.http.HttpStatus
-import org.springframework.stereotype.Component
-import org.springframework.test.web.servlet.MockMvc
-import org.springframework.test.web.servlet.get
-import org.springframework.test.web.servlet.setup.MockMvcBuilders
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import java.lang.reflect.Method
 
-private const val URL = "/test/lock"
+data class TestCommand(val productId: Long)
 
-@RestController
-@RequestMapping(URL)
-class TestLockController(
-    private val testLockService: TestLockService,
-) {
-    @GetMapping("")
-    fun testLock(): ApiResponse<Void> {
-        testLockService.execute()
-        return ApiResponse.success(statusCode = HttpStatus.OK)
-    }
-}
+class RedisLockAspectTest : BehaviorSpec({
+    isolationMode = IsolationMode.InstancePerLeaf
 
-@Component
-class TestLockService {
-    @RedisLock(key = LockKeys.IMMEDIATE_SALE)
-    fun execute() {}
-}
+    val redissonClient = mockk<RedissonClient>()
+    val lockTransaction = mockk<LockTransaction>()
+    val redisLockAspect = RedisLockAspect(redissonClient = redissonClient, lockTransaction = lockTransaction)
 
-@SpringBootTest
-class RedisLockAspectTest {
-    @Autowired
-    lateinit var testLockController: TestLockController
+    Given("SPEL을 파싱에서 Exception이 발생할 때") {
+        val joinPoint = mockk<ProceedingJoinPoint>()
+        val methodSignature = mockk<MethodSignature>()
+        val method = mockk<Method>()
+        every { method.getAnnotation(RedisLock::class.java) } returns RedisLock(
+            key = "abasd",
+        )
+        every { methodSignature.parameterNames } returns arrayOf("command")
+        every { joinPoint.args } returns arrayOf(TestCommand(productId = 1))
+        every { methodSignature.method } returns method
+        every { joinPoint.signature } returns methodSignature
 
-    @MockkBean
-    lateinit var redissonClient: RedissonClient
-
-    lateinit var mockMvc: MockMvc
-
-    @BeforeEach
-    fun setUp() {
-        mockMvc = MockMvcBuilders.standaloneSetup(testLockController)
-            .setControllerAdvice(GlobalExceptionHandler())
-            .build()
-    }
-
-    @Test
-    fun `tryLock에서 InterruptedException이 발생하면 예외를 반환한다`() {
-        // Given
-        val mockRLock = mockk<RLock>()
-        every { mockRLock.tryLock(any(), any(), any()) } throws InterruptedException()
-        every { redissonClient.getLock(any<String>()) } returns mockRLock
-        val exc = LockAcquireFailException()
-
-        // When, Then
-        mockMvc.get(URL) {
-        }
-            .andExpect {
-                status { isRequestTimeout() }
-                jsonPath("errorCode") { value(exc.errorCode) }
+        When("락을 요청하면") {
+            Then("예외가 발생한다") {
+                shouldThrow<LockAcquireFailException> { redisLockAspect.proceed(joinPoint = joinPoint) }
             }
-    }
-
-    @Test
-    fun `락 획득에 실패하면 예외를 반환한다`() {
-        // Given
-        val mockRLock = mockk<RLock>()
-        every { mockRLock.tryLock(any(), any(), any()) } returns false
-        every { redissonClient.getLock(any<String>()) } returns mockRLock
-        every { mockRLock.unlock() } returns Unit
-        val exc = LockAcquireFailException()
-
-        // When, Then
-        mockMvc.get(URL) {
         }
-            .andExpect {
-                status { isRequestTimeout() }
-                jsonPath("errorCode") { value(exc.errorCode) }
-            }
     }
-}
+
+    Given("tryLock에서 InterruptedException이 발생할 때") {
+        val joinPoint = mockk<ProceedingJoinPoint>()
+        val methodSignature = mockk<MethodSignature>()
+        val method = mockk<Method>()
+        every { method.getAnnotation(RedisLock::class.java) } returns RedisLock(
+            key = "#command.productId",
+        )
+        every { methodSignature.parameterNames } returns arrayOf("command")
+        every { joinPoint.args } returns arrayOf(TestCommand(productId = 1))
+        every { methodSignature.method } returns method
+        every { joinPoint.signature } returns methodSignature
+
+        val rLock = mockk<RLock>()
+        every { rLock.tryLock(any(), any(), any()) } throws InterruptedException()
+        every { redissonClient.getLock(any<String>()) } returns rLock
+
+        When("락을 요청하면") {
+            Then("예외가 발생한다") {
+                shouldThrow<LockAcquireFailException> { redisLockAspect.proceed(joinPoint = joinPoint) }
+            }
+        }
+    }
+
+    Given("tryLock이 실패할 때") {
+        val joinPoint = mockk<ProceedingJoinPoint>()
+        val methodSignature = mockk<MethodSignature>()
+        val method = mockk<Method>()
+        every { method.getAnnotation(RedisLock::class.java) } returns RedisLock(
+            key = "#command.productId",
+        )
+        every { methodSignature.parameterNames } returns arrayOf("command")
+        every { joinPoint.args } returns arrayOf(TestCommand(productId = 1))
+        every { methodSignature.method } returns method
+        every { joinPoint.signature } returns methodSignature
+
+        val rLock = mockk<RLock>()
+        every { rLock.tryLock(any(), any(), any()) } returns false
+        every { redissonClient.getLock(any<String>()) } returns rLock
+        every { rLock.unlock() } returns Unit
+
+        When("락을 요청하면") {
+            Then("예외가 발생한다") {
+                shouldThrow<LockAcquireFailException> { redisLockAspect.proceed(joinPoint = joinPoint) }
+            }
+        }
+    }
+
+    Given("tryLock이 성공할 때") {
+        val joinPoint = mockk<ProceedingJoinPoint>()
+        val methodSignature = mockk<MethodSignature>()
+        val method = mockk<Method>()
+        every { method.getAnnotation(RedisLock::class.java) } returns RedisLock(
+            key = "#command.productId",
+        )
+        every { methodSignature.parameterNames } returns arrayOf("command")
+        every { joinPoint.args } returns arrayOf(TestCommand(productId = 1))
+        every { methodSignature.method } returns method
+        every { joinPoint.signature } returns methodSignature
+
+        val rLock = mockk<RLock>()
+        every { rLock.tryLock(any(), any(), any()) } returns true
+        every { redissonClient.getLock(any<String>()) } returns rLock
+        every { rLock.unlock() } returns Unit
+        every { lockTransaction.proceed(any()) } returns Unit
+
+        When("락을 요청하면") {
+            redisLockAspect.proceed(joinPoint = joinPoint)
+
+            Then("성공한다") {
+                verify(exactly = 1) { rLock.unlock() }
+                verify(exactly = 1) { lockTransaction.proceed(any()) }
+            }
+        }
+    }
+
+    Given("unlock에서 에러가 발생할 때") {
+        val joinPoint = mockk<ProceedingJoinPoint>()
+        val methodSignature = mockk<MethodSignature>()
+        val method = mockk<Method>()
+        every { method.getAnnotation(RedisLock::class.java) } returns RedisLock(
+            key = "#command.productId",
+        )
+        every { methodSignature.parameterNames } returns arrayOf("command")
+        every { joinPoint.args } returns arrayOf(TestCommand(productId = 1))
+        every { methodSignature.method } returns method
+        every { joinPoint.signature } returns methodSignature
+
+        val rLock = mockk<RLock>()
+        every { rLock.tryLock(any(), any(), any()) } returns true
+        every { redissonClient.getLock(any<String>()) } returns rLock
+        every { rLock.unlock() } throws IllegalMonitorStateException()
+        every { lockTransaction.proceed(any()) } returns Unit
+
+        When("락을 요청하면") {
+            redisLockAspect.proceed(joinPoint = joinPoint)
+
+            Then("성공한다") {
+                verify(exactly = 1) { lockTransaction.proceed(any()) }
+                verify(exactly = 1) { rLock.unlock() }
+            }
+        }
+    }
+})

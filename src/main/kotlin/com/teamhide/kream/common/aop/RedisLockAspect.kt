@@ -8,6 +8,8 @@ import org.aspectj.lang.annotation.Around
 import org.aspectj.lang.annotation.Aspect
 import org.aspectj.lang.reflect.MethodSignature
 import org.redisson.api.RedissonClient
+import org.springframework.expression.spel.standard.SpelExpressionParser
+import org.springframework.expression.spel.support.StandardEvaluationContext
 import org.springframework.stereotype.Component
 
 private const val LOCK_PREFIX = "lock:"
@@ -27,22 +29,29 @@ class RedisLockAspect(
         val timeUnit = annotation.timeUnit
         val waitTime = annotation.waitTime
         val leaseTime = annotation.leaseTime
-        val key = "$LOCK_PREFIX${annotation.key.key}"
+        val key = annotation.key
 
-        val lock = redissonClient.getLock(key)
+        val uniqueKey = parseSPEL(
+            parameterNames = signature.parameterNames,
+            args = joinPoint.args,
+            key = key,
+        )
 
+        val lockKey = "$LOCK_PREFIX:$key:$uniqueKey"
+        val lock = redissonClient.getLock(lockKey)
         val isLocked = try {
             lock.tryLock(waitTime, leaseTime, timeUnit)
         } catch (e: InterruptedException) {
-            logger.error { "RedisLockAspect | ex=$e" }
+            logger.error { "RedisLockAspect | tryLock fail. ex=$e" }
+            throw LockAcquireFailException()
+        }
+
+        if (!isLocked) {
+            logger.warn { "RedisLockAspect | tryLock fail" }
             throw LockAcquireFailException()
         }
 
         return try {
-            if (!isLocked) {
-                logger.warn { "RedisLockAspect | tryLock fail" }
-                throw LockAcquireFailException()
-            }
             lockTransaction.proceed(joinPoint = joinPoint)
         } finally {
             try {
@@ -50,6 +59,22 @@ class RedisLockAspect(
             } catch (e: IllegalMonitorStateException) {
                 logger.warn { "RedisLockAspect | unlock fail. ex=$e" }
             }
+        }
+    }
+
+    private fun parseSPEL(parameterNames: Array<String>, args: Array<Any>, key: String): Any {
+        val parser = SpelExpressionParser()
+        val context = StandardEvaluationContext()
+
+        for (i in parameterNames.indices) {
+            context.setVariable(parameterNames[i], args[i])
+        }
+
+        return try {
+            parser.parseExpression(key).getValue(context) as Any
+        } catch (e: Exception) {
+            logger.error { "RedisLockAspect | $e" }
+            throw LockAcquireFailException()
         }
     }
 }

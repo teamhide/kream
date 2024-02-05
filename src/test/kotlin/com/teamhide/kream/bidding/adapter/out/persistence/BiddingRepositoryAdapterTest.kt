@@ -141,4 +141,46 @@ class BiddingRepositoryAdapterTest : StringSpec({
         sut.price shouldBe saleHistory.price
         sut.size shouldBe saleHistory.size
     }
+
+    "가장 비싼 입찰을 조회한다" {
+        // Given
+        val biddingType = BiddingType.SALE
+        val bidding = makeBidding()
+        every { biddingRepository.findMostExpensiveBidding(any(), any()) } returns bidding
+
+        // When
+        val sut = biddingRepositoryAdapter.findMostExpensiveBidding(productId = 1L, biddingType = biddingType)
+
+        // Then
+        sut.shouldNotBeNull()
+        sut.id shouldBe bidding.id
+        sut.biddingType shouldBe bidding.biddingType
+        sut.user shouldBe bidding.user
+        sut.product shouldBe bidding.product
+        sut.price shouldBe bidding.price
+        sut.size shouldBe bidding.size
+        sut.status shouldBe bidding.status
+        verify(exactly = 1) { biddingRepository.findMostExpensiveBidding(any(), any()) }
+    }
+
+    "가장 저렴한 입찰을 조회한다" {
+        // Given
+        val biddingType = BiddingType.SALE
+        val bidding = makeBidding()
+        every { biddingRepository.findMostCheapestBidding(any(), any()) } returns bidding
+
+        // When
+        val sut = biddingRepositoryAdapter.findMostCheapestBidding(productId = 1L, biddingType = biddingType)
+
+        // Then
+        sut.shouldNotBeNull()
+        sut.id shouldBe bidding.id
+        sut.biddingType shouldBe bidding.biddingType
+        sut.user shouldBe bidding.user
+        sut.product shouldBe bidding.product
+        sut.price shouldBe bidding.price
+        sut.size shouldBe bidding.size
+        sut.status shouldBe bidding.status
+        verify(exactly = 1) { biddingRepository.findMostCheapestBidding(any(), any()) }
+    }
 })

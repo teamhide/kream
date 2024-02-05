@@ -4,10 +4,12 @@ import com.teamhide.kream.bidding.adapter.`in`.api.v1.BidRequest
 import com.teamhide.kream.bidding.domain.event.BiddingCreatedEvent
 import com.teamhide.kream.bidding.domain.vo.BiddingType
 import com.teamhide.kream.product.adapter.`in`.api.v1.RegisterProductRequest
+import com.teamhide.kream.product.adapter.out.persistence.jpa.ProductDetailDto
 import com.teamhide.kream.product.domain.model.Product
 import com.teamhide.kream.product.domain.model.ProductBrand
 import com.teamhide.kream.product.domain.model.ProductCategory
 import com.teamhide.kream.product.domain.model.ProductDisplay
+import com.teamhide.kream.product.domain.model.ProductInfo
 import com.teamhide.kream.product.domain.usecase.RegisterProductCommand
 import com.teamhide.kream.product.domain.usecase.SaveOrUpdateProductDisplayCommand
 import com.teamhide.kream.product.domain.vo.SizeType
@@ -142,5 +144,41 @@ fun makeBiddingCreatedEvent(
         biddingType = biddingType,
         price = price,
         biddingId = biddingId,
+    )
+}
+
+fun makeProductInfo(
+    productId: Long = 1L,
+    releasePrice: Int = 20000,
+    modelNumber: String = "A-123",
+    name: String = "name",
+    brand: String = "NIKE",
+    category: String = "SHOES",
+): ProductInfo {
+    return ProductInfo(
+        productId = productId,
+        releasePrice = releasePrice,
+        modelNumber = modelNumber,
+        name = name,
+        brand = brand,
+        category = category,
+    )
+}
+
+fun makeProductDetailDto(
+    productId: Long = 1L,
+    releasePrice: Int = 20000,
+    modelNumber: String = "A-123",
+    name: String = "SAKAI",
+    brand: String = "NIKE",
+    category: String = "SHOES",
+): ProductDetailDto {
+    return ProductDetailDto(
+        productId = productId,
+        releasePrice = releasePrice,
+        modelNumber = modelNumber,
+        name = name,
+        brand = brand,
+        category = category,
     )
 }

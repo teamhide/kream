@@ -21,4 +21,28 @@ class BiddingQuerydslRepositoryImpl(
             .orderBy(bidding.price.desc())
             .fetchFirst()
     }
+
+    override fun findMostExpensiveBidding(productId: Long, biddingType: BiddingType): Bidding? {
+        return queryFactory
+            .selectFrom(bidding)
+            .where(
+                bidding.product.id.eq(productId),
+                bidding.biddingType.eq(biddingType),
+                bidding.status.eq(BiddingStatus.IN_PROGRESS),
+            )
+            .orderBy(bidding.price.desc())
+            .fetchFirst()
+    }
+
+    override fun findMostCheapestBidding(productId: Long, biddingType: BiddingType): Bidding? {
+        return queryFactory
+            .selectFrom(bidding)
+            .where(
+                bidding.product.id.eq(productId),
+                bidding.biddingType.eq(biddingType),
+                bidding.status.eq(BiddingStatus.IN_PROGRESS),
+            )
+            .orderBy(bidding.price.asc())
+            .fetchFirst()
+    }
 }

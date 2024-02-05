@@ -6,6 +6,7 @@ import com.teamhide.kream.product.adapter.out.persistence.jpa.ProductRepository
 import com.teamhide.kream.product.domain.model.Product
 import com.teamhide.kream.product.domain.model.ProductBrand
 import com.teamhide.kream.product.domain.model.ProductCategory
+import com.teamhide.kream.product.domain.model.ProductInfo
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Component
 
@@ -29,5 +30,19 @@ class ProductRepositoryAdapter(
 
     fun findBrandById(brandId: Long): ProductBrand? {
         return productBrandRepository.findByIdOrNull(brandId)
+    }
+
+    fun findInfoById(productId: Long): ProductInfo? {
+        val product = productRepository.findDetailById(productId = productId) ?: return null
+        return product.let {
+            ProductInfo(
+                productId = it.productId,
+                releasePrice = it.releasePrice,
+                modelNumber = it.modelNumber,
+                name = it.name,
+                brand = it.brand,
+                category = it.category,
+            )
+        }
     }
 }

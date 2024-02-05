@@ -18,7 +18,7 @@ import com.teamhide.kream.user.domain.model.User
 import com.teamhide.kream.user.makeUser
 
 fun makeBidding(
-    id: Long = 1L,
+    id: Long = 0L,
     product: Product = makeProduct(),
     user: User = makeUser(),
     price: Int = 20000,

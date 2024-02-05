@@ -46,4 +46,12 @@ class BiddingRepositoryAdapter(
     fun saveOrder(order: Order): Order {
         return orderRepository.save(order)
     }
+
+    fun findMostExpensiveBidding(productId: Long, biddingType: BiddingType): Bidding? {
+        return biddingRepository.findMostExpensiveBidding(productId = productId, biddingType = biddingType)
+    }
+
+    fun findMostCheapestBidding(productId: Long, biddingType: BiddingType): Bidding? {
+        return biddingRepository.findMostCheapestBidding(productId = productId, biddingType = biddingType)
+    }
 }

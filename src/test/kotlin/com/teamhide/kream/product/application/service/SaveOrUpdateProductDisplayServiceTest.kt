@@ -108,7 +108,7 @@ class SaveOrUpdateProductDisplayServiceTest : BehaviorSpec({
         val productDisplay = makeProductDisplay(price = 10000)
         every { productDisplayRepositoryAdapter.findByProductId(any()) } returns productDisplay
 
-        val command = makeSaveOrUpdateProductDisplayCommand(price = 2000)
+        val command = makeSaveOrUpdateProductDisplayCommand(price = 20000)
 
         When("저장 또는 업데이트 요청을 하면") {
             saveOrUpdateProductDisplayService.execute(command = command)
@@ -119,9 +119,10 @@ class SaveOrUpdateProductDisplayServiceTest : BehaviorSpec({
         }
     }
 
-    Given("전시 상품 정보가 존재하고 새로운 가격보다 비싼 경우") {
-        val productDisplay = makeProductDisplay(price = 10000)
+    Given("전시 상품 정보가 존재하고 새로운 가격보다 저렴한 경우") {
+        val productDisplay = makeProductDisplay(price = 30000)
         every { productDisplayRepositoryAdapter.findByProductId(any()) } returns productDisplay
+        every { productDisplayRepositoryAdapter.save(any()) } returns productDisplay
 
         val command = makeSaveOrUpdateProductDisplayCommand(price = 20000)
 
@@ -129,7 +130,7 @@ class SaveOrUpdateProductDisplayServiceTest : BehaviorSpec({
             saveOrUpdateProductDisplayService.execute(command = command)
 
             Then("전시 상품 정보를 업데이트한다") {
-                verify(exactly = 0) { productDisplayRepositoryAdapter.save(any()) }
+                verify(exactly = 1) { productDisplayRepositoryAdapter.save(any()) }
             }
         }
     }

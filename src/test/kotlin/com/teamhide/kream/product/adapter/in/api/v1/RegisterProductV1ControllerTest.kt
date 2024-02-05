@@ -3,6 +3,7 @@ package com.teamhide.kream.product.adapter.`in`.api.v1
 import com.teamhide.kream.product.adapter.out.persistence.jpa.ProductBrandRepository
 import com.teamhide.kream.product.adapter.out.persistence.jpa.ProductCategoryRepository
 import com.teamhide.kream.product.adapter.out.persistence.jpa.ProductRepository
+import com.teamhide.kream.product.adapter.out.persistence.mongo.ProductDisplayRepository
 import com.teamhide.kream.product.application.exception.ProductBrandNotFoundException
 import com.teamhide.kream.product.application.exception.ProductCategoryNotFoundException
 import com.teamhide.kream.product.domain.model.InvalidReleasePriceException
@@ -30,6 +31,9 @@ class RegisterProductV1ControllerTest : BaseIntegrationTest() {
 
     @Autowired
     lateinit var productBrandRepository: ProductBrandRepository
+
+    @Autowired
+    lateinit var productDisplayRepository: ProductDisplayRepository
 
     @Test
     fun `존재하지 않는 브랜드인 경우 404를 리턴한다`() {
@@ -118,5 +122,13 @@ class RegisterProductV1ControllerTest : BaseIntegrationTest() {
         product.sizeType shouldBe request.sizeType
         product.modelNumber shouldBe request.modelNumber
         product.releasePrice shouldBe request.releasePrice
+
+        val productDisplay = productDisplayRepository.findByProductId(productId = product.id)
+        productDisplay.shouldNotBeNull()
+        productDisplay.productId shouldBe product.id
+        productDisplay.name shouldBe product.name
+        productDisplay.price shouldBe 0
+        productDisplay.brand shouldBe productBrand.name
+        productDisplay.category shouldBe productCategory.name
     }
 }

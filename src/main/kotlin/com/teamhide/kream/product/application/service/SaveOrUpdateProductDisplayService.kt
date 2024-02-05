@@ -32,11 +32,11 @@ class SaveOrUpdateProductDisplayService(
             productDisplayRepositoryAdapter.save(productDisplay = productDisplay)
             return
         }
-
-        if (existProductDisplay.price < command.price) {
+        if (existProductDisplay.price != 0 && existProductDisplay.price < command.price) {
             return
         }
         existProductDisplay.changePrice(price = command.price)
         existProductDisplay.changeLastBiddingId(biddingId = command.biddingId)
+        productDisplayRepositoryAdapter.save(productDisplay = existProductDisplay)
     }
 }

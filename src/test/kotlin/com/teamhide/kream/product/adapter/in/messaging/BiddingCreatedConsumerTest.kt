@@ -17,8 +17,8 @@ class BiddingCreatedConsumerTest : BehaviorSpec({
         saveOrUpdateProductDisplayUseCase = saveOrUpdateProductDisplayUseCase,
     )
 
-    Given("biddingType이 PURCHASE가 아닌") {
-        val event = makeBiddingCreatedEvent(biddingType = BiddingType.SALE.name)
+    Given("biddingType이 SALE이 아닌") {
+        val event = makeBiddingCreatedEvent(biddingType = BiddingType.PURCHASE.name)
 
         When("메시지를 컨슈밍하면") {
             biddingCreatedConsumer.listen(message = event)
@@ -41,14 +41,14 @@ class BiddingCreatedConsumerTest : BehaviorSpec({
         }
     }
 
-    Given("biddingType이 PURCHASE인") {
-        val event = makeBiddingCreatedEvent(biddingType = BiddingType.PURCHASE.name)
+    Given("biddingType이 SALE인") {
+        val event = makeBiddingCreatedEvent(biddingType = BiddingType.SALE.name)
         every { saveOrUpdateProductDisplayUseCase.execute(any()) } returns Unit
 
         When("메시지를 컨슈밍하면") {
             biddingCreatedConsumer.listen(message = event)
 
-            Then("아무런 작업을 하지 않는다") {
+            Then("생성 또는 수정 메소드를 호출한다") {
                 verify(exactly = 1) { saveOrUpdateProductDisplayUseCase.execute(any()) }
             }
         }

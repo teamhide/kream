@@ -12,7 +12,7 @@ class ProductDisplay(
     val productId: Long,
 
     @Field(name = "last_bidding_id")
-    var lastBiddingId: Long,
+    var lastBiddingId: Long?,
 
     @Field(name = "name")
     val name: String,
@@ -34,6 +34,6 @@ class ProductDisplay(
     }
 
     fun changeLastBiddingId(biddingId: Long) {
-        this.lastBiddingId = lastBiddingId
+        this.lastBiddingId = biddingId
     }
 }

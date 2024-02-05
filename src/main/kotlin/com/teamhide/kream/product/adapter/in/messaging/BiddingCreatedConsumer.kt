@@ -32,7 +32,7 @@ class BiddingCreatedConsumer(
 
     private fun isValidBiddingType(biddingType: String): Boolean {
         return try {
-            BiddingType.valueOf(biddingType) == BiddingType.PURCHASE
+            BiddingType.valueOf(biddingType) == BiddingType.SALE
         } catch (e: IllegalArgumentException) {
             return false
         }

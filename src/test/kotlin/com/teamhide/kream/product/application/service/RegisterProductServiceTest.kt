@@ -1,5 +1,6 @@
 package com.teamhide.kream.product.application.service
 
+import com.teamhide.kream.product.adapter.out.persistence.ProductDisplayRepositoryAdapter
 import com.teamhide.kream.product.adapter.out.persistence.ProductRepositoryAdapter
 import com.teamhide.kream.product.application.exception.ProductBrandNotFoundException
 import com.teamhide.kream.product.application.exception.ProductCategoryNotFoundException
@@ -7,16 +8,22 @@ import com.teamhide.kream.product.domain.model.InvalidReleasePriceException
 import com.teamhide.kream.product.makeProduct
 import com.teamhide.kream.product.makeProductBrand
 import com.teamhide.kream.product.makeProductCategory
+import com.teamhide.kream.product.makeProductDisplay
 import com.teamhide.kream.product.makeRegisterProductCommand
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.verify
 
 class RegisterProductServiceTest : BehaviorSpec({
     val productRepositoryAdapter = mockk<ProductRepositoryAdapter>()
-    val registerProductService = RegisterProductService(productRepositoryAdapter = productRepositoryAdapter)
+    val productDisplayRepositoryAdapter = mockk<ProductDisplayRepositoryAdapter>()
+    val registerProductService = RegisterProductService(
+        productRepositoryAdapter = productRepositoryAdapter,
+        productDisplayRepositoryAdapter = productDisplayRepositoryAdapter,
+    )
 
     Given("brandId에 해당하는 브랜드가 없을 때") {
         val command = makeRegisterProductCommand()
@@ -61,9 +68,11 @@ class RegisterProductServiceTest : BehaviorSpec({
         val product = makeProduct()
         val productBrand = makeProductBrand()
         val productCategory = makeProductCategory()
+        val productDisplay = makeProductDisplay()
         every { productRepositoryAdapter.findBrandById(any()) } returns productBrand
         every { productRepositoryAdapter.findCategoryById(any()) } returns productCategory
         every { productRepositoryAdapter.saveProduct(any()) } returns product
+        every { productDisplayRepositoryAdapter.save(any()) } returns productDisplay
 
         When("상품 생성을 요청하면") {
             val sut = registerProductService.execute(command = command)
@@ -76,6 +85,8 @@ class RegisterProductServiceTest : BehaviorSpec({
                 sut.releasePrice shouldBe product.releasePrice
                 sut.brand shouldBe productBrand.name
                 sut.category shouldBe productCategory.name
+
+                verify(exactly = 1) { productDisplayRepositoryAdapter.save(any()) }
             }
         }
     }

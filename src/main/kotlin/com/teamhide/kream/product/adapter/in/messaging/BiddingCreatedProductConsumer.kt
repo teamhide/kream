@@ -8,7 +8,7 @@ import org.springframework.kafka.annotation.KafkaListener
 import org.springframework.stereotype.Component
 
 @Component
-class BiddingCreatedConsumer(
+class BiddingCreatedProductConsumer(
     private val saveOrUpdateProductDisplayUseCase: SaveOrUpdateProductDisplayUseCase,
 ) {
     @KafkaListener(

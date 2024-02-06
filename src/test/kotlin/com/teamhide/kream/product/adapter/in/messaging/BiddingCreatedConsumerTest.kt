@@ -13,7 +13,7 @@ class BiddingCreatedConsumerTest : BehaviorSpec({
     isolationMode = IsolationMode.InstancePerLeaf
 
     val saveOrUpdateProductDisplayUseCase = mockk<SaveOrUpdateProductDisplayUseCase>()
-    val biddingCreatedConsumer = BiddingCreatedConsumer(
+    val biddingCreatedProductConsumer = BiddingCreatedProductConsumer(
         saveOrUpdateProductDisplayUseCase = saveOrUpdateProductDisplayUseCase,
     )
 
@@ -21,7 +21,7 @@ class BiddingCreatedConsumerTest : BehaviorSpec({
         val event = makeBiddingCreatedEvent(biddingType = BiddingType.PURCHASE.name)
 
         When("메시지를 컨슈밍하면") {
-            biddingCreatedConsumer.listen(message = event)
+            biddingCreatedProductConsumer.listen(message = event)
 
             Then("아무런 작업을 하지 않는다") {
                 verify(exactly = 0) { saveOrUpdateProductDisplayUseCase.execute(any()) }
@@ -33,7 +33,7 @@ class BiddingCreatedConsumerTest : BehaviorSpec({
         val event = makeBiddingCreatedEvent(biddingType = "test")
 
         When("메시지를 컨슈밍하면") {
-            biddingCreatedConsumer.listen(message = event)
+            biddingCreatedProductConsumer.listen(message = event)
 
             Then("아무런 작업을 하지 않는다") {
                 verify(exactly = 0) { saveOrUpdateProductDisplayUseCase.execute(any()) }
@@ -46,7 +46,7 @@ class BiddingCreatedConsumerTest : BehaviorSpec({
         every { saveOrUpdateProductDisplayUseCase.execute(any()) } returns Unit
 
         When("메시지를 컨슈밍하면") {
-            biddingCreatedConsumer.listen(message = event)
+            biddingCreatedProductConsumer.listen(message = event)
 
             Then("생성 또는 수정 메소드를 호출한다") {
                 verify(exactly = 1) { saveOrUpdateProductDisplayUseCase.execute(any()) }

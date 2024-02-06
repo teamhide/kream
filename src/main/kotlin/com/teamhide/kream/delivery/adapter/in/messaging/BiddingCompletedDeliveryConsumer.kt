@@ -11,7 +11,7 @@ class BiddingCompletedDeliveryConsumer(
     private val initializedDeliveryUseCase: InitializeDeliveryUseCase,
 ) {
     @KafkaListener(
-        topics = ["\${spring.kafka.topic.bidding-created}"],
+        topics = ["\${spring.kafka.topic.bidding-completed}"],
         groupId = "hide",
         containerFactory = "kafkaListenerContainerFactory"
     )

@@ -1,10 +1,12 @@
 package com.teamhide.kream.bidding.adapter.`in`.api.v1
 
+import com.fasterxml.jackson.module.kotlin.readValue
 import com.ninjasquad.springmockk.MockkBean
 import com.teamhide.kream.bidding.adapter.out.persistence.jpa.BiddingRepository
 import com.teamhide.kream.bidding.adapter.out.persistence.jpa.OrderRepository
 import com.teamhide.kream.bidding.adapter.out.persistence.jpa.SaleHistoryRepository
 import com.teamhide.kream.bidding.application.exception.BiddingNotFoundException
+import com.teamhide.kream.bidding.domain.event.BiddingCompletedEvent
 import com.teamhide.kream.bidding.domain.vo.BiddingStatus
 import com.teamhide.kream.bidding.domain.vo.BiddingType
 import com.teamhide.kream.bidding.domain.vo.OrderStatus
@@ -12,6 +14,8 @@ import com.teamhide.kream.bidding.makeBidding
 import com.teamhide.kream.bidding.makeImmediateSaleRequest
 import com.teamhide.kream.client.pg.AttemptPaymentResponse
 import com.teamhide.kream.client.pg.PgClient
+import com.teamhide.kream.common.outbox.AggregateType
+import com.teamhide.kream.common.outbox.OutboxRepository
 import com.teamhide.kream.product.adapter.out.persistence.jpa.ProductRepository
 import com.teamhide.kream.product.makeProduct
 import com.teamhide.kream.support.test.BaseIntegrationTest
@@ -46,6 +50,9 @@ class ImmediateSaleV1ControllerTest : BaseIntegrationTest() {
 
     @Autowired
     lateinit var saleHistoryRepository: SaleHistoryRepository
+
+    @Autowired
+    lateinit var outboxRepository: OutboxRepository
 
     @MockkBean
     lateinit var pgClient: PgClient
@@ -143,5 +150,17 @@ class ImmediateSaleV1ControllerTest : BaseIntegrationTest() {
         order.bidding.id shouldBe savedBidding.id
         order.user.id shouldBe seller.id
         order.status shouldBe OrderStatus.COMPLETE
+
+        // 아웃박스 테이블에 이벤트가 저장되었다
+        val outboxes = outboxRepository.findAll()
+        outboxes.size shouldBe 1
+
+        val outbox = outboxes[0]
+        outbox.aggregateType shouldBe AggregateType.BIDDING_COMPLETED
+        outbox.completedAt shouldBe null
+
+        val payload = objectMapper.readValue<BiddingCompletedEvent>(outbox.payload)
+        payload.biddingId shouldBe sut.id
+        payload.productId shouldBe product.id
     }
 }

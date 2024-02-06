@@ -4,5 +4,10 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories
 
 @Configuration
-@EnableJpaRepositories(basePackages = ["com.teamhide.kream.*.adapter.out.persistence.jpa"])
+@EnableJpaRepositories(
+    basePackages = [
+        "com.teamhide.kream.*.adapter.out.persistence.jpa",
+        "com.teamhide.kream.common.outbox",
+    ]
+)
 class SpringDataJpaConfig

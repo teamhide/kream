@@ -13,7 +13,7 @@ class GetProductsService(
     private val productDisplayRepositoryAdapter: ProductDisplayRepositoryAdapter,
 ) : GetProductsUseCase {
     override fun execute(query: GetProductsQuery): List<ProductDisplayRead> {
-        return productDisplayRepositoryAdapter.findAll()
+        return productDisplayRepositoryAdapter.findAllBy(page = query.page, size = query.size)
             .map {
                 ProductDisplayRead(
                     productId = it.productId,

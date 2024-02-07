@@ -5,6 +5,8 @@ import com.teamhide.kream.common.config.database.BaseTimestampEntity
 import com.teamhide.kream.delivery.domain.vo.DeliveryStatus
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
+import jakarta.persistence.EnumType
+import jakarta.persistence.Enumerated
 import jakarta.persistence.FetchType
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
@@ -21,6 +23,7 @@ class Delivery(
     val bidding: Bidding,
 
     @Column(name = "status", nullable = false, length = 20)
+    @Enumerated(EnumType.STRING)
     val status: DeliveryStatus,
 
     @Id

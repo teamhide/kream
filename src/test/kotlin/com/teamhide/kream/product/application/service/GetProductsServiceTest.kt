@@ -31,7 +31,7 @@ class GetProductsServiceTest : BehaviorSpec({
             lastBiddingId = 2L,
         )
         val products = listOf(product1, product2)
-        every { productDisplayRepositoryAdapter.findAll() } returns products
+        every { productDisplayRepositoryAdapter.findAllBy(any(), any()) } returns products
 
         When("상품 전시 목록을 요청하면") {
             val sut = getProductsService.execute(query = query)

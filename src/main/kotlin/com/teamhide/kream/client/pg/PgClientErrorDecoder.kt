@@ -19,8 +19,9 @@ class PgClientErrorDecoder : ErrorDecoder {
     }
 
     private fun parseBody(response: Response): String {
-        val body = response.body()
-        if (body == null || body.length() == 0) {
+        val body = response.body() ?: return ""
+
+        if (body.length() == 0) {
             return ""
         }
 

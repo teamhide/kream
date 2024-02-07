@@ -68,10 +68,10 @@ class ProductDisplayRepositoryAdapterTest : StringSpec({
             lastBiddingId = 2L,
         )
         val products = listOf(product1, product2)
-        every { productDisplayRepository.findAll() } returns products
+        every { productDisplayRepository.findAllBy(any()) } returns products
 
         // When
-        val sut = productDisplayRepositoryAdapter.findAll()
+        val sut = productDisplayRepositoryAdapter.findAllBy(page = 0, size = 20)
 
         // Then
         sut.size shouldBe 2

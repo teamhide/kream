@@ -3,6 +3,7 @@ package com.teamhide.kream.client.pg
 import com.teamhide.kream.client.WebClientException
 import feign.Response
 import io.kotest.assertions.throwables.shouldThrow
+import io.kotest.core.spec.IsolationMode
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
 import io.mockk.every
@@ -10,6 +11,8 @@ import io.mockk.mockk
 import java.io.IOException
 
 class PgClientErrorDecoderTest : StringSpec({
+    isolationMode = IsolationMode.InstancePerLeaf
+
     val response = mockk<Response>()
     val body = mockk<Response.Body>()
     val errorDecoder = PgClientErrorDecoder()
@@ -18,6 +21,17 @@ class PgClientErrorDecoderTest : StringSpec({
         // Given
         every { response.status() } returns 400
         every { response.body() } returns null
+
+        // When, Then
+        val exc = shouldThrow<WebClientException> { errorDecoder.decode(methodKey = "key", response = response) }
+        exc.message shouldBe ""
+    }
+
+    "body의 길이가 0인 경우 빈 문자열을 리턴한다" {
+        // Given
+        every { response.status() } returns 400
+        every { body.length() } returns 0
+        every { response.body() } returns body
 
         // When, Then
         val exc = shouldThrow<WebClientException> { errorDecoder.decode(methodKey = "key", response = response) }

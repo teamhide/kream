@@ -5,9 +5,6 @@ import com.teamhide.kream.common.security.JwtAuthenticationFilter
 import org.junit.jupiter.api.BeforeEach
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
-import org.springframework.restdocs.RestDocumentationContextProvider
-import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation
-import org.springframework.restdocs.operation.preprocess.Preprocessors
 import org.springframework.test.web.servlet.MockHttpServletRequestDsl
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.MockMvcResultMatchersDsl
@@ -30,19 +27,11 @@ abstract class BaseIntegrationTest {
     @BeforeEach
     internal fun setUp(
         webApplicationContext: WebApplicationContext,
-        restDocumentationContextProvider: RestDocumentationContextProvider,
     ) {
         mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
             .addFilter<DefaultMockMvcBuilder>(CharacterEncodingFilter("UTF-8", true))
             .addFilter<DefaultMockMvcBuilder>(jwtAuthenticationFilter)
             .alwaysDo<DefaultMockMvcBuilder>(MockMvcResultHandlers.print())
-            .apply<DefaultMockMvcBuilder>(
-                MockMvcRestDocumentation.documentationConfiguration(
-                    restDocumentationContextProvider
-                ).operationPreprocessors()
-                    .withRequestDefaults(Preprocessors.prettyPrint())
-                    .withResponseDefaults(Preprocessors.prettyPrint())
-            )
             .build()
     }
 

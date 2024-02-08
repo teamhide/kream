@@ -4,12 +4,12 @@ allOpen {
     annotation("jakarta.persistence.Embeddable")
 }
 
-tasks.getByName("bootJar") {
+tasks.bootJar {
     enabled = true
 }
 
-tasks.getByName("jar") {
-    enabled = false
+tasks.jar {
+    enabled = true
 }
 
 dependencies {
@@ -18,7 +18,6 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.boot:spring-boot-starter-data-redis")
-    implementation("org.springframework.boot:spring-boot-starter-data-mongodb")
     implementation("org.springframework.security:spring-security-messaging:6.2.0")
     implementation("org.springframework.cloud:spring-cloud-starter-openfeign:4.1.0")
     implementation("org.springframework.retry:spring-retry")
@@ -27,7 +26,6 @@ dependencies {
     implementation("org.flywaydb:flyway-mysql")
     implementation("org.springframework.kafka:spring-kafka")
     implementation("org.redisson:redisson-spring-boot-starter:3.26.0")
-    testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.security:spring-security-test")
     testImplementation("org.springframework.kafka:spring-kafka-test")
 }

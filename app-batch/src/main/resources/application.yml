@@ -1,0 +1,16 @@
+spring:
+  batch:
+    job:
+      name: ${job.name:NONE}
+  datasource:
+    hikari:
+      jdbc-url: jdbc:mysql://localhost:33061/kream?useSSL=false&characterEncoding=UTF-8&serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true
+      username: kream
+      password: kream
+      pool-name: 'read-write-pool'
+      driver-class-name: com.mysql.cj.jdbc.Driver
+  flyway:
+    enabled: false
+    baseline-on-migrate: false
+  jpa:
+    open-in-view: false

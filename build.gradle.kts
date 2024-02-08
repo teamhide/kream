@@ -38,6 +38,7 @@ subprojects {
 
     dependencies {
         implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+        implementation("org.springframework.boot:spring-boot-starter-data-mongodb")
         implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
         implementation("org.jetbrains.kotlin:kotlin-reflect")
         implementation("com.querydsl:querydsl-jpa:5.0.0:jakarta")
@@ -48,6 +49,7 @@ subprojects {
         runtimeOnly("com.mysql:mysql-connector-j")
         runtimeOnly("io.jsonwebtoken:jjwt-impl:0.11.5")
         runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.11.5")
+        testImplementation("org.springframework.boot:spring-boot-starter-test")
         testImplementation("io.kotest:kotest-runner-junit5-jvm:5.6.2")
         testImplementation("io.kotest:kotest-framework-datatest:5.6.2")
         testImplementation("io.kotest:kotest-assertions-core:5.6.2")

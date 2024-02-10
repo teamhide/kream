@@ -26,4 +26,8 @@ class Outbox(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0L,
-)
+) {
+    fun complete() {
+        this.completedAt = LocalDateTime.now()
+    }
+}

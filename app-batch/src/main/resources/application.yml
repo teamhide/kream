@@ -2,6 +2,8 @@ spring:
   batch:
     job:
       name: ${job.name:NONE}
+    jdbc:
+      initialize-schema: always
   datasource:
     hikari:
       jdbc-url: jdbc:mysql://localhost:33061/kream?useSSL=false&characterEncoding=UTF-8&serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true
@@ -14,3 +16,11 @@ spring:
     baseline-on-migrate: false
   jpa:
     open-in-view: false
+  data:
+    redis:
+      host: localhost
+      port: 63792
+  kafka:
+    topic:
+      bidding-created: kream.bidding.created
+      bidding-completed: kream.bidding.completed

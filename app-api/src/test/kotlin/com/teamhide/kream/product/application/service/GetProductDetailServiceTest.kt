@@ -1,10 +1,10 @@
 package com.teamhide.kream.product.application.service
 
-import com.teamhide.kream.bidding.adapter.out.persistence.BiddingRepositoryAdapter
-import com.teamhide.kream.bidding.makeBidding
+import com.teamhide.kream.product.adapter.out.persistence.BiddingRepositoryAdapter
 import com.teamhide.kream.product.adapter.out.persistence.ProductRepositoryAdapter
 import com.teamhide.kream.product.application.exception.ProductNotFoundException
 import com.teamhide.kream.product.domain.usecase.GetProductDetailQuery
+import com.teamhide.kream.product.makeBidding
 import com.teamhide.kream.product.makeProductInfo
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.BehaviorSpec

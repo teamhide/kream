@@ -1,10 +1,10 @@
 package com.teamhide.kream.delivery
 
-import com.teamhide.kream.bidding.domain.model.Bidding
-import com.teamhide.kream.bidding.makeBidding
 import com.teamhide.kream.delivery.domain.model.Delivery
 import com.teamhide.kream.delivery.domain.usecase.InitializeDeliveryCommand
 import com.teamhide.kream.delivery.domain.vo.DeliveryStatus
+import com.teamhide.kream.product.domain.model.Bidding
+import com.teamhide.kream.product.makeBidding
 
 fun makeDelivery(
     id: Long = 1L,

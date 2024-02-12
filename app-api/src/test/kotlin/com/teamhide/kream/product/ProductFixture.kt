@@ -1,10 +1,9 @@
 package com.teamhide.kream.product
 
-import com.teamhide.kream.bidding.adapter.`in`.api.v1.BidRequest
-import com.teamhide.kream.bidding.domain.event.BiddingCreatedEvent
-import com.teamhide.kream.bidding.domain.vo.BiddingType
+import com.teamhide.kream.product.adapter.`in`.api.v1.BidRequest
 import com.teamhide.kream.product.adapter.`in`.api.v1.RegisterProductRequest
 import com.teamhide.kream.product.adapter.out.persistence.jpa.ProductInfoDto
+import com.teamhide.kream.product.domain.event.BiddingCreatedEvent
 import com.teamhide.kream.product.domain.model.Product
 import com.teamhide.kream.product.domain.model.ProductBrand
 import com.teamhide.kream.product.domain.model.ProductCategory
@@ -12,6 +11,7 @@ import com.teamhide.kream.product.domain.model.ProductDisplay
 import com.teamhide.kream.product.domain.model.ProductInfo
 import com.teamhide.kream.product.domain.usecase.RegisterProductCommand
 import com.teamhide.kream.product.domain.usecase.SaveOrUpdateProductDisplayCommand
+import com.teamhide.kream.product.domain.vo.BiddingType
 import com.teamhide.kream.product.domain.vo.SizeType
 
 fun makeProductCategory(

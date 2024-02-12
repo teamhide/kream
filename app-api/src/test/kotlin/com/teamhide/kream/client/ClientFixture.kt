@@ -1,11 +1,11 @@
 package com.teamhide.kream.client
 
-import com.teamhide.kream.bidding.domain.usecase.AttemptPaymentCommand
 import com.teamhide.kream.client.pg.AttemptPaymentRequest
 import com.teamhide.kream.client.pg.AttemptPaymentResponse
 import com.teamhide.kream.client.pg.CancelPaymentRequest
 import com.teamhide.kream.pg.PgAttemptPaymentResponse
 import com.teamhide.kream.pg.PgCancelPaymentRequest
+import com.teamhide.kream.product.domain.usecase.AttemptPaymentCommand
 
 fun makeAttemptPaymentRequest(biddingId: Long = 1L, price: Int = 50000, userId: Long = 1L): AttemptPaymentRequest {
     return AttemptPaymentRequest(biddingId = biddingId, price = price, userId = userId)

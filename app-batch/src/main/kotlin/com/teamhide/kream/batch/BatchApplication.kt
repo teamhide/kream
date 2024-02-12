@@ -1,8 +1,8 @@
 package com.teamhide.kream.batch
 
-import com.teamhide.kream.bidding.adapter.out.messaging.BiddingKafkaAdapter
 import com.teamhide.kream.common.config.database.QuerydslConfig
 import com.teamhide.kream.common.kafka.KafkaBaseProducer
+import com.teamhide.kream.product.adapter.out.messaging.BiddingKafkaAdapter
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.autoconfigure.domain.EntityScan
 import org.springframework.boot.runApplication

@@ -1,8 +1,8 @@
 package com.teamhide.kream.delivery.adapter.`in`.messaging
 
-import com.teamhide.kream.bidding.domain.event.BiddingCompletedEvent
 import com.teamhide.kream.delivery.domain.usecase.InitializeDeliveryCommand
 import com.teamhide.kream.delivery.domain.usecase.InitializeDeliveryUseCase
+import com.teamhide.kream.product.domain.event.BiddingCompletedEvent
 import org.springframework.kafka.annotation.KafkaListener
 import org.springframework.stereotype.Component
 

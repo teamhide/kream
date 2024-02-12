@@ -1,8 +1,8 @@
 package com.teamhide.kream.common.outbox
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.teamhide.kream.bidding.domain.event.BiddingCreatedEvent
-import com.teamhide.kream.bidding.domain.vo.BiddingType
+import com.teamhide.kream.product.domain.event.BiddingCreatedEvent
+import com.teamhide.kream.product.domain.vo.BiddingType
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
 

@@ -1,9 +1,9 @@
 package com.teamhide.kream.product.adapter.`in`.messaging
 
-import com.teamhide.kream.bidding.domain.event.BiddingCreatedEvent
-import com.teamhide.kream.bidding.domain.vo.BiddingType
+import com.teamhide.kream.product.domain.event.BiddingCreatedEvent
 import com.teamhide.kream.product.domain.usecase.SaveOrUpdateProductDisplayCommand
 import com.teamhide.kream.product.domain.usecase.SaveOrUpdateProductDisplayUseCase
+import com.teamhide.kream.product.domain.vo.BiddingType
 import org.springframework.kafka.annotation.KafkaListener
 import org.springframework.stereotype.Component
 

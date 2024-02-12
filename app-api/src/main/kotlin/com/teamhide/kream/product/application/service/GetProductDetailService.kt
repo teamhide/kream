@@ -1,12 +1,12 @@
 package com.teamhide.kream.product.application.service
 
-import com.teamhide.kream.bidding.adapter.out.persistence.BiddingRepositoryAdapter
-import com.teamhide.kream.bidding.domain.vo.BiddingType
+import com.teamhide.kream.product.adapter.out.persistence.BiddingRepositoryAdapter
 import com.teamhide.kream.product.adapter.out.persistence.ProductRepositoryAdapter
 import com.teamhide.kream.product.application.exception.ProductNotFoundException
 import com.teamhide.kream.product.domain.model.ProductDetail
 import com.teamhide.kream.product.domain.usecase.GetProductDetailQuery
 import com.teamhide.kream.product.domain.usecase.GetProductDetailUseCase
+import com.teamhide.kream.product.domain.vo.BiddingType
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 

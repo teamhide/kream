@@ -1,7 +1,7 @@
 package com.teamhide.kream.product.adapter.`in`.messaging
 
-import com.teamhide.kream.bidding.domain.vo.BiddingType
 import com.teamhide.kream.product.domain.usecase.SaveOrUpdateProductDisplayUseCase
+import com.teamhide.kream.product.domain.vo.BiddingType
 import com.teamhide.kream.product.makeBiddingCreatedEvent
 import io.kotest.core.spec.IsolationMode
 import io.kotest.core.spec.style.BehaviorSpec

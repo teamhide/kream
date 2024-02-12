@@ -1,8 +1,8 @@
 package com.teamhide.kream.delivery.domain.model
 
-import com.teamhide.kream.bidding.domain.model.Bidding
 import com.teamhide.kream.common.config.database.BaseTimestampEntity
 import com.teamhide.kream.delivery.domain.vo.DeliveryStatus
+import com.teamhide.kream.product.domain.model.Bidding
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.EnumType

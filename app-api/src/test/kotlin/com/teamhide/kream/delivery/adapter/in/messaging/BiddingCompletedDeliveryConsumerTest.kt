@@ -1,7 +1,7 @@
 package com.teamhide.kream.delivery.adapter.`in`.messaging
 
-import com.teamhide.kream.bidding.domain.event.BiddingCompletedEvent
 import com.teamhide.kream.delivery.domain.usecase.InitializeDeliveryUseCase
+import com.teamhide.kream.product.domain.event.BiddingCompletedEvent
 import io.kotest.core.spec.style.BehaviorSpec
 import io.mockk.every
 import io.mockk.mockk

@@ -1,11 +1,11 @@
 package com.teamhide.kream.delivery.application.service
 
-import com.teamhide.kream.bidding.adapter.out.persistence.BiddingRepositoryAdapter
-import com.teamhide.kream.bidding.makeBidding
 import com.teamhide.kream.delivery.adapter.out.persistence.DeliveryRepositoryAdapter
 import com.teamhide.kream.delivery.makeDelivery
 import com.teamhide.kream.delivery.makeInitializeDeliveryCommand
+import com.teamhide.kream.product.adapter.out.persistence.BiddingRepositoryAdapter
 import com.teamhide.kream.product.adapter.out.persistence.ProductRepositoryAdapter
+import com.teamhide.kream.product.makeBidding
 import com.teamhide.kream.product.makeProduct
 import io.kotest.core.spec.style.BehaviorSpec
 import io.mockk.every

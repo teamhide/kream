@@ -1,12 +1,12 @@
 package com.teamhide.kream.product.adapter.`in`.api.v1
 
-import com.teamhide.kream.bidding.adapter.out.persistence.jpa.BiddingRepository
-import com.teamhide.kream.bidding.domain.vo.BiddingType
-import com.teamhide.kream.bidding.makeBidding
+import com.teamhide.kream.product.adapter.out.persistence.jpa.BiddingRepository
 import com.teamhide.kream.product.adapter.out.persistence.jpa.ProductBrandRepository
 import com.teamhide.kream.product.adapter.out.persistence.jpa.ProductCategoryRepository
 import com.teamhide.kream.product.adapter.out.persistence.jpa.ProductRepository
 import com.teamhide.kream.product.application.exception.ProductNotFoundException
+import com.teamhide.kream.product.domain.vo.BiddingType
+import com.teamhide.kream.product.makeBidding
 import com.teamhide.kream.product.makeProduct
 import com.teamhide.kream.product.makeProductBrand
 import com.teamhide.kream.product.makeProductCategory

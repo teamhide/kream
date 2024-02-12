@@ -1,10 +1,10 @@
 package com.teamhide.kream.delivery.application.service
 
-import com.teamhide.kream.bidding.adapter.out.persistence.BiddingRepositoryAdapter
 import com.teamhide.kream.delivery.adapter.out.persistence.DeliveryRepositoryAdapter
 import com.teamhide.kream.delivery.domain.model.Delivery
 import com.teamhide.kream.delivery.domain.usecase.InitializeDeliveryCommand
 import com.teamhide.kream.delivery.domain.usecase.InitializeDeliveryUseCase
+import com.teamhide.kream.product.adapter.out.persistence.BiddingRepositoryAdapter
 import com.teamhide.kream.product.adapter.out.persistence.ProductRepositoryAdapter
 import io.github.oshai.kotlinlogging.KotlinLogging
 import org.springframework.stereotype.Service

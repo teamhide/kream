@@ -1,10 +1,9 @@
 package com.teamhide.kream.delivery.application.service
 
 import com.teamhide.kream.delivery.adapter.out.persistence.DeliveryRepositoryAdapter
+import com.teamhide.kream.delivery.domain.usecase.ProductExternalPort
 import com.teamhide.kream.delivery.makeDelivery
 import com.teamhide.kream.delivery.makeInitializeDeliveryCommand
-import com.teamhide.kream.product.adapter.out.persistence.BiddingRepositoryAdapter
-import com.teamhide.kream.product.adapter.out.persistence.ProductRepositoryAdapter
 import com.teamhide.kream.product.makeBidding
 import com.teamhide.kream.product.makeProduct
 import io.kotest.core.spec.style.BehaviorSpec
@@ -14,17 +13,15 @@ import io.mockk.verify
 
 class InitializeDeliveryServiceTest : BehaviorSpec({
     val deliveryRepositoryAdapter = mockk<DeliveryRepositoryAdapter>()
-    val biddingRepositoryAdapter = mockk<BiddingRepositoryAdapter>()
-    val productRepositoryAdapter = mockk<ProductRepositoryAdapter>()
+    val productExternalPort = mockk<ProductExternalPort>()
     val initializeDeliveryService = InitializeDeliveryService(
         deliveryRepositoryAdapter = deliveryRepositoryAdapter,
-        biddingRepositoryAdapter = biddingRepositoryAdapter,
-        productRepositoryAdapter = productRepositoryAdapter,
+        productExternalPort = productExternalPort,
     )
 
     Given("존재하지 않는 입찰에 대해") {
         val command = makeInitializeDeliveryCommand()
-        every { biddingRepositoryAdapter.findById(any()) } returns null
+        every { productExternalPort.findBiddingById(any()) } returns null
 
         When("배송 초기 설정을 요청하면") {
             initializeDeliveryService.execute(command = command)
@@ -38,8 +35,8 @@ class InitializeDeliveryServiceTest : BehaviorSpec({
     Given("존재하지 않는 상품에 대해") {
         val command = makeInitializeDeliveryCommand()
         val bidding = makeBidding()
-        every { biddingRepositoryAdapter.findById(any()) } returns bidding
-        every { productRepositoryAdapter.findById(any()) } returns null
+        every { productExternalPort.findBiddingById(any()) } returns bidding
+        every { productExternalPort.findProductById(any()) } returns null
 
         When("배송 초기 설정을 요청하면") {
             initializeDeliveryService.execute(command = command)
@@ -53,10 +50,10 @@ class InitializeDeliveryServiceTest : BehaviorSpec({
     Given("완료된 입찰에 대해") {
         val command = makeInitializeDeliveryCommand()
         val bidding = makeBidding()
-        every { biddingRepositoryAdapter.findById(any()) } returns bidding
+        every { productExternalPort.findBiddingById(any()) } returns bidding
 
         val product = makeProduct()
-        every { productRepositoryAdapter.findById(any()) } returns product
+        every { productExternalPort.findProductById(any()) } returns product
 
         val delivery = makeDelivery()
         every { deliveryRepositoryAdapter.save(any()) } returns delivery

@@ -4,8 +4,7 @@ import com.teamhide.kream.delivery.adapter.out.persistence.DeliveryRepositoryAda
 import com.teamhide.kream.delivery.domain.model.Delivery
 import com.teamhide.kream.delivery.domain.usecase.InitializeDeliveryCommand
 import com.teamhide.kream.delivery.domain.usecase.InitializeDeliveryUseCase
-import com.teamhide.kream.product.adapter.out.persistence.BiddingRepositoryAdapter
-import com.teamhide.kream.product.adapter.out.persistence.ProductRepositoryAdapter
+import com.teamhide.kream.delivery.domain.usecase.ProductExternalPort
 import io.github.oshai.kotlinlogging.KotlinLogging
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -16,16 +15,15 @@ private val logger = KotlinLogging.logger { }
 @Transactional
 class InitializeDeliveryService(
     private val deliveryRepositoryAdapter: DeliveryRepositoryAdapter,
-    private val biddingRepositoryAdapter: BiddingRepositoryAdapter,
-    private val productRepositoryAdapter: ProductRepositoryAdapter,
+    private val productExternalPort: ProductExternalPort,
 ) : InitializeDeliveryUseCase {
     override fun execute(command: InitializeDeliveryCommand) {
-        val bidding = biddingRepositoryAdapter.findById(biddingId = command.biddingId) ?: run {
+        val bidding = productExternalPort.findBiddingById(biddingId = command.biddingId) ?: run {
             logger.warn { "InitializeDeliveryService | BiddingNotFound. $command" }
             return
         }
 
-        productRepositoryAdapter.findById(productId = command.productId) ?: run {
+        productExternalPort.findProductById(productId = command.productId) ?: run {
             logger.warn { "InitializeDeliveryService | ProductNotFound. $command" }
             return
         }

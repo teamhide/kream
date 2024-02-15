@@ -4,7 +4,7 @@ import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
 import org.springframework.http.HttpMethod
 
-class AuthIgnorePathsTest : StringSpec({
+internal class AuthIgnorePathsTest : StringSpec({
     "제외 대상 path이지만 method가 다른 경우 false가 반환된다" {
         val sut = AuthIgnorePaths.contain(AuthType.JWT, HttpMethod.POST, "/actuator/health")
         sut shouldBe false

@@ -3,7 +3,7 @@ package com.teamhide.kream.common.outbox
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldNotBe
 
-class OutboxTest : StringSpec({
+internal class OutboxTest : StringSpec({
     "completedAt에 현재 날짜를 입력한다" {
         // Given
         val outbox = Outbox(

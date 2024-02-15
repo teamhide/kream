@@ -9,7 +9,7 @@ import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
 
-class GetUserByIdServiceTest : BehaviorSpec({
+internal class GetUserByIdServiceTest : BehaviorSpec({
     val userRepositoryAdapter = mockk<UserRepositoryAdapter>()
     val getUserByIdService = GetUserByIdService(userRepositoryAdapter = userRepositoryAdapter)
 

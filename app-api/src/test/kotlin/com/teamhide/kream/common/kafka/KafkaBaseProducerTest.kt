@@ -10,7 +10,7 @@ import org.springframework.kafka.support.SendResult
 import java.lang.RuntimeException
 import java.util.concurrent.CompletableFuture
 
-class KafkaBaseProducerTest : StringSpec({
+internal class KafkaBaseProducerTest : StringSpec({
     val kafkaTemplate = mockk<KafkaTemplate<String, String>>()
     val kafkaBaseProducer = KafkaBaseProducer(kafkaTemplate = kafkaTemplate)
 

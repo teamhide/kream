@@ -9,6 +9,7 @@ class ApiResponse<T> : ResponseEntity<T> {
     constructor(body: T, statusCode: HttpStatus) : super(body, statusCode)
 
     companion object {
+        const val TEST = "a"
         fun success(statusCode: HttpStatus): ApiResponse<Void> {
             return ApiResponse(statusCode = statusCode)
         }

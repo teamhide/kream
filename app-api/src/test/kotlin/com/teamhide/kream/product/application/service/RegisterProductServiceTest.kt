@@ -17,7 +17,7 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 
-class RegisterProductServiceTest : BehaviorSpec({
+internal class RegisterProductServiceTest : BehaviorSpec({
     val productRepositoryAdapter = mockk<ProductRepositoryAdapter>()
     val productDisplayRepositoryAdapter = mockk<ProductDisplayRepositoryAdapter>()
     val registerProductService = RegisterProductService(

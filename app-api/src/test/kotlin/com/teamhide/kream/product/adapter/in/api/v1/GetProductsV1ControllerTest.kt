@@ -5,16 +5,14 @@ import com.teamhide.kream.product.makeProductDisplay
 import com.teamhide.kream.support.test.BaseIntegrationTest
 import com.teamhide.kream.user.USER_ID_1_TOKEN
 import org.junit.jupiter.api.Test
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpHeaders
 import org.springframework.test.web.servlet.get
 
 private const val URL = "/v1/product"
 
-class GetProductsV1ControllerTest : BaseIntegrationTest() {
-    @Autowired
-    lateinit var productDisplayRepository: ProductDisplayRepository
-
+internal class GetProductsV1ControllerTest(
+    private val productDisplayRepository: ProductDisplayRepository,
+) : BaseIntegrationTest() {
     @Test
     fun `상품 전시 목록을 조회한다`() {
         // Given

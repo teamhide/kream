@@ -9,15 +9,13 @@ import com.teamhide.kream.user.makeRegisterUserRequest
 import com.teamhide.kream.user.makeUser
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.test.web.servlet.post
 
 const val URL = "/api/v1/user"
 
-internal class RegisterUserV1ControllerTest : BaseIntegrationTest() {
-    @Autowired
-    lateinit var userRepository: UserRepository
-
+internal class RegisterUserV1ControllerTest(
+    private val userRepository: UserRepository,
+) : BaseIntegrationTest() {
     @Test
     fun `password1과 password2가 동일하지 않다면 400이 리턴된다`() {
         // Given

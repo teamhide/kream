@@ -16,7 +16,7 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 
-class CompleteBidServiceTest : BehaviorSpec({
+internal class CompleteBidServiceTest : BehaviorSpec({
     val biddingRepositoryAdapter = mockk<BiddingRepositoryAdapter>()
     val userExternalAdapter = mockk<UserExternalAdapter>()
     val completeBidService = CompleteBidService(

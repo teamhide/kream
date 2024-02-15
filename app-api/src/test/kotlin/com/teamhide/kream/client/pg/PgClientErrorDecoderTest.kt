@@ -10,7 +10,7 @@ import io.mockk.every
 import io.mockk.mockk
 import java.io.IOException
 
-class PgClientErrorDecoderTest : StringSpec({
+internal class PgClientErrorDecoderTest : StringSpec({
     isolationMode = IsolationMode.InstancePerLeaf
 
     val response = mockk<Response>()

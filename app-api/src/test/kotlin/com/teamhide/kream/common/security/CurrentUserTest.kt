@@ -3,7 +3,7 @@ package com.teamhide.kream.common.security
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
 
-class CurrentUserTest : StringSpec({
+internal class CurrentUserTest : StringSpec({
     "권한을 확인한다" {
         val currentUser = CurrentUser(id = 1)
 

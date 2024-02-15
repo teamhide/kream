@@ -11,7 +11,7 @@ import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
 
-class GetProductByIdServiceTest : BehaviorSpec({
+internal class GetProductByIdServiceTest : BehaviorSpec({
     val productRepositoryAdapter = mockk<ProductRepositoryAdapter>()
     val getProductByIdService = GetProductByIdService(productRepositoryAdapter = productRepositoryAdapter)
 

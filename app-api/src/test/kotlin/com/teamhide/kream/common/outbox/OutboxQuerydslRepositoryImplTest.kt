@@ -5,18 +5,14 @@ import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import jakarta.persistence.EntityManager
 import org.junit.jupiter.api.Test
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.PageRequest
 import org.springframework.transaction.annotation.Transactional
 
 @JpaRepositoryTest
-class OutboxQuerydslRepositoryImplTest {
-    @Autowired
-    lateinit var outboxRepository: OutboxRepository
-
-    @Autowired
-    lateinit var entityManager: EntityManager
-
+internal class OutboxQuerydslRepositoryImplTest(
+    private val outboxRepository: OutboxRepository,
+    private val entityManager: EntityManager,
+) {
     @Test
     fun `완료되지 않은 로우를 조회한다`() {
         // Given

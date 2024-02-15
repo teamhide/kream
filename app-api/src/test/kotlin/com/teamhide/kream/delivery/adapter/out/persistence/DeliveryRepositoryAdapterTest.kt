@@ -10,7 +10,7 @@ import io.mockk.mockk
 import io.mockk.verify
 import org.springframework.data.repository.findByIdOrNull
 
-class DeliveryRepositoryAdapterTest : StringSpec({
+internal class DeliveryRepositoryAdapterTest : StringSpec({
     val deliveryRepository = mockk<DeliveryRepository>()
     val deliveryRepositoryAdapter = DeliveryRepositoryAdapter(deliveryRepository = deliveryRepository)
 

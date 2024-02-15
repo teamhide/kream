@@ -10,7 +10,7 @@ import io.mockk.every
 import io.mockk.mockk
 import org.springframework.http.HttpStatus
 
-class AttemptPaymentServiceTest : BehaviorSpec({
+internal class AttemptPaymentServiceTest : BehaviorSpec({
     val pgClientAdapter = mockk<PgClientAdapter>()
     val attemptPaymentService = AttemptPaymentService(pgClientAdapter = pgClientAdapter)
 

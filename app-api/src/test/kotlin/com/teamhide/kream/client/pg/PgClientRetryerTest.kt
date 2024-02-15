@@ -7,7 +7,7 @@ import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.StringSpec
 import io.mockk.mockk
 
-class PgClientRetryerTest : StringSpec({
+internal class PgClientRetryerTest : StringSpec({
     "RetryableException이 발생하면 WebClientException으로 감싸진다" {
         // Given
         val retryer = PgClientRetryer()

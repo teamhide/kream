@@ -9,7 +9,7 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 
-class BiddingCreatedConsumerTest : BehaviorSpec({
+internal class BiddingCreatedConsumerTest : BehaviorSpec({
     isolationMode = IsolationMode.InstancePerLeaf
 
     val saveOrUpdateProductDisplayUseCase = mockk<SaveOrUpdateProductDisplayUseCase>()

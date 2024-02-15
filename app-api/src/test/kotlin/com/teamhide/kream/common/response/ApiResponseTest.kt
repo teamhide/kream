@@ -4,7 +4,7 @@ import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
 import org.springframework.http.HttpStatus
 
-class ApiResponseTest : StringSpec({
+internal class ApiResponseTest : StringSpec({
     "HttpStatus만 존재하는 success" {
         val statusCode = HttpStatus.OK
 

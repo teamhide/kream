@@ -16,7 +16,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 
 @FeignTest
-class PgClientTest(
+internal class PgClientTest(
     private val pgClient: PgClient,
 ) : StringSpec({
     var mockWebServer = MockWebServer()

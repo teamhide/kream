@@ -9,22 +9,14 @@ import com.teamhide.kream.user.makeUser
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
-import org.springframework.beans.factory.annotation.Autowired
 
 @JpaRepositoryTest
-class SaleHistoryQuerydslRepositoryImplTest {
-    @Autowired
-    lateinit var saleHistoryRepository: SaleHistoryRepository
-
-    @Autowired
-    lateinit var biddingRepository: BiddingRepository
-
-    @Autowired
-    lateinit var productRepository: ProductRepository
-
-    @Autowired
-    lateinit var userRepository: UserRepository
-
+internal class SaleHistoryQuerydslRepositoryImplTest(
+    private val saleHistoryRepository: SaleHistoryRepository,
+    private val biddingRepository: BiddingRepository,
+    private val productRepository: ProductRepository,
+    private val userRepository: UserRepository,
+) {
     @Test
     fun `biddingId로 SaleHistory를 조회한다`() {
         // Given

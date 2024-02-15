@@ -12,7 +12,7 @@ import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
 
-class ProductAdapterTest : StringSpec({
+internal class ProductAdapterTest : StringSpec({
     val getProductByIdUseCase = mockk<GetProductByIdUseCase>()
     val getBiddingByIdUseCase = mockk<GetBiddingByIdUseCase>()
     val productAdapter = ProductAdapter(

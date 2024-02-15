@@ -21,7 +21,7 @@ import io.mockk.mockk
 import io.mockk.verify
 import org.springframework.context.ApplicationEventPublisher
 
-class ImmediatePurchaseServiceTest : BehaviorSpec({
+internal class ImmediatePurchaseServiceTest : BehaviorSpec({
     val biddingRepositoryAdapter = mockk<BiddingRepositoryAdapter>()
     val attemptPaymentUseCase = mockk<AttemptPaymentUseCase>()
     val completeBidUseCase = mockk<CompleteBidUseCase>()

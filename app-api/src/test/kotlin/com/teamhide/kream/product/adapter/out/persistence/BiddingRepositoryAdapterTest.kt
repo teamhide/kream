@@ -16,7 +16,7 @@ import io.mockk.mockk
 import io.mockk.verify
 import org.springframework.data.repository.findByIdOrNull
 
-class BiddingRepositoryAdapterTest : StringSpec({
+internal class BiddingRepositoryAdapterTest : StringSpec({
     val biddingRepository = mockk<BiddingRepository>()
     val saleHistoryRepository = mockk<SaleHistoryRepository>()
     val orderRepository = mockk<OrderRepository>()

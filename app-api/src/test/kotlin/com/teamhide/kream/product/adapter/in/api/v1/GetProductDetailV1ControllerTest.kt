@@ -15,28 +15,18 @@ import com.teamhide.kream.user.USER_ID_1_TOKEN
 import com.teamhide.kream.user.adapter.out.persistence.jpa.UserRepository
 import com.teamhide.kream.user.makeUser
 import org.junit.jupiter.api.Test
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpHeaders
 import org.springframework.test.web.servlet.get
 
 private const val URL = "/v1/product"
 
-class GetProductDetailV1ControllerTest : BaseIntegrationTest() {
-    @Autowired
-    lateinit var productRepository: ProductRepository
-
-    @Autowired
-    lateinit var productBrandRepository: ProductBrandRepository
-
-    @Autowired
-    lateinit var productCategoryRepository: ProductCategoryRepository
-
-    @Autowired
-    lateinit var biddingRepository: BiddingRepository
-
-    @Autowired
-    lateinit var userRepository: UserRepository
-
+internal class GetProductDetailV1ControllerTest(
+    private val productRepository: ProductRepository,
+    private val productBrandRepository: ProductBrandRepository,
+    private val productCategoryRepository: ProductCategoryRepository,
+    private val biddingRepository: BiddingRepository,
+    private val userRepository: UserRepository,
+) : BaseIntegrationTest() {
     @Test
     fun `상품이 존재하지 않으면 404가 리턴된다`() {
         // Given

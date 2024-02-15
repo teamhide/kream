@@ -6,7 +6,7 @@ import io.mockk.every
 import io.mockk.mockk
 import org.aspectj.lang.ProceedingJoinPoint
 
-class LockTransactionTest : StringSpec({
+internal class LockTransactionTest : StringSpec({
     val lockTransaction = LockTransaction()
 
     "새롭게 트랜잭션을 시작한다" {

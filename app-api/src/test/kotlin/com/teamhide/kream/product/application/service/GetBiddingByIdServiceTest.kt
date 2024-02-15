@@ -11,7 +11,7 @@ import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
 
-class GetBiddingByIdServiceTest : BehaviorSpec({
+internal class GetBiddingByIdServiceTest : BehaviorSpec({
     val biddingRepositoryAdapter = mockk<BiddingRepositoryAdapter>()
     val getBiddingByIdService = GetBiddingByIdService(biddingRepositoryAdapter = biddingRepositoryAdapter)
 

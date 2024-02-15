@@ -15,26 +15,18 @@ import com.teamhide.kream.user.USER_ID_1_TOKEN
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.http.HttpHeaders
 import org.springframework.test.web.servlet.post
 
 private const val URL = "/v1/product"
 
-class RegisterProductV1ControllerTest : BaseIntegrationTest() {
-    @Autowired
-    lateinit var productRepository: ProductRepository
-
-    @Autowired
-    lateinit var productCategoryRepository: ProductCategoryRepository
-
-    @Autowired
-    lateinit var productBrandRepository: ProductBrandRepository
-
-    @Autowired
-    lateinit var productDisplayRepository: ProductDisplayRepository
-
+internal class RegisterProductV1ControllerTest(
+    private val productRepository: ProductRepository,
+    private val productCategoryRepository: ProductCategoryRepository,
+    private val productBrandRepository: ProductBrandRepository,
+    private val productDisplayRepository: ProductDisplayRepository,
+) : BaseIntegrationTest() {
     @Test
     fun `존재하지 않는 브랜드인 경우 404를 리턴한다`() {
         // Given

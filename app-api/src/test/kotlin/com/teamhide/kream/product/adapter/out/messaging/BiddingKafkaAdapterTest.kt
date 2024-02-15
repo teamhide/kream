@@ -30,7 +30,7 @@ import org.springframework.test.annotation.DirtiesContext
 )
 @SpringBootTest
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-class BiddingKafkaAdapterTest(
+internal class BiddingKafkaAdapterTest(
     @Value("\${spring.kafka.topic.bidding-created}")
     private val biddingCreatedTopic: String,
 

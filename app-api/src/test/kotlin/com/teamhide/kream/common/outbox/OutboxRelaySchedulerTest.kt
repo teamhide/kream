@@ -8,7 +8,7 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 
-class OutboxRelaySchedulerTest : BehaviorSpec({
+internal class OutboxRelaySchedulerTest : BehaviorSpec({
     val outboxRepository = mockk<OutboxRepository>()
     val biddingKafkaAdapter = mockk<BiddingKafkaAdapter>()
     val outboxRelayScheduler = OutboxRelayScheduler(

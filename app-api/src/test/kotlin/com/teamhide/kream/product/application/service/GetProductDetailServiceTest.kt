@@ -13,7 +13,7 @@ import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
 
-class GetProductDetailServiceTest : BehaviorSpec({
+internal class GetProductDetailServiceTest : BehaviorSpec({
     val productRepositoryAdapter = mockk<ProductRepositoryAdapter>()
     val biddingRepositoryAdapter = mockk<BiddingRepositoryAdapter>()
     val getProductDetailService = GetProductDetailService(

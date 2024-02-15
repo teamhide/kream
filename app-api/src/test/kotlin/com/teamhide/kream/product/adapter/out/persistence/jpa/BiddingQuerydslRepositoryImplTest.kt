@@ -9,19 +9,13 @@ import com.teamhide.kream.user.makeUser
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
-import org.springframework.beans.factory.annotation.Autowired
 
 @JpaRepositoryTest
-class BiddingQuerydslRepositoryImplTest {
-    @Autowired
-    lateinit var biddingRepository: BiddingRepository
-
-    @Autowired
-    lateinit var userRepository: UserRepository
-
-    @Autowired
-    lateinit var productRepository: ProductRepository
-
+internal class BiddingQuerydslRepositoryImplTest(
+    private val biddingRepository: BiddingRepository,
+    private val userRepository: UserRepository,
+    private val productRepository: ProductRepository,
+) {
     @Test
     fun `특정 상품에 대해 가장 비싼 입찰을 조회한다`() {
         // Given

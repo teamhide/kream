@@ -6,7 +6,7 @@ import com.teamhide.kream.product.domain.vo.BiddingType
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
 
-class AggregateTypeMapperTest : StringSpec({
+internal class AggregateTypeMapperTest : StringSpec({
     val objectMapper = ObjectMapper()
 
     "payload를 BiddingCreatedEvent로 변환한다" {

@@ -9,22 +9,14 @@ import com.teamhide.kream.user.makeUser
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
-import org.springframework.beans.factory.annotation.Autowired
 
 @JpaRepositoryTest
-class ProductQuerydslRepositoryImplTest {
-    @Autowired
-    lateinit var productRepository: ProductRepository
-
-    @Autowired
-    lateinit var userRepository: UserRepository
-
-    @Autowired
-    lateinit var productCategoryRepository: ProductCategoryRepository
-
-    @Autowired
-    lateinit var productBrandRepository: ProductBrandRepository
-
+internal class ProductQuerydslRepositoryImplTest(
+    private val productRepository: ProductRepository,
+    private val userRepository: UserRepository,
+    private val productCategoryRepository: ProductCategoryRepository,
+    private val productBrandRepository: ProductBrandRepository,
+) {
     @Test
     fun `id로 ProductInfoDto를 조회한다`() {
         // Given

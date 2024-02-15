@@ -7,7 +7,7 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 
-class BiddingCompletedDeliveryConsumerTest : BehaviorSpec({
+internal class BiddingCompletedDeliveryConsumerTest : BehaviorSpec({
     val initializeDeliveryUseCase = mockk<InitializeDeliveryUseCase>()
     val consumer = BiddingCompletedDeliveryConsumer(
         initializedDeliveryUseCase = initializeDeliveryUseCase,

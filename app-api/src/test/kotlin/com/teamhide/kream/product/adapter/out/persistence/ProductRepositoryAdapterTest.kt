@@ -14,7 +14,7 @@ import io.mockk.every
 import io.mockk.mockk
 import org.springframework.data.repository.findByIdOrNull
 
-class ProductRepositoryAdapterTest : StringSpec({
+internal class ProductRepositoryAdapterTest : StringSpec({
     val productRepository = mockk<ProductRepository>()
     val productCategoryRepository = mockk<ProductCategoryRepository>()
     val productBrandRepository = mockk<ProductBrandRepository>()

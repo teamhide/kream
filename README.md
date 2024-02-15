@@ -20,7 +20,10 @@ TBD
 - Redis
 
 ## Test
-`./gradlew testAll`
+```shell
+> docker-compose -f docker/docker-compose.yml up
+> ./gradlew testAll
+```
 
 ## Functional requirements
 

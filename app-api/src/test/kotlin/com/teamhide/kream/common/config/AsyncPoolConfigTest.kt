@@ -5,7 +5,7 @@ import io.kotest.matchers.should
 import io.kotest.matchers.types.beInstanceOf
 import org.springframework.aop.interceptor.AsyncUncaughtExceptionHandler
 
-class AsyncPoolConfigTest : StringSpec({
+internal class AsyncPoolConfigTest : StringSpec({
     val asyncPoolConfig = AsyncPoolConfig()
 
     "Async 전용 예외 핸들러를 얻어온다" {

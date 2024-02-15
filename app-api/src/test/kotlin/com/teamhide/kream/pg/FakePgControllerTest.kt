@@ -7,7 +7,7 @@ import org.springframework.test.web.servlet.post
 
 const val URL = "/pg"
 
-class FakePgControllerTest : BaseIntegrationTest() {
+internal class FakePgControllerTest : BaseIntegrationTest() {
     @Test
     fun `결제를 시도한다`() {
         // Given, When, Then

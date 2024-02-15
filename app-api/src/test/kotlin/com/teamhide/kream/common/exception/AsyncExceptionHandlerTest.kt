@@ -6,7 +6,7 @@ import io.mockk.mockk
 import org.springframework.http.HttpStatus
 import java.lang.reflect.Method
 
-class AsyncExceptionHandlerTest : BehaviorSpec({
+internal class AsyncExceptionHandlerTest : BehaviorSpec({
     val handler = AsyncExceptionHandler()
     class TestException : CustomException(
         statusCode = HttpStatus.NOT_FOUND,

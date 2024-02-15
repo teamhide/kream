@@ -28,32 +28,20 @@ import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import io.mockk.every
 import org.junit.jupiter.api.Test
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.http.HttpHeaders
 import org.springframework.test.web.servlet.post
 
 private const val URL = "/v1/bid/purchase"
 
-class ImmediatePurchaseV1ControllerTest : BaseIntegrationTest() {
-    @Autowired
-    lateinit var biddingRepository: BiddingRepository
-
-    @Autowired
-    lateinit var userRepository: UserRepository
-
-    @Autowired
-    lateinit var productRepository: ProductRepository
-
-    @Autowired
-    lateinit var orderRepository: OrderRepository
-
-    @Autowired
-    lateinit var saleHistoryRepository: SaleHistoryRepository
-
-    @Autowired
-    lateinit var outboxRepository: OutboxRepository
-
+internal class ImmediatePurchaseV1ControllerTest(
+    private val biddingRepository: BiddingRepository,
+    private val userRepository: UserRepository,
+    private val productRepository: ProductRepository,
+    private val orderRepository: OrderRepository,
+    private val saleHistoryRepository: SaleHistoryRepository,
+    private val outboxRepository: OutboxRepository,
+) : BaseIntegrationTest() {
     @MockkBean
     lateinit var pgClient: PgClient
 

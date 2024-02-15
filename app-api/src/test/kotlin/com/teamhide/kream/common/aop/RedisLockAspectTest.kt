@@ -16,7 +16,7 @@ import java.lang.reflect.Method
 
 data class TestCommand(val productId: Long)
 
-class RedisLockAspectTest : BehaviorSpec({
+internal class RedisLockAspectTest : BehaviorSpec({
     isolationMode = IsolationMode.InstancePerLeaf
 
     val redissonClient = mockk<RedissonClient>()

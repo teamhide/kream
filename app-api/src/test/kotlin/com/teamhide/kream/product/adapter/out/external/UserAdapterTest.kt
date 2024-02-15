@@ -8,7 +8,7 @@ import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
 
-class UserAdapterTest : StringSpec({
+internal class UserAdapterTest : StringSpec({
     val getUserByIdUseCase = mockk<GetUserByIdUseCase>()
     val userExternalAdapter = UserExternalAdapter(getUserByIdUseCase = getUserByIdUseCase)
 

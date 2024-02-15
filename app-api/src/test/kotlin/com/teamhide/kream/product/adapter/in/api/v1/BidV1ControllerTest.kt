@@ -15,22 +15,16 @@ import com.teamhide.kream.user.adapter.out.persistence.jpa.UserRepository
 import com.teamhide.kream.user.makeUser
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Test
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpHeaders
 import org.springframework.test.web.servlet.post
 
 private const val URL = "/v1/bid"
 
-class BidV1ControllerTest : BaseIntegrationTest() {
-    @Autowired
-    lateinit var biddingRepository: BiddingRepository
-
-    @Autowired
-    lateinit var userRepository: UserRepository
-
-    @Autowired
-    lateinit var productRepository: ProductRepository
-
+internal class BidV1ControllerTest(
+    private val biddingRepository: BiddingRepository,
+    private val userRepository: UserRepository,
+    private val productRepository: ProductRepository,
+) : BaseIntegrationTest() {
     @Test
     fun `판매 입찰 가격이 현재 가장 비싼 구매 가격과 동일한 경우 400을 리턴한다`() {
         // Given

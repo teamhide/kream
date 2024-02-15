@@ -18,7 +18,7 @@ import java.nio.charset.MalformedInputException
 
 const val secretKey = "hidehidehidehidehidehidehidehidehide"
 
-class TokenProviderTest : StringSpec({
+internal class TokenProviderTest : StringSpec({
     val provider = TokenProvider(secretKey = secretKey)
 
     beforeEach {

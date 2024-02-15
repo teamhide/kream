@@ -9,7 +9,7 @@ import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
 
-class ProductDisplayRepositoryAdapterTest : StringSpec({
+internal class ProductDisplayRepositoryAdapterTest : StringSpec({
     val productDisplayRepository = mockk<ProductDisplayRepository>()
     val productDisplayRepositoryAdapter =
         ProductDisplayRepositoryAdapter(productDisplayRepository = productDisplayRepository)

@@ -11,7 +11,7 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 
-class InitializeDeliveryServiceTest : BehaviorSpec({
+internal class InitializeDeliveryServiceTest : BehaviorSpec({
     val deliveryRepositoryAdapter = mockk<DeliveryRepositoryAdapter>()
     val productExternalPort = mockk<ProductExternalPort>()
     val initializeDeliveryService = InitializeDeliveryService(

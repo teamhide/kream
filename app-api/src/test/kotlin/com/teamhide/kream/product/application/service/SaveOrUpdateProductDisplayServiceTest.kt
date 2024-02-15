@@ -14,7 +14,7 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 
-class SaveOrUpdateProductDisplayServiceTest : BehaviorSpec({
+internal class SaveOrUpdateProductDisplayServiceTest : BehaviorSpec({
     isolationMode = IsolationMode.InstancePerLeaf
 
     val productDisplayRepositoryAdapter = mockk<ProductDisplayRepositoryAdapter>()

@@ -22,7 +22,7 @@ import io.mockk.mockk
 import io.mockk.verify
 import org.springframework.context.ApplicationEventPublisher
 
-class BidServiceTest : BehaviorSpec({
+internal class BidServiceTest : BehaviorSpec({
     isolationMode = IsolationMode.InstancePerLeaf
 
     val biddingRepositoryAdapter = mockk<BiddingRepositoryAdapter>()

@@ -2,7 +2,6 @@ package com.teamhide.kream.product.application.service
 
 import com.teamhide.kream.client.WebClientException
 import com.teamhide.kream.client.makeAttemptPaymentCommand
-import com.teamhide.kream.product.adapter.out.external.PgClientAdapter
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.shouldNotBe

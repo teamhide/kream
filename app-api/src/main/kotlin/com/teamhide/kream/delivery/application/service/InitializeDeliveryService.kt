@@ -1,7 +1,7 @@
 package com.teamhide.kream.delivery.application.service
 
-import com.teamhide.kream.delivery.adapter.out.persistence.DeliveryRepositoryAdapter
 import com.teamhide.kream.delivery.domain.model.Delivery
+import com.teamhide.kream.delivery.domain.repository.DeliveryRepositoryAdapter
 import com.teamhide.kream.delivery.domain.usecase.InitializeDeliveryCommand
 import com.teamhide.kream.delivery.domain.usecase.InitializeDeliveryUseCase
 import com.teamhide.kream.delivery.domain.usecase.ProductExternalPort

@@ -1,6 +1,6 @@
 package com.teamhide.kream.product.application.service
 
-import com.teamhide.kream.product.adapter.out.persistence.ProductDisplayRepositoryAdapter
+import com.teamhide.kream.product.domain.repository.ProductDisplayRepositoryAdapter
 import com.teamhide.kream.product.domain.usecase.GetProductsQuery
 import com.teamhide.kream.product.makeProductDisplay
 import io.kotest.core.spec.style.BehaviorSpec

@@ -1,11 +1,10 @@
 package com.teamhide.kream.product.application.service
 
 import com.teamhide.kream.common.util.lock.RedisLock
-import com.teamhide.kream.product.adapter.out.external.UserExternalAdapter
-import com.teamhide.kream.product.adapter.out.persistence.BiddingRepositoryAdapter
 import com.teamhide.kream.product.application.exception.AlreadyCompleteBidException
 import com.teamhide.kream.product.application.exception.BiddingNotFoundException
 import com.teamhide.kream.product.domain.event.BiddingCompletedEvent
+import com.teamhide.kream.product.domain.repository.BiddingRepositoryAdapter
 import com.teamhide.kream.product.domain.usecase.AttemptPaymentCommand
 import com.teamhide.kream.product.domain.usecase.AttemptPaymentUseCase
 import com.teamhide.kream.product.domain.usecase.CompleteBidCommand

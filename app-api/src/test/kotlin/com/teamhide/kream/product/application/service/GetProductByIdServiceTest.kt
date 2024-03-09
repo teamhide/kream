@@ -1,7 +1,7 @@
 package com.teamhide.kream.product.application.service
 
-import com.teamhide.kream.product.adapter.out.persistence.ProductRepositoryAdapter
 import com.teamhide.kream.product.application.exception.ProductNotFoundException
+import com.teamhide.kream.product.domain.repository.ProductRepositoryAdapter
 import com.teamhide.kream.product.domain.usecase.GetProductByIdQuery
 import com.teamhide.kream.product.makeProduct
 import io.kotest.assertions.throwables.shouldThrow

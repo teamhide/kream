@@ -3,7 +3,7 @@ package com.teamhide.kream.batch.outbox.relay.processor
 import com.teamhide.kream.common.outbox.AggregateType
 import com.teamhide.kream.common.outbox.AggregateTypeMapper
 import com.teamhide.kream.common.outbox.Outbox
-import com.teamhide.kream.product.adapter.out.messaging.BiddingKafkaAdapter
+import com.teamhide.kream.product.application.service.BiddingKafkaAdapter
 import com.teamhide.kream.product.domain.event.BiddingCompletedEvent
 import io.github.oshai.kotlinlogging.KotlinLogging
 import org.springframework.batch.item.ItemProcessor

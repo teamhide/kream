@@ -1,9 +1,9 @@
 package com.teamhide.kream.product.application.service
 
-import com.teamhide.kream.product.adapter.out.persistence.BiddingRepositoryAdapter
-import com.teamhide.kream.product.adapter.out.persistence.ProductRepositoryAdapter
 import com.teamhide.kream.product.application.exception.ProductNotFoundException
 import com.teamhide.kream.product.domain.model.ProductDetail
+import com.teamhide.kream.product.domain.repository.BiddingRepositoryAdapter
+import com.teamhide.kream.product.domain.repository.ProductRepositoryAdapter
 import com.teamhide.kream.product.domain.usecase.GetProductDetailQuery
 import com.teamhide.kream.product.domain.usecase.GetProductDetailUseCase
 import com.teamhide.kream.product.domain.vo.BiddingType

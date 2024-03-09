@@ -1,8 +1,8 @@
 package com.teamhide.kream.user.application.service
 
-import com.teamhide.kream.user.adapter.out.persistence.UserRepositoryAdapter
 import com.teamhide.kream.user.application.exception.UserAlreadyExistException
 import com.teamhide.kream.user.domain.model.User
+import com.teamhide.kream.user.domain.repository.UserRepositoryAdapter
 import com.teamhide.kream.user.domain.usecase.RegisterUserCommand
 import com.teamhide.kream.user.domain.usecase.RegisterUserUseCase
 import com.teamhide.kream.user.domain.vo.Address

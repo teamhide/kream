@@ -1,6 +1,5 @@
 package com.teamhide.kream.product.application.service
 
-import com.teamhide.kream.product.adapter.out.external.PgClientAdapter
 import com.teamhide.kream.product.domain.usecase.AttemptPaymentCommand
 import com.teamhide.kream.product.domain.usecase.AttemptPaymentUseCase
 import io.github.oshai.kotlinlogging.KotlinLogging

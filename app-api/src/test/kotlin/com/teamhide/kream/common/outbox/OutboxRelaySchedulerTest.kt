@@ -1,7 +1,7 @@
 package com.teamhide.kream.common.outbox
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.teamhide.kream.product.adapter.out.messaging.BiddingKafkaAdapter
+import com.teamhide.kream.product.application.service.BiddingKafkaAdapter
 import com.teamhide.kream.product.domain.event.BiddingCompletedEvent
 import io.kotest.core.spec.style.BehaviorSpec
 import io.mockk.every

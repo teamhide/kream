@@ -1,7 +1,5 @@
 package com.teamhide.kream.product
 
-import com.teamhide.kream.product.adapter.`in`.api.v1.ImmediatePurchaseRequest
-import com.teamhide.kream.product.adapter.`in`.api.v1.ImmediateSaleRequest
 import com.teamhide.kream.product.domain.model.Bidding
 import com.teamhide.kream.product.domain.model.Order
 import com.teamhide.kream.product.domain.model.Product
@@ -13,6 +11,8 @@ import com.teamhide.kream.product.domain.usecase.ImmediateSaleCommand
 import com.teamhide.kream.product.domain.vo.BiddingStatus
 import com.teamhide.kream.product.domain.vo.BiddingType
 import com.teamhide.kream.product.domain.vo.OrderStatus
+import com.teamhide.kream.product.ui.api.ImmediatePurchaseRequest
+import com.teamhide.kream.product.ui.api.ImmediateSaleRequest
 import com.teamhide.kream.user.domain.model.User
 import com.teamhide.kream.user.makeUser
 

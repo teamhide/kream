@@ -1,8 +1,8 @@
 package com.teamhide.kream.product.application.service
 
-import com.teamhide.kream.product.adapter.out.persistence.BiddingRepositoryAdapter
 import com.teamhide.kream.product.application.exception.BiddingNotFoundException
 import com.teamhide.kream.product.domain.model.Bidding
+import com.teamhide.kream.product.domain.repository.BiddingRepositoryAdapter
 import com.teamhide.kream.product.domain.usecase.GetBiddingByIdQuery
 import com.teamhide.kream.product.domain.usecase.GetBiddingByIdUseCase
 import org.springframework.stereotype.Service

@@ -1,6 +1,6 @@
 package com.teamhide.kream.user.application.service
 
-import com.teamhide.kream.user.adapter.out.persistence.UserRepositoryAdapter
+import com.teamhide.kream.user.domain.repository.UserRepositoryAdapter
 import com.teamhide.kream.user.domain.usecase.GetUserByIdQuery
 import com.teamhide.kream.user.makeUser
 import io.kotest.core.spec.style.BehaviorSpec

@@ -1,11 +1,11 @@
 package com.teamhide.kream.product.application.service
 
-import com.teamhide.kream.product.adapter.out.persistence.ProductDisplayRepositoryAdapter
-import com.teamhide.kream.product.adapter.out.persistence.ProductRepositoryAdapter
 import com.teamhide.kream.product.application.exception.ProductBrandNotFoundException
 import com.teamhide.kream.product.application.exception.ProductCategoryNotFoundException
 import com.teamhide.kream.product.domain.model.Product
 import com.teamhide.kream.product.domain.model.ProductDisplay
+import com.teamhide.kream.product.domain.repository.ProductDisplayRepositoryAdapter
+import com.teamhide.kream.product.domain.repository.ProductRepositoryAdapter
 import com.teamhide.kream.product.domain.usecase.RegisterProductCommand
 import com.teamhide.kream.product.domain.usecase.RegisterProductResponseDto
 import com.teamhide.kream.product.domain.usecase.RegisterProductUseCase

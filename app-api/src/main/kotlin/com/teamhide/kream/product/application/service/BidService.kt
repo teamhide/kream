@@ -1,12 +1,11 @@
 package com.teamhide.kream.product.application.service
 
-import com.teamhide.kream.product.adapter.out.external.UserExternalAdapter
-import com.teamhide.kream.product.adapter.out.persistence.BiddingRepositoryAdapter
-import com.teamhide.kream.product.adapter.out.persistence.ProductRepositoryAdapter
 import com.teamhide.kream.product.application.exception.ImmediateTradeAvailableException
 import com.teamhide.kream.product.application.exception.ProductNotFoundException
 import com.teamhide.kream.product.domain.event.BiddingCreatedEvent
 import com.teamhide.kream.product.domain.model.Bidding
+import com.teamhide.kream.product.domain.repository.BiddingRepositoryAdapter
+import com.teamhide.kream.product.domain.repository.ProductRepositoryAdapter
 import com.teamhide.kream.product.domain.usecase.BidCommand
 import com.teamhide.kream.product.domain.usecase.BidResponseDto
 import com.teamhide.kream.product.domain.usecase.BidUseCase

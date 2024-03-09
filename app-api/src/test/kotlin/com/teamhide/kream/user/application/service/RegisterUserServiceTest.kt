@@ -1,8 +1,8 @@
 package com.teamhide.kream.user.application.service
 
-import com.teamhide.kream.user.adapter.out.persistence.UserRepositoryAdapter
 import com.teamhide.kream.user.application.exception.UserAlreadyExistException
 import com.teamhide.kream.user.domain.model.PasswordDoesNotMatchException
+import com.teamhide.kream.user.domain.repository.UserRepositoryAdapter
 import com.teamhide.kream.user.makeRegisterUserCommand
 import com.teamhide.kream.user.makeUser
 import io.kotest.assertions.throwables.shouldThrow

@@ -1,6 +1,6 @@
 package com.teamhide.kream.product.application.handler
 
-import com.teamhide.kream.product.adapter.out.messaging.BiddingKafkaAdapter
+import com.teamhide.kream.product.application.service.BiddingKafkaAdapter
 import com.teamhide.kream.product.domain.event.BiddingCreatedEvent
 import org.springframework.stereotype.Component
 import org.springframework.transaction.event.TransactionPhase

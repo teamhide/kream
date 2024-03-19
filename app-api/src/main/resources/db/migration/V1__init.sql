@@ -90,9 +90,14 @@ CREATE TABLE outbox(
 
 CREATE TABLE coupon_group(
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    identifier VARCHAR(32) NOT NULL,
     discount_type VARCHAR(20) NOT NULL,
     discount_value INT NOT NULL,
     status VARCHAR(20) NOT NULL,
+    quantity INT NOT NULL,
+    remain_quantity INT NOT NULL,
+    period_type VARCHAR(20) NOT NULL,
+    period INT NOT NULL,
     created_at DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
     updated_at DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6)
 );

@@ -1,6 +1,7 @@
 package com.teamhide.kream.coupon.domain.model
 
 import com.teamhide.kream.common.config.database.BaseTimestampEntity
+import com.teamhide.kream.coupon.domain.vo.CouponPeriodType
 import com.teamhide.kream.coupon.domain.vo.CouponStatus
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
@@ -35,4 +36,21 @@ class Coupon(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0L,
-) : BaseTimestampEntity()
+) : BaseTimestampEntity() {
+    companion object {
+        fun issue(couponGroup: CouponGroup, userId: Long): Coupon {
+            val now = LocalDateTime.now()
+            val period = couponGroup.period
+            val expiredAt = when (couponGroup.periodType) {
+                CouponPeriodType.DAY -> now.plusDays(period.toLong())
+                CouponPeriodType.MONTH -> now.plusMonths(period.toLong())
+            }
+            return Coupon(
+                couponGroup = couponGroup,
+                userId = userId,
+                status = CouponStatus.ISSUED,
+                expiredAt = expiredAt,
+            )
+        }
+    }
+}

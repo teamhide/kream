@@ -3,6 +3,7 @@ package com.teamhide.kream.coupon.domain.model
 import com.teamhide.kream.common.config.database.BaseTimestampEntity
 import com.teamhide.kream.coupon.domain.vo.CouponDiscountInfo
 import com.teamhide.kream.coupon.domain.vo.CouponGroupStatus
+import com.teamhide.kream.coupon.domain.vo.CouponPeriodType
 import jakarta.persistence.Column
 import jakarta.persistence.Embedded
 import jakarta.persistence.Entity
@@ -18,6 +19,9 @@ import jakarta.persistence.Table
     name = "coupon_group",
 )
 class CouponGroup(
+    @Column(name = "identifier", nullable = false, length = 32)
+    val identifier: String,
+
     @Embedded
     val discountInfo: CouponDiscountInfo,
 
@@ -25,7 +29,28 @@ class CouponGroup(
     @Enumerated(EnumType.STRING)
     val status: CouponGroupStatus,
 
+    @Column(name = "quantity", nullable = false)
+    var quantity: Int,
+
+    @Column(name = "remain_quantity", nullable = false)
+    var remainQuantity: Int,
+
+    @Column(name = "period_type", nullable = false)
+    @Enumerated(EnumType.STRING)
+    val periodType: CouponPeriodType,
+
+    @Column(name = "period", nullable = false)
+    val period: Int,
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0L,
-) : BaseTimestampEntity()
+) : BaseTimestampEntity() {
+    fun isAvailable(): Boolean {
+        return this.status == CouponGroupStatus.ACTIVATED
+    }
+
+    fun decreaseRemainQuantity() {
+        this.remainQuantity -= 1
+    }
+}

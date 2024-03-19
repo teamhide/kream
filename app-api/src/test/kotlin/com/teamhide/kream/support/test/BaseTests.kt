@@ -24,7 +24,7 @@ import org.springframework.test.context.TestExecutionListeners
 @Retention(AnnotationRetention.RUNTIME)
 @ActiveProfiles("test")
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
-annotation class TestEnvironment()
+annotation class TestEnvironment
 
 @Target(AnnotationTarget.CLASS)
 @Retention(AnnotationRetention.RUNTIME)

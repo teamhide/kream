@@ -20,7 +20,7 @@ import org.springframework.test.web.servlet.get
 
 private const val URL = "/v1/product"
 
-internal class GetProductDetailV1ControllerTest(
+internal class ProductDetailV1ControllerTest(
     private val productRepository: ProductRepository,
     private val productBrandRepository: ProductBrandRepository,
     private val productCategoryRepository: ProductCategoryRepository,

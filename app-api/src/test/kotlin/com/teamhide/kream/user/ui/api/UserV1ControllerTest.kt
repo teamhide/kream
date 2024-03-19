@@ -13,7 +13,7 @@ import org.springframework.test.web.servlet.post
 
 const val URL = "/api/v1/user"
 
-internal class RegisterUserV1ControllerTest(
+internal class UserV1ControllerTest(
     private val userRepository: UserRepository,
 ) : BaseIntegrationTest() {
     @Test

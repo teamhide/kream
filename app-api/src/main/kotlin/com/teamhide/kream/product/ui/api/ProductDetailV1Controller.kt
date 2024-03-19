@@ -22,7 +22,7 @@ data class GetProductResponse(
 
 @RestController
 @RequestMapping("/v1/product")
-class GetProductDetailV1Controller(
+class ProductDetailV1Controller(
     private val getProductDetailUseCase: GetProductDetailUseCase,
 ) {
     @GetMapping("/{productId}")

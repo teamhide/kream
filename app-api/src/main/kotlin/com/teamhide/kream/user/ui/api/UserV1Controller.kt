@@ -26,7 +26,7 @@ data class RegisterUserResponse(
 
 @RestController
 @RequestMapping("/api/v1/user")
-class RegisterUserV1Controller(
+class UserV1Controller(
     private val registerUserUseCase: RegisterUserUseCase,
 ) {
     @PostMapping("")

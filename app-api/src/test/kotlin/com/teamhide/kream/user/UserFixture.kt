@@ -28,7 +28,7 @@ fun makeRegisterUserCommand(
 }
 
 fun makeUser(
-    id: Long = 0L,
+    id: Long = 1L,
     email: String = "h@id.e",
     nickname: String = "hide",
     password: String = "password",

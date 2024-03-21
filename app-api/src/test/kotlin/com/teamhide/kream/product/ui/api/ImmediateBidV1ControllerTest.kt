@@ -1,260 +1,63 @@
 package com.teamhide.kream.product.ui.api
 
-import com.fasterxml.jackson.module.kotlin.readValue
 import com.ninjasquad.springmockk.MockkBean
-import com.teamhide.kream.client.pg.AttemptPaymentResponse
-import com.teamhide.kream.client.pg.PgClient
-import com.teamhide.kream.common.outbox.AggregateType
-import com.teamhide.kream.common.outbox.OutboxRepository
-import com.teamhide.kream.product.application.exception.BiddingNotFoundException
-import com.teamhide.kream.product.domain.event.BiddingCompletedEvent
-import com.teamhide.kream.product.domain.repository.BiddingRepository
-import com.teamhide.kream.product.domain.repository.OrderRepository
-import com.teamhide.kream.product.domain.repository.ProductRepository
-import com.teamhide.kream.product.domain.repository.SaleHistoryRepository
-import com.teamhide.kream.product.domain.vo.BiddingStatus
-import com.teamhide.kream.product.domain.vo.BiddingType
-import com.teamhide.kream.product.domain.vo.OrderStatus
-import com.teamhide.kream.product.makeBidding
+import com.teamhide.kream.product.domain.usecase.ImmediatePurchaseResponseDto
+import com.teamhide.kream.product.domain.usecase.ImmediatePurchaseUseCase
+import com.teamhide.kream.product.domain.usecase.ImmediateSaleResponseDto
+import com.teamhide.kream.product.domain.usecase.ImmediateSaleUseCase
 import com.teamhide.kream.product.makeImmediatePurchaseRequest
 import com.teamhide.kream.product.makeImmediateSaleRequest
-import com.teamhide.kream.product.makeProduct
-import com.teamhide.kream.support.test.BaseIntegrationTest
+import com.teamhide.kream.support.test.RestControllerTest
 import com.teamhide.kream.user.USER_ID_1_TOKEN
-import com.teamhide.kream.user.USER_ID_2_TOKEN
-import com.teamhide.kream.user.application.exception.UserNotFoundException
-import com.teamhide.kream.user.domain.repository.UserRepository
-import com.teamhide.kream.user.makeUser
-import io.kotest.matchers.nulls.shouldNotBeNull
-import io.kotest.matchers.shouldBe
 import io.mockk.every
 import org.junit.jupiter.api.Test
-import org.springframework.data.repository.findByIdOrNull
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.http.HttpHeaders
 import org.springframework.test.web.servlet.post
 
 private const val URL = "/v1/bid"
 
-internal class ImmediateBidV1ControllerTest(
-    private val biddingRepository: BiddingRepository,
-    private val userRepository: UserRepository,
-    private val productRepository: ProductRepository,
-    private val orderRepository: OrderRepository,
-    private val saleHistoryRepository: SaleHistoryRepository,
-    private val outboxRepository: OutboxRepository,
-) : BaseIntegrationTest() {
+@WebMvcTest(ImmediateBidV1Controller::class)
+internal class ImmediateBidV1ControllerTest : RestControllerTest() {
     @MockkBean
-    lateinit var pgClient: PgClient
+    lateinit var immediatePurchaseUseCase: ImmediatePurchaseUseCase
+
+    @MockkBean
+    lateinit var immediateSaleUseCase: ImmediateSaleUseCase
 
     @Test
-    fun `즉시 구매 - 존재하지 않는 입찰인 경우 404를 리턴한다`() {
+    fun `즉시 구매 API`() {
         // Given
         val request = makeImmediatePurchaseRequest()
-        val exc = BiddingNotFoundException()
+        val responseDto = ImmediatePurchaseResponseDto(biddingId = 1L, price = 20000)
+        val response = ImmediatePurchaseResponse(biddingId = 1L, price = 20000)
+        every { immediatePurchaseUseCase.execute(any()) } returns responseDto
 
         // When, Then
         mockMvc.post("$URL/purchase") {
             header(HttpHeaders.AUTHORIZATION, "Bearer $USER_ID_1_TOKEN")
             jsonRequest(request)
+        }.andExpect {
+            status { isOk() }
+            jsonResponse(response)
         }
-            .andExpect {
-                status { isNotFound() }
-                jsonPath("errorCode") { value(exc.errorCode) }
-            }
     }
 
     @Test
-    fun `즉시 구매 - 존재하지 않는 유저인 경우 404를 리턴한다`() {
-        // Given
-        val request = makeImmediatePurchaseRequest()
-
-        val user = userRepository.save(makeUser(id = 100L))
-        val product = productRepository.save(makeProduct(id = 1L))
-        val bidding = makeBidding(id = request.biddingId, product = product, user = user)
-        biddingRepository.save(bidding)
-
-        val exc = UserNotFoundException()
-
-        // When, Then
-        mockMvc.post("$URL/purchase") {
-            header(HttpHeaders.AUTHORIZATION, "Bearer $USER_ID_2_TOKEN")
-            jsonRequest(request)
-        }
-            .andExpect {
-                status { isNotFound() }
-                jsonPath("errorCode") { value(exc.errorCode) }
-            }
-    }
-
-    @Test
-    fun `즉시 구매 - 즉시 구매에 성공하면 200을 리턴한다`() {
-        // Given
-        val request = makeImmediatePurchaseRequest()
-
-        val seller = userRepository.save(makeUser(id = 1L))
-        val purchaser = userRepository.save(makeUser(id = 2L))
-        val product = productRepository.save(makeProduct(id = 1L))
-        val bidding = makeBidding(
-            id = request.biddingId,
-            product = product,
-            user = seller,
-            biddingType = BiddingType.SALE,
-            status = BiddingStatus.IN_PROGRESS,
-        )
-        val savedBidding = biddingRepository.save(bidding)
-
-        val paymentId = "paymentId"
-        every { pgClient.attemptPayment(any()) } returns AttemptPaymentResponse(paymentId = paymentId)
-
-        // When, Then
-        mockMvc.post("$URL/purchase") {
-            header(HttpHeaders.AUTHORIZATION, "Bearer $USER_ID_2_TOKEN")
-            jsonRequest(request)
-        }
-            .andExpect {
-                status { isOk() }
-                jsonPath("biddingId") { value(savedBidding.id) }
-                jsonPath("price") { value(savedBidding.price) }
-            }
-
-        // Bidding이 완료 상태로 변경되었다
-        val sut = biddingRepository.findByIdOrNull(id = savedBidding.id)
-        sut.shouldNotBeNull()
-        sut.status shouldBe BiddingStatus.COMPLETE
-
-        // 판매 내역이 생성되었다
-        val saleHistory = saleHistoryRepository.findByBiddingId(biddingId = savedBidding.id)
-        saleHistory.shouldNotBeNull()
-        saleHistory.bidding.id shouldBe savedBidding.id
-        saleHistory.user.id shouldBe bidding.user.id
-        saleHistory.price shouldBe savedBidding.price
-        saleHistory.size shouldBe savedBidding.size
-
-        // 주문이 생성되었다
-        val order = orderRepository.findByBiddingId(biddingId = savedBidding.id)
-        order.shouldNotBeNull()
-        order.paymentId shouldBe paymentId
-        order.bidding.id shouldBe savedBidding.id
-        order.user.id shouldBe purchaser.id
-        order.status shouldBe OrderStatus.COMPLETE
-
-        // 아웃박스 테이블에 이벤트가 저장되었다
-        val outboxes = outboxRepository.findAll()
-        outboxes.size shouldBe 1
-
-        val outbox = outboxes[0]
-        outbox.aggregateType shouldBe AggregateType.BIDDING_COMPLETED
-        outbox.completedAt shouldBe null
-
-        val payload = objectMapper.readValue<BiddingCompletedEvent>(outbox.payload)
-        payload.biddingId shouldBe sut.id
-        payload.productId shouldBe product.id
-    }
-
-    @Test
-    fun `즉시 판매 - 존재하지 않는 입찰인 경우 404를 리턴한다`() {
+    fun `즉시 판매 API`() {
         // Given
         val request = makeImmediateSaleRequest()
-        val exc = BiddingNotFoundException()
+        val responseDto = ImmediateSaleResponseDto(biddingId = 1L, price = 20000)
+        val response = ImmediateSaleResponse(biddingId = 1L, price = 20000)
+        every { immediateSaleUseCase.execute(any()) } returns responseDto
 
         // When, Then
         mockMvc.post("$URL/sale") {
             header(HttpHeaders.AUTHORIZATION, "Bearer $USER_ID_1_TOKEN")
             jsonRequest(request)
+        }.andExpect {
+            status { isOk() }
+            jsonResponse(response)
         }
-            .andExpect {
-                status { isNotFound() }
-                jsonPath("errorCode") { value(exc.errorCode) }
-            }
-    }
-
-    @Test
-    fun `즉시 판매 - 존재하지 않는 유저인 경우 404를 리턴한다`() {
-        // Given
-        val request = makeImmediateSaleRequest()
-
-        val user = userRepository.save(makeUser(id = 100L))
-        val product = productRepository.save(makeProduct(id = 1L))
-        val bidding = makeBidding(id = request.biddingId, product = product, user = user)
-        biddingRepository.save(bidding)
-
-        val exc = UserNotFoundException()
-
-        // When, Then
-        mockMvc.post("$URL/sale") {
-            header(HttpHeaders.AUTHORIZATION, "Bearer $USER_ID_2_TOKEN")
-            jsonRequest(request)
-        }
-            .andExpect {
-                status { isNotFound() }
-                jsonPath("errorCode") { value(exc.errorCode) }
-            }
-    }
-
-    @Test
-    fun `즉시 판매 - 즉시 판매에 성공하면 200을 리턴한다`() {
-        // Given
-        val request = makeImmediateSaleRequest()
-
-        val seller = userRepository.save(makeUser(id = 1L))
-        // purchaser
-        userRepository.save(makeUser(id = 2L))
-
-        val product = productRepository.save(makeProduct(id = 1L))
-        val bidding = makeBidding(
-            id = request.biddingId,
-            product = product,
-            user = seller,
-            biddingType = BiddingType.PURCHASE,
-            status = BiddingStatus.IN_PROGRESS,
-        )
-        val savedBidding = biddingRepository.save(bidding)
-
-        val paymentId = "paymentId"
-        every { pgClient.attemptPayment(any()) } returns AttemptPaymentResponse(paymentId = paymentId)
-
-        // When, Then
-        mockMvc.post("$URL/sale") {
-            header(HttpHeaders.AUTHORIZATION, "Bearer $USER_ID_2_TOKEN")
-            jsonRequest(request)
-        }
-            .andExpect {
-                status { isOk() }
-                jsonPath("biddingId") { value(savedBidding.id) }
-                jsonPath("price") { value(savedBidding.price) }
-            }
-
-        // Bidding이 완료 상태로 변경되었다
-        val sut = biddingRepository.findByIdOrNull(id = savedBidding.id)
-        sut.shouldNotBeNull()
-        sut.status shouldBe BiddingStatus.COMPLETE
-
-        // 판매 내역이 생성되었다
-        val saleHistory = saleHistoryRepository.findByBiddingId(biddingId = savedBidding.id)
-        saleHistory.shouldNotBeNull()
-        saleHistory.bidding.id shouldBe savedBidding.id
-        saleHistory.user.id shouldBe seller.id
-        saleHistory.price shouldBe savedBidding.price
-        saleHistory.size shouldBe savedBidding.size
-
-        // 주문이 생성되었다
-        val order = orderRepository.findByBiddingId(biddingId = savedBidding.id)
-        order.shouldNotBeNull()
-        order.paymentId shouldBe paymentId
-        order.bidding.id shouldBe savedBidding.id
-        order.user.id shouldBe seller.id
-        order.status shouldBe OrderStatus.COMPLETE
-
-        // 아웃박스 테이블에 이벤트가 저장되었다
-        val outboxes = outboxRepository.findAll()
-        outboxes.size shouldBe 1
-
-        val outbox = outboxes[0]
-        outbox.aggregateType shouldBe AggregateType.BIDDING_COMPLETED
-        outbox.completedAt shouldBe null
-
-        val payload = objectMapper.readValue<BiddingCompletedEvent>(outbox.payload)
-        payload.biddingId shouldBe sut.id
-        payload.productId shouldBe product.id
     }
 }

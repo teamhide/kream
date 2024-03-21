@@ -24,7 +24,8 @@ class GetProductDetailService(
             biddingType = BiddingType.PURCHASE
         )
         val cheapestBidding = biddingRepositoryAdapter.findMostCheapestBidding(
-            productId = product.productId, biddingType = BiddingType.SALE
+            productId = product.productId,
+            biddingType = BiddingType.SALE
         )
         return ProductDetail(
             productId = product.productId,

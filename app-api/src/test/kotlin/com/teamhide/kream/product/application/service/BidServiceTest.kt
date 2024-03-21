@@ -2,45 +2,35 @@ package com.teamhide.kream.product.application.service
 
 import com.teamhide.kream.product.application.exception.ImmediateTradeAvailableException
 import com.teamhide.kream.product.application.exception.ProductNotFoundException
-import com.teamhide.kream.product.domain.event.BiddingCreatedEvent
 import com.teamhide.kream.product.domain.model.InvalidBiddingPriceException
-import com.teamhide.kream.product.domain.repository.BiddingRepositoryAdapter
-import com.teamhide.kream.product.domain.repository.ProductRepositoryAdapter
+import com.teamhide.kream.product.domain.repository.BiddingRepository
+import com.teamhide.kream.product.domain.repository.ProductRepository
 import com.teamhide.kream.product.domain.vo.BiddingType
 import com.teamhide.kream.product.makeBidCommand
 import com.teamhide.kream.product.makeBidding
 import com.teamhide.kream.product.makeProduct
+import com.teamhide.kream.support.test.IntegrationTest
+import com.teamhide.kream.support.test.MysqlDbCleaner
 import com.teamhide.kream.user.application.exception.UserNotFoundException
+import com.teamhide.kream.user.domain.repository.UserRepository
 import com.teamhide.kream.user.makeUser
 import io.kotest.assertions.throwables.shouldThrow
-import io.kotest.core.spec.IsolationMode
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.shouldBe
-import io.mockk.every
-import io.mockk.mockk
-import io.mockk.verify
-import org.springframework.context.ApplicationEventPublisher
 
-internal class BidServiceTest : BehaviorSpec({
-    isolationMode = IsolationMode.InstancePerLeaf
-
-    val biddingRepositoryAdapter = mockk<BiddingRepositoryAdapter>()
-    val userExternalAdapter = mockk<UserExternalAdapter>()
-    val productRepositoryAdapter = mockk<ProductRepositoryAdapter>()
-    val applicationEventPublisher = mockk<ApplicationEventPublisher>()
-    val bidService = BidService(
-        biddingRepositoryAdapter = biddingRepositoryAdapter,
-        userExternalAdapter = userExternalAdapter,
-        productRepositoryAdapter = productRepositoryAdapter,
-        applicationEventPublisher = applicationEventPublisher,
-    )
+@IntegrationTest
+internal class BidServiceTest(
+    private val biddingRepository: BiddingRepository,
+    private val bidService: BidService,
+    private val userRepository: UserRepository,
+    private val productRepository: ProductRepository,
+) : BehaviorSpec({
+    listeners(MysqlDbCleaner())
 
     Given("동일한 가격의 구매 입찰이 있을 때") {
         val price = 1000
-        val purchaseBidding = makeBidding(price = price, biddingType = BiddingType.SALE)
-        every {
-            biddingRepositoryAdapter.findMostExpensiveBidding(any(), any())
-        } returns purchaseBidding
+        val purchaseBidding = makeBidding(price = price, biddingType = BiddingType.PURCHASE)
+        biddingRepository.save(purchaseBidding)
 
         val command = makeBidCommand(price = price, biddingType = BiddingType.SALE)
 
@@ -53,10 +43,8 @@ internal class BidServiceTest : BehaviorSpec({
 
     Given("동일한 가격의 판매 입찰이 있을 때") {
         val price = 1000
-        val purchaseBidding = makeBidding(price = price, biddingType = BiddingType.SALE)
-        every {
-            biddingRepositoryAdapter.findMostCheapestBidding(any(), any())
-        } returns purchaseBidding
+        val saleBidding = makeBidding(price = price, biddingType = BiddingType.SALE)
+        biddingRepository.save(saleBidding)
 
         val command = makeBidCommand(price = price, biddingType = BiddingType.PURCHASE)
 
@@ -68,13 +56,11 @@ internal class BidServiceTest : BehaviorSpec({
     }
 
     Given("판매 입찰 가격이 가장 낮은 구매 입찰 가격보다 낮은 경우") {
-        val bidPrice = 2000
-        val command = makeBidCommand(price = bidPrice, biddingType = BiddingType.SALE)
+        val price = 2000
+        val saleBidding = makeBidding(price = price, biddingType = BiddingType.SALE)
+        biddingRepository.save(saleBidding)
 
-        val purchaseBidding = makeBidding(price = 3000, biddingType = BiddingType.PURCHASE)
-        every {
-            biddingRepositoryAdapter.findMostExpensiveBidding(any(), any())
-        } returns purchaseBidding
+        val command = makeBidCommand(price = 3000, biddingType = BiddingType.PURCHASE)
 
         When("판매 입찰을 시도하면") {
             Then("예외가 발생한다") {
@@ -83,16 +69,14 @@ internal class BidServiceTest : BehaviorSpec({
         }
     }
 
-    Given("구매 입찰 가격이 가장 높은 판매 입찰 가격보다 높은 경우") {
-        val bidPrice = 3000
-        val command = makeBidCommand(price = bidPrice, biddingType = BiddingType.PURCHASE)
+    Given("구매 입찰 가격이 가장 낮은 판매 입찰 가격보다 낮은 경우") {
+        val price = 3000
+        val purchaseBidding = makeBidding(price = price, biddingType = BiddingType.PURCHASE)
+        biddingRepository.save(purchaseBidding)
 
-        val purchaseBidding = makeBidding(price = 2000, biddingType = BiddingType.SALE)
-        every {
-            biddingRepositoryAdapter.findMostCheapestBidding(any(), any())
-        } returns purchaseBidding
+        val command = makeBidCommand(price = 2000, biddingType = BiddingType.SALE)
 
-        When("판매 입찰을 시도하면") {
+        When("구매 입찰을 시도하면") {
             Then("예외가 발생한다") {
                 shouldThrow<ImmediateTradeAvailableException> { bidService.execute(command = command) }
             }
@@ -100,14 +84,10 @@ internal class BidServiceTest : BehaviorSpec({
     }
 
     Given("존재하지 않는 유저가") {
-        val price = 1000
-        val purchaseBidding = makeBidding(price = 2000, biddingType = BiddingType.SALE)
-        every {
-            biddingRepositoryAdapter.findMostCheapestBidding(any(), any())
-        } returns purchaseBidding
-        val command = makeBidCommand(price = price, biddingType = BiddingType.PURCHASE)
+        val saleBidding = makeBidding(price = 2000, biddingType = BiddingType.SALE)
+        biddingRepository.save(saleBidding)
 
-        every { userExternalAdapter.findById(any()) } returns null
+        val command = makeBidCommand(price = 1000, biddingType = BiddingType.PURCHASE)
 
         When("구매 입찰을 시도하면") {
             Then("예외가 발생한다") {
@@ -117,16 +97,13 @@ internal class BidServiceTest : BehaviorSpec({
     }
 
     Given("존재하지 않는 상품을 대상으로") {
-        val price = 1000
-        every {
-            biddingRepositoryAdapter.findMostCheapestBidding(any(), any())
-        } returns null
-        val command = makeBidCommand(price = price, biddingType = BiddingType.PURCHASE)
+        val saleBidding = makeBidding(price = 2000, biddingType = BiddingType.SALE)
+        biddingRepository.save(saleBidding)
 
-        val user = makeUser()
-        every { userExternalAdapter.findById(any()) } returns user
+        val user = makeUser(id = 1L)
+        userRepository.save(user)
 
-        every { productRepositoryAdapter.findById(any()) } returns null
+        val command = makeBidCommand(price = 1000, biddingType = BiddingType.PURCHASE, userId = user.id)
 
         When("구매 입찰을 시도하면") {
             Then("예외가 발생한다") {
@@ -136,17 +113,15 @@ internal class BidServiceTest : BehaviorSpec({
     }
 
     Given("0원 미만의 가격으로") {
-        val price = -1
-        every {
-            biddingRepositoryAdapter.findMostCheapestBidding(any(), any())
-        } returns null
-        val command = makeBidCommand(price = price, biddingType = BiddingType.PURCHASE)
+        val user = makeUser(id = 1L)
+        userRepository.save(user)
 
-        val user = makeUser()
-        every { userExternalAdapter.findById(any()) } returns user
+        val product = makeProduct(id = 1L)
+        productRepository.save(product)
 
-        val product = makeProduct()
-        every { productRepositoryAdapter.findById(any()) } returns product
+        val command = makeBidCommand(
+            price = -1, biddingType = BiddingType.PURCHASE, userId = user.id, productId = 1L,
+        )
 
         When("구매 입찰을 시도하면") {
             Then("예외가 발생한다") {
@@ -156,63 +131,49 @@ internal class BidServiceTest : BehaviorSpec({
     }
 
     Given("동일한 판매 가격이 없는 상품을 대상으로") {
-        val price = 1000
-        every {
-            biddingRepositoryAdapter.findMostCheapestBidding(any(), any())
-        } returns null
+        val user = makeUser(id = 1L)
+        userRepository.save(user)
 
-        val command = makeBidCommand(price = price, biddingType = BiddingType.PURCHASE)
+        val product = makeProduct(id = 1L)
+        productRepository.save(product)
 
-        val user = makeUser()
-        every { userExternalAdapter.findById(any()) } returns user
-
-        val product = makeProduct()
-        every { productRepositoryAdapter.findById(any()) } returns product
-
-        val bidding = makeBidding()
-        every { biddingRepositoryAdapter.save(any()) } returns bidding
-
-        every { applicationEventPublisher.publishEvent(any<BiddingCreatedEvent>()) } returns Unit
+        val command = makeBidCommand(
+            price = 1000, biddingType = BiddingType.PURCHASE, userId = user.id, productId = 1L,
+        )
 
         When("구매 입찰을 시도하면") {
-            Then("입찰에 성공한다") {
-                val sut = bidService.execute(command = command)
+            val sut = bidService.execute(command = command)
+
+            Then("성공한다") {
+                val bidding = biddingRepository.findAll()[0]
                 sut.biddingId shouldBe bidding.id
                 sut.biddingType shouldBe bidding.biddingType
                 sut.price shouldBe bidding.price
                 sut.size shouldBe bidding.size
-                verify(exactly = 1) { applicationEventPublisher.publishEvent(any<BiddingCreatedEvent>()) }
             }
         }
     }
 
     Given("동일한 구매 가격이 없는 상품을 대상으로") {
-        val price = 1000
-        every {
-            biddingRepositoryAdapter.findMostExpensiveBidding(any(), any())
-        } returns null
+        val user = makeUser(id = 1L)
+        userRepository.save(user)
 
-        val command = makeBidCommand(price = price, biddingType = BiddingType.SALE)
+        val product = makeProduct(id = 1L)
+        productRepository.save(product)
 
-        val user = makeUser()
-        every { userExternalAdapter.findById(any()) } returns user
-
-        val product = makeProduct()
-        every { productRepositoryAdapter.findById(any()) } returns product
-
-        val bidding = makeBidding()
-        every { biddingRepositoryAdapter.save(any()) } returns bidding
-
-        every { applicationEventPublisher.publishEvent(any<BiddingCreatedEvent>()) } returns Unit
+        val command = makeBidCommand(
+            price = 1000, biddingType = BiddingType.SALE, userId = user.id, productId = 1L,
+        )
 
         When("판매 입찰을 시도하면") {
-            Then("입찰에 성공한다") {
-                val sut = bidService.execute(command = command)
+            val sut = bidService.execute(command = command)
+
+            Then("성공한다") {
+                val bidding = biddingRepository.findAll()[0]
                 sut.biddingId shouldBe bidding.id
                 sut.biddingType shouldBe bidding.biddingType
                 sut.price shouldBe bidding.price
                 sut.size shouldBe bidding.size
-                verify(exactly = 1) { applicationEventPublisher.publishEvent(any<BiddingCreatedEvent>()) }
             }
         }
     }

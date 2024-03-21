@@ -1,23 +1,25 @@
 package com.teamhide.kream.product.application.service
 
 import com.teamhide.kream.product.application.exception.BiddingNotFoundException
-import com.teamhide.kream.product.domain.repository.BiddingRepositoryAdapter
+import com.teamhide.kream.product.domain.repository.BiddingRepository
 import com.teamhide.kream.product.domain.usecase.GetBiddingByIdQuery
 import com.teamhide.kream.product.makeBidding
+import com.teamhide.kream.support.test.IntegrationTest
+import com.teamhide.kream.support.test.MysqlDbCleaner
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
-import io.mockk.every
-import io.mockk.mockk
 
-internal class GetBiddingByIdServiceTest : BehaviorSpec({
-    val biddingRepositoryAdapter = mockk<BiddingRepositoryAdapter>()
-    val getBiddingByIdService = GetBiddingByIdService(biddingRepositoryAdapter = biddingRepositoryAdapter)
+@IntegrationTest
+internal class GetBiddingByIdServiceTest(
+    private val biddingRepository: BiddingRepository,
+    private val getBiddingByIdService: GetBiddingByIdService,
+) : BehaviorSpec({
+    listeners(MysqlDbCleaner())
 
     Given("존재하지 않는 Bidding을") {
         val query = GetBiddingByIdQuery(biddingId = 1L)
-        every { biddingRepositoryAdapter.findById(any()) } returns null
 
         When("조회 요청하면") {
             Then("예외가 발생한다") {
@@ -29,7 +31,7 @@ internal class GetBiddingByIdServiceTest : BehaviorSpec({
     Given("존재하는 Bidding을") {
         val bidding = makeBidding(id = 1L)
         val query = GetBiddingByIdQuery(biddingId = bidding.id)
-        every { biddingRepositoryAdapter.findById(any()) } returns bidding
+        biddingRepository.save(bidding)
 
         When("조회 요청하면") {
             val sut = getBiddingByIdService.execute(query = query)

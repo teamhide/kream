@@ -35,7 +35,6 @@ class AcquireCouponService(
             }
             throw CouponOutOfStockException()
         }
-
         if (!acquireResponse.isObtain) {
             throw AlreadyAcquireException()
         }

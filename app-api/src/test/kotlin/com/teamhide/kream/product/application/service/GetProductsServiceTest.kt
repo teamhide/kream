@@ -1,16 +1,20 @@
 package com.teamhide.kream.product.application.service
 
-import com.teamhide.kream.product.domain.repository.ProductDisplayRepositoryAdapter
+import com.teamhide.kream.product.domain.repository.ProductDisplayRepository
 import com.teamhide.kream.product.domain.usecase.GetProductsQuery
 import com.teamhide.kream.product.makeProductDisplay
+import com.teamhide.kream.support.test.IntegrationTest
+import com.teamhide.kream.support.test.MongoDbCleaner
+import com.teamhide.kream.support.test.MysqlDbCleaner
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.shouldBe
-import io.mockk.every
-import io.mockk.mockk
 
-internal class GetProductsServiceTest : BehaviorSpec({
-    val productDisplayRepositoryAdapter = mockk<ProductDisplayRepositoryAdapter>()
-    val getProductsService = GetProductsService(productDisplayRepositoryAdapter = productDisplayRepositoryAdapter)
+@IntegrationTest
+internal class GetProductsServiceTest(
+    private val productDisplayRepository: ProductDisplayRepository,
+    private val getProductsService: GetProductsService,
+) : BehaviorSpec({
+    listeners(MysqlDbCleaner(), MongoDbCleaner())
 
     Given("page와 size를 통해") {
         val query = GetProductsQuery(page = 0, size = 20)
@@ -30,8 +34,7 @@ internal class GetProductsServiceTest : BehaviorSpec({
             category = "CLOTHES",
             lastBiddingId = 2L,
         )
-        val products = listOf(product1, product2)
-        every { productDisplayRepositoryAdapter.findAllBy(any(), any()) } returns products
+        productDisplayRepository.saveAll(listOf(product1, product2))
 
         When("상품 전시 목록을 요청하면") {
             val sut = getProductsService.execute(query = query)

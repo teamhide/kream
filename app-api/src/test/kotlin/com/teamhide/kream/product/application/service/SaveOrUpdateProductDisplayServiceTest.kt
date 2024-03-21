@@ -1,71 +1,61 @@
 package com.teamhide.kream.product.application.service
 
-import com.teamhide.kream.product.domain.model.ProductDisplay
-import com.teamhide.kream.product.domain.repository.ProductDisplayRepositoryAdapter
-import com.teamhide.kream.product.domain.repository.ProductRepositoryAdapter
+import com.teamhide.kream.product.domain.repository.ProductBrandRepository
+import com.teamhide.kream.product.domain.repository.ProductCategoryRepository
+import com.teamhide.kream.product.domain.repository.ProductDisplayRepository
+import com.teamhide.kream.product.domain.repository.ProductRepository
 import com.teamhide.kream.product.makeProduct
 import com.teamhide.kream.product.makeProductBrand
 import com.teamhide.kream.product.makeProductCategory
 import com.teamhide.kream.product.makeProductDisplay
 import com.teamhide.kream.product.makeSaveOrUpdateProductDisplayCommand
-import io.kotest.core.spec.IsolationMode
+import com.teamhide.kream.support.test.IntegrationTest
+import com.teamhide.kream.support.test.MongoDbCleaner
+import com.teamhide.kream.support.test.MysqlDbCleaner
 import io.kotest.core.spec.style.BehaviorSpec
-import io.mockk.every
-import io.mockk.mockk
-import io.mockk.verify
+import io.kotest.matchers.nulls.shouldNotBeNull
+import io.kotest.matchers.shouldBe
 
-internal class SaveOrUpdateProductDisplayServiceTest : BehaviorSpec({
-    isolationMode = IsolationMode.InstancePerLeaf
-
-    val productDisplayRepositoryAdapter = mockk<ProductDisplayRepositoryAdapter>()
-    val productRepositoryAdapter = mockk<ProductRepositoryAdapter>()
-    val saveOrUpdateProductDisplayService = SaveOrUpdateProductDisplayService(
-        productDisplayRepositoryAdapter = productDisplayRepositoryAdapter,
-        productRepositoryAdapter = productRepositoryAdapter,
-    )
+@IntegrationTest
+internal class SaveOrUpdateProductDisplayServiceTest(
+    private val saveOrUpdateProductDisplayService: SaveOrUpdateProductDisplayService,
+    private val productRepository: ProductRepository,
+    private val productDisplayRepository: ProductDisplayRepository,
+    private val productBrandRepository: ProductBrandRepository,
+    private val productCategoryRepository: ProductCategoryRepository,
+) : BehaviorSpec({
+    listeners(MysqlDbCleaner(), MongoDbCleaner())
 
     Given("전시 상품 정보가 존재하지 않고 상품도 존재하지 않을 때") {
-        every { productDisplayRepositoryAdapter.findByProductId(any()) } returns null
-        every { productRepositoryAdapter.findById(any()) } returns null
         val command = makeSaveOrUpdateProductDisplayCommand()
 
         When("저장 또는 업데이트 요청을 하면") {
             saveOrUpdateProductDisplayService.execute(command = command)
 
             Then("저장하지 않는다") {
-                verify(exactly = 0) { productDisplayRepositoryAdapter.save(any<ProductDisplay>()) }
+                productDisplayRepository.findAll().size shouldBe 0
             }
         }
     }
 
     Given("전시 상품 정보가 존재하지 않고 브랜드도 존재하지 않을 때") {
-        every { productDisplayRepositoryAdapter.findByProductId(any()) } returns null
+        productRepository.save(makeProduct())
 
-        val product = makeProduct()
-        every { productRepositoryAdapter.findById(any()) } returns product
-
-        every { productRepositoryAdapter.findBrandById(any()) } returns null
         val command = makeSaveOrUpdateProductDisplayCommand()
 
         When("저장 또는 업데이트 요청을 하면") {
             saveOrUpdateProductDisplayService.execute(command = command)
 
             Then("저장하지 않는다") {
-                verify(exactly = 0) { productDisplayRepositoryAdapter.save(any<ProductDisplay>()) }
+                productDisplayRepository.findAll().size shouldBe 0
             }
         }
     }
 
     Given("전시 상품 정보가 존재하지 않고 카테고리도 존재하지 않을 때") {
-        every { productDisplayRepositoryAdapter.findByProductId(any()) } returns null
+        productRepository.save(makeProduct())
 
-        val product = makeProduct()
-        every { productRepositoryAdapter.findById(any()) } returns product
-
-        val brand = makeProductBrand()
-        every { productRepositoryAdapter.findBrandById(any()) } returns brand
-
-        every { productRepositoryAdapter.findCategoryById(any()) } returns null
+        productBrandRepository.save(makeProductBrand())
 
         val command = makeSaveOrUpdateProductDisplayCommand()
 
@@ -73,25 +63,17 @@ internal class SaveOrUpdateProductDisplayServiceTest : BehaviorSpec({
             saveOrUpdateProductDisplayService.execute(command = command)
 
             Then("저장하지 않는다") {
-                verify(exactly = 0) { productDisplayRepositoryAdapter.save(any<ProductDisplay>()) }
+                productDisplayRepository.findAll().size shouldBe 0
             }
         }
     }
 
     Given("전시 상품 정보가 존재하지 않을 때") {
-        every { productDisplayRepositoryAdapter.findByProductId(any()) } returns null
+        val productBrand = productBrandRepository.save(makeProductBrand())
 
-        val product = makeProduct()
-        every { productRepositoryAdapter.findById(any()) } returns product
+        val productCategory = productCategoryRepository.save(makeProductCategory())
 
-        val brand = makeProductBrand()
-        every { productRepositoryAdapter.findBrandById(any()) } returns brand
-
-        val category = makeProductCategory()
-        every { productRepositoryAdapter.findCategoryById(any()) } returns category
-
-        val productDisplay = makeProductDisplay()
-        every { productDisplayRepositoryAdapter.save(any()) } returns productDisplay
+        val product = productRepository.save(makeProduct(productBrand = productBrand, productCategory = productCategory))
 
         val command = makeSaveOrUpdateProductDisplayCommand()
 
@@ -99,14 +81,20 @@ internal class SaveOrUpdateProductDisplayServiceTest : BehaviorSpec({
             saveOrUpdateProductDisplayService.execute(command = command)
 
             Then("전시 상품 정보를 저장한다") {
-                verify(exactly = 1) { productDisplayRepositoryAdapter.save(any<ProductDisplay>()) }
+                val sut = productDisplayRepository.findByProductId(productId = product.id)
+                sut.shouldNotBeNull()
+                sut.productId shouldBe product.id
+                sut.name shouldBe product.name
+                sut.price shouldBe command.price
+                sut.brand shouldBe productBrand.name
+                sut.category shouldBe productCategory.name
+                sut.lastBiddingId shouldBe command.biddingId
             }
         }
     }
 
     Given("전시 상품 정보가 존재하지만 새로운 가격보다 저렴한 경우") {
-        val productDisplay = makeProductDisplay(price = 10000)
-        every { productDisplayRepositoryAdapter.findByProductId(any()) } returns productDisplay
+        val productDisplay = productDisplayRepository.save(makeProductDisplay(price = 10000))
 
         val command = makeSaveOrUpdateProductDisplayCommand(price = 20000)
 
@@ -114,15 +102,15 @@ internal class SaveOrUpdateProductDisplayServiceTest : BehaviorSpec({
             saveOrUpdateProductDisplayService.execute(command = command)
 
             Then("전시 상품 정보를 업데이트 하지않는다") {
-                verify(exactly = 0) { productDisplayRepositoryAdapter.save(any()) }
+                val sut = productDisplayRepository.findByProductId(productId = productDisplay.productId)
+                sut.shouldNotBeNull()
+                sut.price shouldBe productDisplay.price
             }
         }
     }
 
     Given("전시 상품 정보가 존재하고 새로운 가격보다 저렴한 경우") {
-        val productDisplay = makeProductDisplay(price = 30000)
-        every { productDisplayRepositoryAdapter.findByProductId(any()) } returns productDisplay
-        every { productDisplayRepositoryAdapter.save(any()) } returns productDisplay
+        val productDisplay = productDisplayRepository.save(makeProductDisplay(price = 30000))
 
         val command = makeSaveOrUpdateProductDisplayCommand(price = 20000)
 
@@ -130,7 +118,9 @@ internal class SaveOrUpdateProductDisplayServiceTest : BehaviorSpec({
             saveOrUpdateProductDisplayService.execute(command = command)
 
             Then("전시 상품 정보를 업데이트한다") {
-                verify(exactly = 1) { productDisplayRepositoryAdapter.save(any()) }
+                val sut = productDisplayRepository.findByProductId(productId = productDisplay.productId)
+                sut.shouldNotBeNull()
+                sut.price shouldBe command.price
             }
         }
     }

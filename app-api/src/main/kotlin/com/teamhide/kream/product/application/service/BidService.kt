@@ -73,7 +73,6 @@ class BidService(
                 productId = productId, biddingType = BiddingType.SALE
             ) ?: return true
         }
-
         if (price == bidding.price) {
             return false
         }
@@ -87,7 +86,6 @@ class BidService(
         if (biddingType == BiddingType.SALE && price < bidding.price) {
             return false
         }
-
         return true
     }
 }

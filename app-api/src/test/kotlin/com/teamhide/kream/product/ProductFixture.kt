@@ -5,6 +5,7 @@ import com.teamhide.kream.product.domain.model.Product
 import com.teamhide.kream.product.domain.model.ProductBrand
 import com.teamhide.kream.product.domain.model.ProductCategory
 import com.teamhide.kream.product.domain.model.ProductDisplay
+import com.teamhide.kream.product.domain.model.ProductDisplayRead
 import com.teamhide.kream.product.domain.model.ProductInfo
 import com.teamhide.kream.product.domain.repository.ProductInfoDto
 import com.teamhide.kream.product.domain.usecase.RegisterProductCommand
@@ -118,6 +119,22 @@ fun makeProductDisplay(
         brand = brand,
         category = category,
         lastBiddingId = lastBiddingId,
+    )
+}
+
+fun makeProductDisplayRead(
+    productId: Long = 1L,
+    name: String = "name",
+    price: Int = 10000,
+    brand: String = "Nike",
+    category: String = "SHOES",
+): ProductDisplayRead {
+    return ProductDisplayRead(
+        productId = productId,
+        name = name,
+        price = price,
+        brand = brand,
+        category = category,
     )
 }
 

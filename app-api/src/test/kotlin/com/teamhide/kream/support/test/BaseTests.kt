@@ -54,13 +54,6 @@ annotation class MongoRepositoryTest
 @SpringBootTest
 @AutoConfigureMockMvc
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@TestExecutionListeners(
-    value = [
-        MySqlTestExecutionListener::class,
-        MongoTestExecutionListener::class,
-    ],
-    mergeMode = TestExecutionListeners.MergeMode.MERGE_WITH_DEFAULTS
-)
 annotation class IntegrationTest
 
 @ImportAutoConfiguration(

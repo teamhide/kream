@@ -19,17 +19,15 @@ class AcquireCouponV1ControllerTest : RestControllerTest() {
     lateinit var acquireCouponUseCase: AcquireCouponUseCase
 
     @Test
-    fun `테스트`() {
+    fun `쿠폰 획득 API`() {
         // Given
         every { acquireCouponUseCase.execute(any()) } returns Unit
 
-        // When
+        // When, Then
         mockMvc.post("$URL/couponIdentifier") {
             header(HttpHeaders.AUTHORIZATION, "Bearer $USER_ID_1_TOKEN")
         }.andExpect {
             status { isOk() }
         }
-
-        // Then
     }
 }

@@ -21,7 +21,7 @@ import org.springframework.transaction.annotation.Transactional
 @Transactional(readOnly = true)
 class ImmediateSaleService(
     private val biddingRepositoryAdapter: BiddingRepositoryAdapter,
-    private val userExternalAdapter: UserExternalAdapter,
+    private val productUserAdapter: ProductUserAdapter,
     private val attemptPaymentUseCase: AttemptPaymentUseCase,
     private val completeBidUseCase: CompleteBidUseCase,
     private val applicationEventPublisher: ApplicationEventPublisher,
@@ -34,7 +34,7 @@ class ImmediateSaleService(
             throw AlreadyCompleteBidException()
         }
 
-        userExternalAdapter.findById(userId = command.userId) ?: throw UserNotFoundException()
+        productUserAdapter.findById(userId = command.userId) ?: throw UserNotFoundException()
 
         val purchaserId = bidding.user.id
         val paymentId = AttemptPaymentCommand(biddingId = bidding.id, price = bidding.price, userId = purchaserId).let {

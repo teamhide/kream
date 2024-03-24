@@ -23,7 +23,7 @@ class ImmediatePurchaseService(
     private val biddingRepositoryAdapter: BiddingRepositoryAdapter,
     private val attemptPaymentUseCase: AttemptPaymentUseCase,
     private val completeBidUseCase: CompleteBidUseCase,
-    private val userExternalAdapter: UserExternalAdapter,
+    private val productUserAdapter: ProductUserAdapter,
     private val applicationEventPublisher: ApplicationEventPublisher,
 ) : ImmediatePurchaseUseCase {
     @RedisLock(key = "#command.biddingId")
@@ -35,7 +35,7 @@ class ImmediatePurchaseService(
         }
 
         val user =
-            userExternalAdapter.findById(userId = command.userId) ?: throw UserNotFoundException()
+            productUserAdapter.findById(userId = command.userId) ?: throw UserNotFoundException()
 
         val purchaserId = user.id
         val paymentId = AttemptPaymentCommand(biddingId = bidding.id, price = bidding.price, userId = purchaserId).let {

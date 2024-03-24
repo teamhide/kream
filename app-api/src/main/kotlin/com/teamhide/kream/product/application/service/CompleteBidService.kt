@@ -16,10 +16,10 @@ import org.springframework.transaction.annotation.Transactional
 @Transactional(propagation = Propagation.REQUIRES_NEW)
 class CompleteBidService(
     private val biddingRepositoryAdapter: BiddingRepositoryAdapter,
-    private val userExternalAdapter: UserExternalAdapter,
+    private val productUserAdapter: ProductUserAdapter,
 ) : CompleteBidUseCase {
     override fun execute(command: CompleteBidCommand) {
-        val user = userExternalAdapter.findById(userId = command.userId) ?: throw UserNotFoundException()
+        val user = productUserAdapter.findById(userId = command.userId) ?: throw UserNotFoundException()
         val bidding = biddingRepositoryAdapter.findById(biddingId = command.biddingId)
             ?: throw BiddingNotFoundException()
 

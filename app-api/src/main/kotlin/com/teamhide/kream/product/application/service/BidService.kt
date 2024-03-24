@@ -20,7 +20,7 @@ import org.springframework.transaction.annotation.Transactional
 @Transactional
 class BidService(
     private val biddingRepositoryAdapter: BiddingRepositoryAdapter,
-    private val userExternalAdapter: UserExternalAdapter,
+    private val productUserAdapter: ProductUserAdapter,
     private val productRepositoryAdapter: ProductRepositoryAdapter,
     private val applicationEventPublisher: ApplicationEventPublisher,
 ) : BidUseCase {
@@ -29,7 +29,7 @@ class BidService(
             throw ImmediateTradeAvailableException()
         }
 
-        val user = userExternalAdapter.findById(userId = command.userId)
+        val user = productUserAdapter.findById(userId = command.userId)
             ?: throw UserNotFoundException()
         val product = productRepositoryAdapter.findById(productId = command.productId)
             ?: throw ProductNotFoundException()

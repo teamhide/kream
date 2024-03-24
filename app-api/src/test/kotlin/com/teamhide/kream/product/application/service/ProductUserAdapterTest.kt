@@ -8,9 +8,9 @@ import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
 
-internal class UserAdapterTest : StringSpec({
+internal class ProductUserAdapterTest : StringSpec({
     val getUserByIdUseCase = mockk<GetUserByIdUseCase>()
-    val userExternalAdapter = UserExternalAdapter(getUserByIdUseCase = getUserByIdUseCase)
+    val productUserAdapter = ProductUserAdapter(getUserByIdUseCase = getUserByIdUseCase)
 
     "ID로 유저를 조회한다" {
         // Given
@@ -19,7 +19,7 @@ internal class UserAdapterTest : StringSpec({
         every { getUserByIdUseCase.execute(any()) } returns user
 
         // When
-        val sut = userExternalAdapter.findById(userId = userId)
+        val sut = productUserAdapter.findById(userId = userId)
 
         // Then
         sut.shouldNotBeNull()

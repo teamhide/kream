@@ -38,36 +38,6 @@ internal class SaveOrUpdateProductDisplayServiceTest(
         }
     }
 
-    Given("전시 상품 정보가 존재하지 않고 브랜드도 존재하지 않을 때") {
-        productRepository.save(makeProduct())
-
-        val command = makeSaveOrUpdateProductDisplayCommand()
-
-        When("저장 또는 업데이트 요청을 하면") {
-            saveOrUpdateProductDisplayService.execute(command = command)
-
-            Then("저장하지 않는다") {
-                productDisplayRepository.findAll().size shouldBe 0
-            }
-        }
-    }
-
-    Given("전시 상품 정보가 존재하지 않고 카테고리도 존재하지 않을 때") {
-        productRepository.save(makeProduct())
-
-        productBrandRepository.save(makeProductBrand())
-
-        val command = makeSaveOrUpdateProductDisplayCommand()
-
-        When("저장 또는 업데이트 요청을 하면") {
-            saveOrUpdateProductDisplayService.execute(command = command)
-
-            Then("저장하지 않는다") {
-                productDisplayRepository.findAll().size shouldBe 0
-            }
-        }
-    }
-
     Given("전시 상품 정보가 존재하지 않을 때") {
         val productBrand = productBrandRepository.save(makeProductBrand())
 

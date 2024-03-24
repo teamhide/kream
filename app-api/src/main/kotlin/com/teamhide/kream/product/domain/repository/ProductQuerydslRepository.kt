@@ -1,6 +1,7 @@
 package com.teamhide.kream.product.domain.repository
 
 import com.querydsl.core.annotations.QueryProjection
+import com.teamhide.kream.product.domain.model.Product
 
 data class ProductInfoDto @QueryProjection constructor(
     val productId: Long,
@@ -13,4 +14,6 @@ data class ProductInfoDto @QueryProjection constructor(
 
 interface ProductQuerydslRepository {
     fun findInfoById(productId: Long): ProductInfoDto?
+
+    fun findWithCategoryAndBrandById(productId: Long): Product?
 }

@@ -31,11 +31,11 @@ class Product(
     val sizeType: SizeType,
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_brand_id")
+    @JoinColumn(name = "product_brand_id", nullable = false)
     val productBrand: ProductBrand,
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_category_id")
+    @JoinColumn(name = "product_category_id", nullable = false)
     val productCategory: ProductCategory,
 
     @Id

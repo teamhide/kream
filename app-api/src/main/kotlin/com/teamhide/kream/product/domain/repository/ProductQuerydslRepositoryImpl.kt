@@ -1,6 +1,7 @@
 package com.teamhide.kream.product.domain.repository
 
 import com.querydsl.jpa.impl.JPAQueryFactory
+import com.teamhide.kream.product.domain.model.Product
 import com.teamhide.kream.product.domain.model.QProduct
 import com.teamhide.kream.product.domain.model.QProductBrand
 import com.teamhide.kream.product.domain.model.QProductCategory
@@ -27,6 +28,15 @@ class ProductQuerydslRepositoryImpl(
             .from(product)
             .innerJoin(product.productBrand, productBrand)
             .innerJoin(product.productCategory, productCategory)
+            .where(product.id.eq(productId))
+            .fetchFirst()
+    }
+
+    override fun findWithCategoryAndBrandById(productId: Long): Product? {
+        return queryFactory
+            .select(product)
+            .join(product.productBrand).fetchJoin()
+            .join(product.productCategory).fetchJoin()
             .where(product.id.eq(productId))
             .fetchFirst()
     }

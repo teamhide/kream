@@ -19,14 +19,12 @@ class SaveOrUpdateProductDisplayService(
 
         if (existProductDisplay == null) {
             val product = productRepositoryAdapter.findById(productId = command.productId) ?: return
-            val brand = productRepositoryAdapter.findBrandById(brandId = product.productBrand.id) ?: return
-            val category = productRepositoryAdapter.findCategoryById(categoryId = product.productCategory.id) ?: return
             val productDisplay = ProductDisplay(
                 productId = product.id,
                 name = product.name,
                 price = command.price,
-                brand = brand.name,
-                category = category.name,
+                brand = product.productBrand.name,
+                category = product.productCategory.name,
                 lastBiddingId = command.biddingId,
             )
             productDisplayRepositoryAdapter.save(productDisplay = productDisplay)

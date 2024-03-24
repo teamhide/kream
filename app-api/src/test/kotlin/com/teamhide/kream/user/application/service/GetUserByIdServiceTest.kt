@@ -1,22 +1,24 @@
 package com.teamhide.kream.user.application.service
 
-import com.teamhide.kream.user.domain.repository.UserRepositoryAdapter
+import com.teamhide.kream.support.test.IntegrationTest
+import com.teamhide.kream.support.test.MysqlDbCleaner
+import com.teamhide.kream.user.domain.repository.UserRepository
 import com.teamhide.kream.user.domain.usecase.GetUserByIdQuery
 import com.teamhide.kream.user.makeUser
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
-import io.mockk.every
-import io.mockk.mockk
 
-internal class GetUserByIdServiceTest : BehaviorSpec({
-    val userRepositoryAdapter = mockk<UserRepositoryAdapter>()
-    val getUserByIdService = GetUserByIdService(userRepositoryAdapter = userRepositoryAdapter)
+@IntegrationTest
+internal class GetUserByIdServiceTest(
+    private val userRepository: UserRepository,
+    private val getUserByIdService: GetUserByIdService,
+) : BehaviorSpec({
+    listeners(MysqlDbCleaner())
 
     Given("유저 ID를 기반으로") {
         val query = GetUserByIdQuery(userId = 1L)
-        val user = makeUser()
-        every { userRepositoryAdapter.findById(any()) } returns user
+        val user = userRepository.save(makeUser())
 
         When("조회하면") {
             val sut = getUserByIdService.execute(query = query)

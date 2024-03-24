@@ -30,7 +30,6 @@ class RegisterUserService(
         }
 
         userRepositoryAdapter.save(user = user)
-
         return user
     }
 }

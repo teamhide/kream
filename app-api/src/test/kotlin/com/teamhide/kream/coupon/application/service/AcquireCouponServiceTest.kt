@@ -5,9 +5,11 @@ import com.teamhide.kream.coupon.application.exception.CouponOutOfStockException
 import com.teamhide.kream.coupon.application.exception.InvalidIdentifierException
 import com.teamhide.kream.coupon.application.exception.UnavailableCouponGroupException
 import com.teamhide.kream.coupon.domain.repository.CouponGroupRepository
+import com.teamhide.kream.coupon.domain.repository.CouponHistoryRepository
 import com.teamhide.kream.coupon.domain.repository.CouponRepository
 import com.teamhide.kream.coupon.domain.vo.CouponGroupStatus
 import com.teamhide.kream.coupon.domain.vo.CouponPeriodType
+import com.teamhide.kream.coupon.domain.vo.CouponStatus
 import com.teamhide.kream.coupon.makeAcquireCouponCommand
 import com.teamhide.kream.coupon.makeCouponGroup
 import com.teamhide.kream.support.test.IntegrationTest
@@ -28,6 +30,7 @@ internal class AcquireCouponServiceTest(
     private val couponGroupRepository: CouponGroupRepository,
     private val couponRedisAdapter: CouponRedisAdapter,
     private val couponRepository: CouponRepository,
+    private val couponHistoryRepository: CouponHistoryRepository,
 ) : BehaviorSpec({
     listeners(MysqlDbCleaner(), RedisCleaner())
 
@@ -176,6 +179,13 @@ internal class AcquireCouponServiceTest(
                 val sut = couponGroupRepository.findByIdOrNull(savedCouponGroup.id)
                 sut.shouldNotBeNull()
                 sut.remainQuantity shouldBe couponGroup.remainQuantity - 1
+            }
+
+            Then("쿠폰 발급 내역이 저장된다") {
+                val histories = couponHistoryRepository.findAll()
+                val sut = histories[0]
+                sut.userId shouldBe userId
+                sut.status shouldBe CouponStatus.ISSUED
             }
         }
     }

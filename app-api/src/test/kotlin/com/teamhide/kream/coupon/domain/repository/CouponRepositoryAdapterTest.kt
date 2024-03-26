@@ -2,6 +2,7 @@ package com.teamhide.kream.coupon.domain.repository
 
 import com.teamhide.kream.coupon.makeCoupon
 import com.teamhide.kream.coupon.makeCouponGroup
+import com.teamhide.kream.coupon.makeCouponHistory
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
@@ -11,9 +12,11 @@ import io.mockk.mockk
 internal class CouponRepositoryAdapterTest : StringSpec({
     val couponRepository = mockk<CouponRepository>()
     val couponGroupRepository = mockk<CouponGroupRepository>()
+    val couponHistoryRepository = mockk<CouponHistoryRepository>()
     val couponRepositoryAdapter = CouponRepositoryAdapter(
         couponGroupRepository = couponGroupRepository,
         couponRepository = couponRepository,
+        couponHistoryRepository = couponHistoryRepository,
     )
 
     "identifier로 CouponGroup을 조회한다" {
@@ -44,7 +47,6 @@ internal class CouponRepositoryAdapterTest : StringSpec({
         val sut = couponRepositoryAdapter.saveCoupon(coupon = coupon)
 
         // Then
-        sut.shouldNotBeNull()
         sut.id shouldBe coupon.id
         sut.couponGroup shouldBe coupon.couponGroup
         sut.userId shouldBe coupon.userId
@@ -61,7 +63,6 @@ internal class CouponRepositoryAdapterTest : StringSpec({
         val sut = couponRepositoryAdapter.saveCouponGroup(couponGroup = couponGroup)
 
         // Then
-        sut.shouldNotBeNull()
         sut.id shouldBe couponGroup.id
         sut.identifier shouldBe couponGroup.identifier
         sut.discountInfo shouldBe couponGroup.discountInfo
@@ -70,5 +71,20 @@ internal class CouponRepositoryAdapterTest : StringSpec({
         sut.remainQuantity shouldBe couponGroup.remainQuantity
         sut.periodType shouldBe couponGroup.periodType
         sut.period shouldBe couponGroup.period
+    }
+
+    "CouponHistory를 저장한다" {
+        // Given
+        val couponHistory = makeCouponHistory()
+        every { couponHistoryRepository.save(any()) } returns couponHistory
+
+        // When
+        val sut = couponRepositoryAdapter.saveCouponHistory(couponHistory = couponHistory)
+
+        // Then
+        sut.id shouldBe couponHistory.id
+        sut.userId shouldBe couponHistory.userId
+        sut.coupon shouldBe couponHistory.coupon
+        sut.status shouldBe couponHistory.status
     }
 })

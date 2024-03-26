@@ -114,7 +114,7 @@ CREATE TABLE coupon(
 
 CREATE TABLE coupon_history(
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
-    coupon_group_id BIGINT NOT NULL,
+    coupon_id BIGINT NOT NULL,
     user_id BIGINT NOT NULL,
     status VARCHAR(20) NOT NULL,
     created_at DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),

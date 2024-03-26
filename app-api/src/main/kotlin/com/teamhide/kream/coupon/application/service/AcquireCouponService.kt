@@ -5,6 +5,7 @@ import com.teamhide.kream.coupon.application.exception.CouponOutOfStockException
 import com.teamhide.kream.coupon.application.exception.InvalidIdentifierException
 import com.teamhide.kream.coupon.application.exception.UnavailableCouponGroupException
 import com.teamhide.kream.coupon.domain.model.Coupon
+import com.teamhide.kream.coupon.domain.model.CouponHistory
 import com.teamhide.kream.coupon.domain.repository.CouponRepositoryAdapter
 import com.teamhide.kream.coupon.domain.usecase.AcquireCouponCommand
 import com.teamhide.kream.coupon.domain.usecase.AcquireCouponUseCase
@@ -41,6 +42,10 @@ class AcquireCouponService(
 
         val coupon = Coupon.issue(couponGroup = couponGroup, userId = command.userId)
         couponRepositoryAdapter.saveCoupon(coupon = coupon)
+
+        val couponHistory = CouponHistory.issued(userId = userId, coupon = coupon)
+        couponRepositoryAdapter.saveCouponHistory(couponHistory = couponHistory)
+
         couponGroup.decreaseRemainQuantity()
     }
 }

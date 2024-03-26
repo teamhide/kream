@@ -31,4 +31,14 @@ class CouponHistory(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0L,
-) : BaseTimestampEntity()
+) : BaseTimestampEntity() {
+    companion object {
+        fun issued(userId: Long, coupon: Coupon): CouponHistory {
+            return CouponHistory(
+                userId = userId,
+                coupon = coupon,
+                status = CouponStatus.ISSUED,
+            )
+        }
+    }
+}

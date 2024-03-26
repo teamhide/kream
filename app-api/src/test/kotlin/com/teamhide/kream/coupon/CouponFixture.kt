@@ -2,6 +2,7 @@ package com.teamhide.kream.coupon
 
 import com.teamhide.kream.coupon.domain.model.Coupon
 import com.teamhide.kream.coupon.domain.model.CouponGroup
+import com.teamhide.kream.coupon.domain.model.CouponHistory
 import com.teamhide.kream.coupon.domain.usecase.AcquireCouponCommand
 import com.teamhide.kream.coupon.domain.vo.CouponDiscountInfo
 import com.teamhide.kream.coupon.domain.vo.CouponDiscountType
@@ -56,5 +57,19 @@ fun makeAcquireCouponCommand(
     return AcquireCouponCommand(
         identifier = identifier,
         userId = userId,
+    )
+}
+
+fun makeCouponHistory(
+    id: Long = 1L,
+    userId: Long = 1L,
+    coupon: Coupon = makeCoupon(),
+    status: CouponStatus = CouponStatus.ISSUED,
+): CouponHistory {
+    return CouponHistory(
+        id = id,
+        userId = userId,
+        coupon = coupon,
+        status = status,
     )
 }

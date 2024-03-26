@@ -1,16 +1,21 @@
 package com.teamhide.kream.batch.test
 
+import io.kotest.core.listeners.TestListener
+import io.kotest.core.test.TestCase
+import io.kotest.core.test.TestResult
+import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.data.mongodb.core.MongoTemplate
 import org.springframework.data.mongodb.core.query.Query
-import org.springframework.test.context.TestContext
-import org.springframework.test.context.support.AbstractTestExecutionListener
+import org.springframework.test.context.TestContextManager
 
-class MongoTestExecutionListener : AbstractTestExecutionListener() {
-
-    override fun afterTestMethod(testContext: TestContext) {
-        val mongoTemplate = getMongoTemplate(testContext = testContext)
+@SpringBootTest
+@TestEnvironment
+class MongoDbCleaner : TestListener {
+    override suspend fun afterContainer(testCase: TestCase, result: TestResult) {
+        val testContextManager = TestContextManager(this::class.java)
+        testContextManager.prepareTestInstance(this)
+        val mongoTemplate = testContextManager.testContext.applicationContext.getBean(MongoTemplate::class.java)
         val collections = getAllCollections(mongoTemplate = mongoTemplate)
-
         truncateAll(collections = collections, mongoTemplate = mongoTemplate)
     }
 
@@ -18,10 +23,6 @@ class MongoTestExecutionListener : AbstractTestExecutionListener() {
         for (collection in collections) {
             mongoTemplate.remove(Query(), collection)
         }
-    }
-
-    private fun getMongoTemplate(testContext: TestContext): MongoTemplate {
-        return testContext.applicationContext.getBean(MongoTemplate::class.java)
     }
 
     private fun getAllCollections(mongoTemplate: MongoTemplate): Set<String> {

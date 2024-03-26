@@ -6,8 +6,16 @@ spring:
       password: kream
       pool-name: 'read-write-pool'
       driver-class-name: com.mysql.cj.jdbc.Driver
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    url: jdbc:mysql://localhost:33061/kream_test?useSSL=false&characterEncoding=UTF-8&serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true
+    user: kream
+    password: kream
+    locations: classpath:db/migration
   jpa:
     show-sql: true
-    generate-ddl: true
+    database-platform: org.hibernate.dialect.MySQLDialect
+    open-in-view: false
     hibernate:
       ddl-auto: none

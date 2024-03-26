@@ -1,17 +1,24 @@
 package com.teamhide.kream.batch.test
 
+import io.kotest.core.listeners.TestListener
+import io.kotest.core.test.TestCase
+import io.kotest.core.test.TestResult
+import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.jdbc.core.JdbcTemplate
-import org.springframework.test.context.TestContext
-import org.springframework.test.context.support.AbstractTestExecutionListener
+import org.springframework.test.context.TestContextManager
 import java.sql.DatabaseMetaData
 import java.sql.SQLException
 
-class MySqlTestExecutionListener : AbstractTestExecutionListener() {
+@SpringBootTest
+@TestEnvironment
+class MysqlDbCleaner : TestListener {
+    lateinit var jdbcTemplate: JdbcTemplate
 
-    override fun afterTestMethod(testContext: TestContext) {
-        val jdbcTemplate = getJdbcTemplate(testContext)
+    override suspend fun afterContainer(testCase: TestCase, result: TestResult) {
+        val testContextManager = TestContextManager(this::class.java)
+        testContextManager.prepareTestInstance(this)
+        jdbcTemplate = testContextManager.testContext.applicationContext.getBean(JdbcTemplate::class.java)
         val tables = getAllTables(jdbcTemplate)
-
         truncateAll(tables = tables, jdbcTemplate = jdbcTemplate)
     }
 
@@ -22,10 +29,6 @@ class MySqlTestExecutionListener : AbstractTestExecutionListener() {
                 jdbcTemplate.execute("TRUNCATE TABLE $table")
             }
         }
-    }
-
-    private fun getJdbcTemplate(testContext: TestContext): JdbcTemplate {
-        return testContext.applicationContext.getBean(JdbcTemplate::class.java)
     }
 
     private fun getAllTables(jdbcTemplate: JdbcTemplate): List<String> {
@@ -56,7 +59,7 @@ class MySqlTestExecutionListener : AbstractTestExecutionListener() {
             "BATCH_JOB_SEQ",
             "BATCH_STEP_EXECUTION",
             "BATCH_STEP_EXECUTION_CONTEXT",
-            "BATCH_STEP_EXECUTION_SEQ"
+            "BATCH_STEP_EXECUTION_SEQ",
         )
     }
 }

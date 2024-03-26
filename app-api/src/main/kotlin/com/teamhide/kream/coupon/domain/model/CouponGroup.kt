@@ -2,6 +2,7 @@ package com.teamhide.kream.coupon.domain.model
 
 import com.teamhide.kream.common.config.database.BaseTimestampEntity
 import com.teamhide.kream.coupon.domain.vo.CouponDiscountInfo
+import com.teamhide.kream.coupon.domain.vo.CouponDiscountType
 import com.teamhide.kream.coupon.domain.vo.CouponGroupStatus
 import com.teamhide.kream.coupon.domain.vo.CouponPeriodType
 import jakarta.persistence.Column
@@ -52,5 +53,26 @@ class CouponGroup(
 
     fun decreaseRemainQuantity() {
         this.remainQuantity -= 1
+    }
+
+    companion object {
+        fun create(
+            identifier: String,
+            discountType: CouponDiscountType,
+            discountValue: Int,
+            quantity: Int,
+            periodType: CouponPeriodType,
+            period: Int,
+        ): CouponGroup {
+            return CouponGroup(
+                identifier = identifier,
+                discountInfo = CouponDiscountInfo(discountType = discountType, discountValue = discountValue),
+                status = CouponGroupStatus.ACTIVATED,
+                quantity = quantity,
+                remainQuantity = quantity,
+                periodType = periodType,
+                period = period,
+            )
+        }
     }
 }

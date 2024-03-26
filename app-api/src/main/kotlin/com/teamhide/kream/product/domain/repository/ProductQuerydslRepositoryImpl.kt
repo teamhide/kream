@@ -34,9 +34,9 @@ class ProductQuerydslRepositoryImpl(
 
     override fun findWithCategoryAndBrandById(productId: Long): Product? {
         return queryFactory
-            .select(product)
-            .join(product.productBrand).fetchJoin()
-            .join(product.productCategory).fetchJoin()
+            .selectFrom(product)
+            .innerJoin(product.productBrand, productBrand).fetchJoin()
+            .innerJoin(product.productCategory, productCategory).fetchJoin()
             .where(product.id.eq(productId))
             .fetchFirst()
     }

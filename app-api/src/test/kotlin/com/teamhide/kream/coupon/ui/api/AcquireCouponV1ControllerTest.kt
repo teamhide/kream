@@ -13,10 +13,10 @@ import org.springframework.test.web.servlet.post
 private const val URL = "/v1/coupon/acquire"
 
 @WebMvcTest(AcquireCouponV1Controller::class)
-class AcquireCouponV1ControllerTest : RestControllerTest() {
+internal class AcquireCouponV1ControllerTest : RestControllerTest() {
 
     @MockkBean
-    lateinit var acquireCouponUseCase: AcquireCouponUseCase
+    private lateinit var acquireCouponUseCase: AcquireCouponUseCase
 
     @Test
     fun `쿠폰 획득 API`() {

@@ -44,4 +44,32 @@ internal class ProductQuerydslRepositoryImplTest(
         sut.brand shouldBe productBrand.name
         sut.category shouldBe productCategory.name
     }
+
+    @Test
+    fun `id로 Category와 Brand를 Fetch join하여 Product를 조회한다`() {
+        // Given
+        val productCategory = makeProductCategory()
+        productCategoryRepository.save(productCategory)
+
+        val productBrand = makeProductBrand()
+        productBrandRepository.save(productBrand)
+
+        val product = makeProduct(productCategory = productCategory, productBrand = productBrand)
+        productRepository.save(product)
+
+        // When
+        val sut = productRepository.findWithCategoryAndBrandById(productId = product.id)
+
+        // Then
+        sut.shouldNotBeNull()
+        sut.id shouldBe product.id
+        sut.name shouldBe product.name
+        sut.productCategory.id shouldBe product.productCategory.id
+        sut.productCategory.name shouldBe product.productCategory.name
+        sut.productBrand.id shouldBe product.productBrand.id
+        sut.productBrand.name shouldBe product.productBrand.name
+        sut.releasePrice shouldBe product.releasePrice
+        sut.modelNumber shouldBe product.modelNumber
+        sut.sizeType shouldBe product.sizeType
+    }
 }

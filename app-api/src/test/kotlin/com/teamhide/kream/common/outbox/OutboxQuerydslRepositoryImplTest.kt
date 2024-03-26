@@ -1,5 +1,7 @@
 package com.teamhide.kream.common.outbox
 
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.teamhide.kream.product.domain.event.BiddingCompletedEvent
 import com.teamhide.kream.support.test.JpaRepositoryTest
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
@@ -12,18 +14,27 @@ import org.springframework.transaction.annotation.Transactional
 internal class OutboxQuerydslRepositoryImplTest(
     private val outboxRepository: OutboxRepository,
     private val entityManager: EntityManager,
+    private val objectMapper: ObjectMapper,
 ) {
     @Test
     fun `완료되지 않은 로우를 조회한다`() {
         // Given
+        val event1 = BiddingCompletedEvent(
+            productId = 1L,
+            biddingId = 1L,
+        )
         val outbox1 = Outbox(
             aggregateType = AggregateType.BIDDING_COMPLETED,
-            payload = "payload",
+            payload = objectMapper.writeValueAsString(event1),
             completedAt = null,
+        )
+        val event2 = BiddingCompletedEvent(
+            productId = 2L,
+            biddingId = 2L,
         )
         val outbox2 = Outbox(
             aggregateType = AggregateType.BIDDING_COMPLETED,
-            payload = "payload",
+            payload = objectMapper.writeValueAsString(event2),
             completedAt = null,
         )
         outboxRepository.saveAll(listOf(outbox1, outbox2))

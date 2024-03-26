@@ -73,7 +73,6 @@ annotation class FeignTest
 @Retention(AnnotationRetention.RUNTIME)
 @TestEnvironment
 @SpringBootTest
-@AutoConfigureMockMvc
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @TestExecutionListeners(
     value = [MySqlTestExecutionListener::class],

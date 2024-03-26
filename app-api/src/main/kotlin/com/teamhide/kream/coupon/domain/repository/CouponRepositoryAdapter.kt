@@ -12,4 +12,6 @@ class CouponRepositoryAdapter(
     fun findCouponGroupByIdentifier(identifier: String): CouponGroup? = couponGroupRepository.findByIdentifier(identifier = identifier)
 
     fun saveCoupon(coupon: Coupon): Coupon = couponRepository.save(coupon)
+
+    fun saveCouponGroup(couponGroup: CouponGroup): CouponGroup = couponGroupRepository.save(couponGroup)
 }

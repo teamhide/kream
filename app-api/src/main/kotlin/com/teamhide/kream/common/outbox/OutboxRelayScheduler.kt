@@ -3,6 +3,7 @@ package com.teamhide.kream.common.outbox
 import com.teamhide.kream.product.application.service.BiddingKafkaAdapter
 import com.teamhide.kream.product.domain.event.BiddingCompletedEvent
 import io.github.oshai.kotlinlogging.KotlinLogging
+import org.springframework.context.annotation.Profile
 import org.springframework.data.domain.PageRequest
 import org.springframework.scheduling.annotation.Async
 import org.springframework.scheduling.annotation.Scheduled
@@ -16,6 +17,7 @@ class OutboxRelayScheduler(
     private val biddingKafkaAdapter: BiddingKafkaAdapter,
 ) {
     @Async
+    @Profile("!test")
     @Scheduled(fixedDelay = 1000)
     fun execute() {
         val pageRequest = PageRequest.of(0, 10)

@@ -3,6 +3,7 @@ package com.teamhide.kream.coupon.domain.repository
 import com.teamhide.kream.coupon.domain.model.Coupon
 import com.teamhide.kream.coupon.domain.model.CouponGroup
 import com.teamhide.kream.coupon.domain.model.CouponHistory
+import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Component
 
 @Component
@@ -18,4 +19,9 @@ class CouponRepositoryAdapter(
     fun saveCouponGroup(couponGroup: CouponGroup): CouponGroup = couponGroupRepository.save(couponGroup)
 
     fun saveCouponHistory(couponHistory: CouponHistory): CouponHistory = couponHistoryRepository.save(couponHistory)
+
+    fun findAllCouponGroupBy(pageSize: Int, offset: Int): List<CouponGroup> {
+        val pageRequest = PageRequest.of(offset, pageSize)
+        return couponGroupRepository.findAll(pageRequest).toList()
+    }
 }

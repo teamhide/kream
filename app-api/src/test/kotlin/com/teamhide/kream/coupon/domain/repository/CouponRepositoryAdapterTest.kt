@@ -1,5 +1,7 @@
 package com.teamhide.kream.coupon.domain.repository
 
+import com.teamhide.kream.coupon.domain.model.CouponGroup
+import com.teamhide.kream.coupon.domain.vo.CouponGroupStatus
 import com.teamhide.kream.coupon.makeCoupon
 import com.teamhide.kream.coupon.makeCouponGroup
 import com.teamhide.kream.coupon.makeCouponHistory
@@ -8,6 +10,8 @@ import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 
 internal class CouponRepositoryAdapterTest : StringSpec({
     val couponRepository = mockk<CouponRepository>()
@@ -86,5 +90,36 @@ internal class CouponRepositoryAdapterTest : StringSpec({
         sut.userId shouldBe couponHistory.userId
         sut.coupon shouldBe couponHistory.coupon
         sut.status shouldBe couponHistory.status
+    }
+
+    "모든 쿠폰그룹을 조회한다" {
+        // Given
+        val pageSize = 10
+        val offset = 0
+        val couponGroup1 = makeCouponGroup(id = 1L, remainQuantity = 0, status = CouponGroupStatus.ACTIVATED)
+        val couponGroup2 = makeCouponGroup(id = 2L, remainQuantity = 10, status = CouponGroupStatus.ACTIVATED)
+        val couponGroup3 = makeCouponGroup(id = 3L, remainQuantity = 10, status = CouponGroupStatus.DEACTIVATED)
+        val couponGroups = mutableListOf(couponGroup1, couponGroup2, couponGroup3)
+        val page = mockk<Page<CouponGroup>>()
+        every { page.toList() } returns couponGroups
+        every { couponGroupRepository.findAll(any<Pageable>()) } returns page
+
+        // When
+        val result = couponRepositoryAdapter.findAllCouponGroupBy(pageSize = pageSize, offset = offset)
+
+        // Then
+        result.size shouldBe 3
+
+        result[0].id shouldBe couponGroup1.id
+        result[0].remainQuantity shouldBe couponGroup1.remainQuantity
+        result[0].status shouldBe couponGroup1.status
+
+        result[1].id shouldBe couponGroup2.id
+        result[1].remainQuantity shouldBe couponGroup2.remainQuantity
+        result[1].status shouldBe couponGroup2.status
+
+        result[2].id shouldBe couponGroup3.id
+        result[2].remainQuantity shouldBe couponGroup3.remainQuantity
+        result[2].status shouldBe couponGroup3.status
     }
 })

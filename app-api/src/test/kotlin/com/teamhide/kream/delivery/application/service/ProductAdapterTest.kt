@@ -2,8 +2,7 @@ package com.teamhide.kream.delivery.application.service
 
 import com.teamhide.kream.product.application.exception.BiddingNotFoundException
 import com.teamhide.kream.product.application.exception.ProductNotFoundException
-import com.teamhide.kream.product.domain.usecase.GetBiddingByIdUseCase
-import com.teamhide.kream.product.domain.usecase.GetProductByIdUseCase
+import com.teamhide.kream.product.domain.usecase.InternalProductQueryUseCase
 import com.teamhide.kream.product.makeBidding
 import com.teamhide.kream.product.makeProduct
 import io.kotest.core.spec.style.StringSpec
@@ -13,16 +12,14 @@ import io.mockk.every
 import io.mockk.mockk
 
 internal class ProductAdapterTest : StringSpec({
-    val getProductByIdUseCase = mockk<GetProductByIdUseCase>()
-    val getBiddingByIdUseCase = mockk<GetBiddingByIdUseCase>()
+    val internalProductQueryUseCase = mockk<InternalProductQueryUseCase>()
     val productAdapter = ProductAdapter(
-        getProductByIdUseCase = getProductByIdUseCase,
-        getBiddingByIdUseCase = getBiddingByIdUseCase,
+        internalProductQueryUseCase = internalProductQueryUseCase,
     )
 
     "id로 Product를 조회할 때 예외가 발생하면 null을 리턴한다" {
         // Given
-        every { getProductByIdUseCase.execute(any()) } throws ProductNotFoundException()
+        every { internalProductQueryUseCase.getProductById(any()) } throws ProductNotFoundException()
 
         // When
         val sut = productAdapter.findProductById(productId = 1L)
@@ -34,7 +31,7 @@ internal class ProductAdapterTest : StringSpec({
     "id로 Product를 조회한다" {
         // Given
         val product = makeProduct()
-        every { getProductByIdUseCase.execute(any()) } returns product
+        every { internalProductQueryUseCase.getProductById(any()) } returns product
 
         // When
         val sut = productAdapter.findProductById(productId = product.id)
@@ -52,7 +49,7 @@ internal class ProductAdapterTest : StringSpec({
 
     "id로 Bidding을 조회할 때 예외가 발생하면 null을 리턴한다" {
         // Given
-        every { getBiddingByIdUseCase.execute(any()) } throws BiddingNotFoundException()
+        every { internalProductQueryUseCase.getBiddingById(any()) } throws BiddingNotFoundException()
 
         // When
         val sut = productAdapter.findBiddingById(biddingId = 1L)
@@ -64,7 +61,7 @@ internal class ProductAdapterTest : StringSpec({
     "id로 Bidding을 조회한다" {
         // Given
         val bidding = makeBidding(id = 1L)
-        every { getBiddingByIdUseCase.execute(any()) } returns bidding
+        every { internalProductQueryUseCase.getBiddingById(any()) } returns bidding
 
         // When
         val sut = productAdapter.findBiddingById(biddingId = bidding.id)

@@ -23,6 +23,5 @@ class GetProductsService(
                     category = it.category,
                 )
             }
-            .toList()
     }
 }

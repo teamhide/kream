@@ -15,26 +15,34 @@ class SaveOrUpdateProductDisplayService(
     private val productRepositoryAdapter: ProductRepositoryAdapter,
 ) : SaveOrUpdateProductDisplayUseCase {
     override fun execute(command: SaveOrUpdateProductDisplayCommand) {
-        val existProductDisplay = productDisplayRepositoryAdapter.findByProductId(productId = command.productId)
+        val existingProductDisplay = productDisplayRepositoryAdapter.findByProductId(productId = command.productId)
 
-        if (existProductDisplay == null) {
-            val product = productRepositoryAdapter.findById(productId = command.productId) ?: return
-            val productDisplay = ProductDisplay(
-                productId = product.id,
-                name = product.name,
-                price = command.price,
-                brand = product.productBrand.name,
-                category = product.productCategory.name,
-                lastBiddingId = command.biddingId,
-            )
-            productDisplayRepositoryAdapter.save(productDisplay = productDisplay)
+        if (existingProductDisplay == null) {
+            handleNewProductDisplay(command = command)
+        } else {
+            handleExistingProductDisplay(command = command, existingProductDisplay = existingProductDisplay)
+        }
+    }
+
+    private fun handleNewProductDisplay(command: SaveOrUpdateProductDisplayCommand) {
+        val product = productRepositoryAdapter.findById(productId = command.productId) ?: return
+        val productDisplay = ProductDisplay(
+            productId = product.id,
+            name = product.name,
+            price = command.price,
+            brand = product.productBrand.name,
+            category = product.productCategory.name,
+            lastBiddingId = command.biddingId
+        )
+        productDisplayRepositoryAdapter.save(productDisplay)
+    }
+
+    private fun handleExistingProductDisplay(command: SaveOrUpdateProductDisplayCommand, existingProductDisplay: ProductDisplay) {
+        if (existingProductDisplay.price != 0 && existingProductDisplay.price < command.price) {
             return
         }
-        if (existProductDisplay.price != 0 && existProductDisplay.price < command.price) {
-            return
-        }
-        existProductDisplay.changePrice(price = command.price)
-        existProductDisplay.changeLastBiddingId(biddingId = command.biddingId)
-        productDisplayRepositoryAdapter.save(productDisplay = existProductDisplay)
+        existingProductDisplay.changePrice(command.price)
+        existingProductDisplay.changeLastBiddingId(command.biddingId)
+        productDisplayRepositoryAdapter.save(existingProductDisplay)
     }
 }

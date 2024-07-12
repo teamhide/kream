@@ -1,3 +1,5 @@
+server:
+  deploy-version: 1.0.0
 spring:
   datasource:
     writer:

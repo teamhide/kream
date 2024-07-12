@@ -1,5 +1,6 @@
 server:
   port: 8080
+  deploy-version: 1.0.0
 spring:
   profiles:
     group:

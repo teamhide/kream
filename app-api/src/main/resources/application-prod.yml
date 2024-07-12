@@ -1,3 +1,5 @@
+server:
+  deploy-version: ${DEPLOY_VERSION}
 spring:
   datasource:
     writer:

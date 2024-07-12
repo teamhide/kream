@@ -62,30 +62,25 @@ class BidService(
     }
 
     private fun canBid(productId: Long, price: Int, biddingType: BiddingType): Boolean {
-        // 판매 입찰인 경우 가장 비싼 구매 입찰 조회
-        val bidding = if (biddingType == BiddingType.SALE) {
+        val bidding = getBiddingByType(productId = productId, biddingType = biddingType) ?: return true
+
+        return when {
+            price == bidding.price -> false
+            biddingType == BiddingType.PURCHASE && price > bidding.price -> false
+            biddingType == BiddingType.SALE && price < bidding.price -> false
+            else -> true
+        }
+    }
+
+    private fun getBiddingByType(productId: Long, biddingType: BiddingType): Bidding? {
+        return if (biddingType == BiddingType.SALE) {
             biddingRepositoryAdapter.findMostExpensiveBidding(
                 productId = productId, biddingType = BiddingType.PURCHASE
-            ) ?: return true
-            // 구매 입찰인 경우 가장 저렴한 판매 입찰 조회
+            )
         } else {
             biddingRepositoryAdapter.findMostCheapestBidding(
                 productId = productId, biddingType = BiddingType.SALE
-            ) ?: return true
+            )
         }
-        if (price == bidding.price) {
-            return false
-        }
-
-        // 구매 입찰하려는 가격이 가장 높은 판매 입찰 가격보다 높은 경우
-        if (biddingType == BiddingType.PURCHASE && price > bidding.price) {
-            return false
-        }
-
-        // 판매 입찰하려는 가격이 가장 낮은 구매 입찰 가격보다 낮은 경우
-        if (biddingType == BiddingType.SALE && price < bidding.price) {
-            return false
-        }
-        return true
     }
 }

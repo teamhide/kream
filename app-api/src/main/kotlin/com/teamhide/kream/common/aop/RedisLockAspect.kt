@@ -7,10 +7,12 @@ import org.aspectj.lang.ProceedingJoinPoint
 import org.aspectj.lang.annotation.Around
 import org.aspectj.lang.annotation.Aspect
 import org.aspectj.lang.reflect.MethodSignature
+import org.redisson.api.RLock
 import org.redisson.api.RedissonClient
 import org.springframework.expression.spel.standard.SpelExpressionParser
 import org.springframework.expression.spel.support.StandardEvaluationContext
 import org.springframework.stereotype.Component
+import java.util.concurrent.TimeUnit
 
 private const val LOCK_PREFIX = "lock:"
 private val logger = KotlinLogging.logger { }
@@ -24,50 +26,54 @@ class RedisLockAspect(
     @Around("@annotation(com.teamhide.kream.common.util.lock.RedisLock)")
     fun proceed(joinPoint: ProceedingJoinPoint): Any {
         val signature = joinPoint.signature as MethodSignature
-        val annotation = signature.method.getAnnotation(RedisLock::class.java)
-
-        val timeUnit = annotation.timeUnit
-        val waitTime = annotation.waitTime
-        val leaseTime = annotation.leaseTime
-        val key = annotation.key
-
-        val uniqueKey = parseSPEL(
+        val method = signature.method
+        val annotation = method.getAnnotation(RedisLock::class.java)
+        val lockKey = generateLockKey(
             parameterNames = signature.parameterNames,
             args = joinPoint.args,
-            key = key,
+            key = annotation.key,
         )
 
-        val lockKey = "$LOCK_PREFIX:$key:$uniqueKey"
         val lock = redissonClient.getLock(lockKey)
-        val isLocked = try {
+        return if (acquireLock(lock = lock, waitTime = annotation.waitTime, leaseTime = annotation.leaseTime, timeUnit = annotation.timeUnit)) {
+            try {
+                lockTransaction.proceed(joinPoint)
+            } finally {
+                releaseLock(lock = lock)
+            }
+        } else {
+            throw LockAcquireFailException()
+        }
+    }
+
+    private fun acquireLock(lock: RLock, waitTime: Long, leaseTime: Long, timeUnit: TimeUnit): Boolean {
+        return try {
             lock.tryLock(waitTime, leaseTime, timeUnit)
         } catch (e: InterruptedException) {
-            logger.error { "RedisLockAspect | tryLock fail. ex=$e" }
+            logger.error { "RedisLockAspect | Failed to acquire lock $e" }
             throw LockAcquireFailException()
         }
+    }
 
-        if (!isLocked) {
-            logger.warn { "RedisLockAspect | tryLock fail" }
-            throw LockAcquireFailException()
+    private fun releaseLock(lock: RLock) {
+        try {
+            lock.unlock()
+        } catch (e: IllegalMonitorStateException) {
+            logger.warn { "RedisLockAspect | Failed to release lock $e" }
         }
+    }
 
-        return try {
-            lockTransaction.proceed(joinPoint = joinPoint)
-        } finally {
-            try {
-                lock.unlock()
-            } catch (e: IllegalMonitorStateException) {
-                logger.warn { "RedisLockAspect | unlock fail. ex=$e" }
-            }
-        }
+    private fun generateLockKey(parameterNames: Array<String>, args: Array<Any>, key: String): String {
+        val uniqueKey = parseSPEL(parameterNames, args, key)
+        return "$LOCK_PREFIX:$key:$uniqueKey"
     }
 
     private fun parseSPEL(parameterNames: Array<String>, args: Array<Any>, key: String): Any {
         val parser = SpelExpressionParser()
         val context = StandardEvaluationContext()
 
-        for (i in parameterNames.indices) {
-            context.setVariable(parameterNames[i], args[i])
+        parameterNames.forEachIndexed { index, paramName ->
+            context.setVariable(paramName, args[index])
         }
 
         return try {

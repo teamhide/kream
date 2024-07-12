@@ -12,8 +12,8 @@ import com.teamhide.kream.product.domain.usecase.RegisterProductCommand
 import com.teamhide.kream.product.domain.usecase.SaveOrUpdateProductDisplayCommand
 import com.teamhide.kream.product.domain.vo.BiddingType
 import com.teamhide.kream.product.domain.vo.SizeType
-import com.teamhide.kream.product.ui.api.BidRequest
-import com.teamhide.kream.product.ui.api.RegisterProductRequest
+import com.teamhide.kream.product.ui.api.dto.BidRequest
+import com.teamhide.kream.product.ui.api.dto.RegisterProductRequest
 
 fun makeProductCategory(
     id: Long = 1L,

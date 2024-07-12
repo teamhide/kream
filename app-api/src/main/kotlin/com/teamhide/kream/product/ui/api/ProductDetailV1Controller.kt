@@ -3,22 +3,12 @@ package com.teamhide.kream.product.ui.api
 import com.teamhide.kream.common.response.ApiResponse
 import com.teamhide.kream.product.domain.usecase.GetProductDetailQuery
 import com.teamhide.kream.product.domain.usecase.GetProductDetailUseCase
+import com.teamhide.kream.product.ui.api.dto.GetProductResponse
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
-
-data class GetProductResponse(
-    val productId: Long,
-    val releasePrice: Int,
-    val modelNumber: String,
-    val name: String,
-    val brand: String,
-    val category: String,
-    val purchaseBidPrice: Int?,
-    val saleBidPrice: Int?,
-)
 
 @RestController
 @RequestMapping("/v1/product")

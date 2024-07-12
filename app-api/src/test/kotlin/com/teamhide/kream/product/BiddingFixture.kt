@@ -11,8 +11,8 @@ import com.teamhide.kream.product.domain.usecase.ImmediateSaleCommand
 import com.teamhide.kream.product.domain.vo.BiddingStatus
 import com.teamhide.kream.product.domain.vo.BiddingType
 import com.teamhide.kream.product.domain.vo.OrderStatus
-import com.teamhide.kream.product.ui.api.ImmediatePurchaseRequest
-import com.teamhide.kream.product.ui.api.ImmediateSaleRequest
+import com.teamhide.kream.product.ui.api.dto.ImmediatePurchaseRequest
+import com.teamhide.kream.product.ui.api.dto.ImmediateSaleRequest
 import com.teamhide.kream.user.domain.model.User
 import com.teamhide.kream.user.makeUser
 

@@ -3,26 +3,14 @@ package com.teamhide.kream.user.ui.api
 import com.teamhide.kream.common.response.ApiResponse
 import com.teamhide.kream.user.domain.usecase.RegisterUserCommand
 import com.teamhide.kream.user.domain.usecase.RegisterUserUseCase
+import com.teamhide.kream.user.ui.api.dto.RegisterUserRequest
+import com.teamhide.kream.user.ui.api.dto.RegisterUserResponse
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
-
-data class RegisterUserRequest(
-    val email: String,
-    val nickname: String,
-    val password1: String,
-    val password2: String,
-    val baseAddress: String,
-    val detailAddress: String,
-)
-
-data class RegisterUserResponse(
-    val email: String,
-    val nickname: String,
-)
 
 @RestController
 @RequestMapping("/api/v1/user")

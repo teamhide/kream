@@ -6,34 +6,17 @@ import com.teamhide.kream.product.domain.usecase.ImmediatePurchaseCommand
 import com.teamhide.kream.product.domain.usecase.ImmediatePurchaseUseCase
 import com.teamhide.kream.product.domain.usecase.ImmediateSaleCommand
 import com.teamhide.kream.product.domain.usecase.ImmediateSaleUseCase
+import com.teamhide.kream.product.ui.api.dto.ImmediatePurchaseRequest
+import com.teamhide.kream.product.ui.api.dto.ImmediatePurchaseResponse
+import com.teamhide.kream.product.ui.api.dto.ImmediateSaleRequest
+import com.teamhide.kream.product.ui.api.dto.ImmediateSaleResponse
 import jakarta.validation.Valid
-import jakarta.validation.constraints.NotNull
 import org.springframework.http.HttpStatus
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
-
-data class ImmediatePurchaseRequest(
-    @field:NotNull
-    val biddingId: Long,
-)
-
-data class ImmediatePurchaseResponse(
-    val biddingId: Long,
-    val price: Int,
-)
-
-data class ImmediateSaleRequest(
-    @field:NotNull
-    val biddingId: Long,
-)
-
-data class ImmediateSaleResponse(
-    val biddingId: Long,
-    val price: Int,
-)
 
 @RestController
 @RequestMapping("/v1/bid")

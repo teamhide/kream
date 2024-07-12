@@ -5,6 +5,7 @@ import com.teamhide.kream.product.domain.usecase.BidResponseDto
 import com.teamhide.kream.product.domain.usecase.BidUseCase
 import com.teamhide.kream.product.domain.vo.BiddingType
 import com.teamhide.kream.product.makeBidRequest
+import com.teamhide.kream.product.ui.api.dto.BidResponse
 import com.teamhide.kream.support.test.RestControllerTest
 import com.teamhide.kream.user.USER_ID_1_TOKEN
 import io.mockk.every

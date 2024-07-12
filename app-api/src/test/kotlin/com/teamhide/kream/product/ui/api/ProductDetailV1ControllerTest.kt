@@ -3,6 +3,7 @@ package com.teamhide.kream.product.ui.api
 import com.ninjasquad.springmockk.MockkBean
 import com.teamhide.kream.product.domain.model.ProductDetail
 import com.teamhide.kream.product.domain.usecase.GetProductDetailUseCase
+import com.teamhide.kream.product.ui.api.dto.GetProductResponse
 import com.teamhide.kream.support.test.RestControllerTest
 import com.teamhide.kream.user.USER_ID_1_TOKEN
 import io.mockk.every

@@ -7,6 +7,9 @@ import com.teamhide.kream.coupon.domain.usecase.RegisterCouponDto
 import com.teamhide.kream.coupon.domain.usecase.RegisterCouponUseCase
 import com.teamhide.kream.coupon.domain.vo.CouponDiscountType
 import com.teamhide.kream.coupon.domain.vo.CouponPeriodType
+import com.teamhide.kream.coupon.ui.api.dto.GetAllCouponResponse
+import com.teamhide.kream.coupon.ui.api.dto.RegisterCouponRequest
+import com.teamhide.kream.coupon.ui.api.dto.RegisterCouponResponse
 import com.teamhide.kream.support.test.RestControllerTest
 import com.teamhide.kream.user.USER_ID_1_TOKEN
 import io.mockk.every

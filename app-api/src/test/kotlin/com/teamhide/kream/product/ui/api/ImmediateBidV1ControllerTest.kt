@@ -7,6 +7,8 @@ import com.teamhide.kream.product.domain.usecase.ImmediateSaleResponseDto
 import com.teamhide.kream.product.domain.usecase.ImmediateSaleUseCase
 import com.teamhide.kream.product.makeImmediatePurchaseRequest
 import com.teamhide.kream.product.makeImmediateSaleRequest
+import com.teamhide.kream.product.ui.api.dto.ImmediatePurchaseResponse
+import com.teamhide.kream.product.ui.api.dto.ImmediateSaleResponse
 import com.teamhide.kream.support.test.RestControllerTest
 import com.teamhide.kream.user.USER_ID_1_TOKEN
 import io.mockk.every

@@ -7,6 +7,7 @@ import com.teamhide.kream.product.domain.usecase.RegisterProductUseCase
 import com.teamhide.kream.product.domain.vo.SizeType
 import com.teamhide.kream.product.makeProductDisplayRead
 import com.teamhide.kream.product.makeRegisterProductRequest
+import com.teamhide.kream.product.ui.api.dto.RegisterProductResponse
 import com.teamhide.kream.support.test.RestControllerTest
 import com.teamhide.kream.user.USER_ID_1_TOKEN
 import io.mockk.every

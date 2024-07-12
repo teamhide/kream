@@ -23,10 +23,8 @@ class RegisterUserService(
             address = Address(base = command.baseAddress, detail = command.detailAddress),
         )
 
-        userRepositoryAdapter.apply {
-            if (existsByEmail(email = command.email)) {
-                throw UserAlreadyExistException()
-            }
+        if (userRepositoryAdapter.existsByEmail(email = command.email)) {
+            throw UserAlreadyExistException()
         }
 
         userRepositoryAdapter.save(user = user)

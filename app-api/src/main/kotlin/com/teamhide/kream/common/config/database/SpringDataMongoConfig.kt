@@ -40,9 +40,8 @@ class SpringDataMongoConfig : AbstractMongoClientConfiguration() {
     override fun mongoClient(): MongoClient {
         val connectionString = ConnectionString(mongoUri)
         val settings = MongoClientSettings.builder()
-            .apply {
-                applyConnectionString(connectionString)
-            }.build()
+            .applyConnectionString(connectionString)
+            .build()
         return MongoClients.create(settings)
     }
 }

@@ -36,10 +36,10 @@ class DataSourceConfig {
         @Qualifier("readerDataSource") readerDataSource: DataSource
     ): DataSource {
         val routingDataSource = RoutingDataSource()
-        val dataSourceMap = HashMap<Any, Any>()
-
-        dataSourceMap[DataSourceType.WRITER] = writerDataSource
-        dataSourceMap[DataSourceType.READER] = readerDataSource
+        val dataSourceMap = mapOf<Any, Any>(
+            DataSourceType.WRITER to writerDataSource,
+            DataSourceType.READER to readerDataSource
+        )
 
         routingDataSource.setTargetDataSources(dataSourceMap)
         routingDataSource.setDefaultTargetDataSource(writerDataSource)

@@ -13,6 +13,7 @@ tasks.jar {
 }
 
 dependencies {
+    implementation(project(":support"))
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.boot:spring-boot-starter-web")

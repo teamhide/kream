@@ -4,3 +4,4 @@ plugins {
 rootProject.name = "kream"
 include("app-api")
 include("app-batch")
+include("support")

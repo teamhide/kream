@@ -26,7 +26,9 @@ class PgClientErrorDecoder : ErrorDecoder {
         }
 
         return try {
-            String(body.asInputStream().readAllBytes(), StandardCharsets.UTF_8)
+            body.asInputStream().use { inputStream ->
+                String(inputStream.readAllBytes(), StandardCharsets.UTF_8)
+            }
         } catch (e: IOException) {
             logger.error { "PgClientErrorDecoder | parse body error. $e" }
             return e.message ?: ""

@@ -26,8 +26,8 @@ class RequestLogFilter : OncePerRequestFilter() {
         val cachedResponse = ContentCachingResponseWrapper(response)
 
         filterChain.doFilter(cachedRequest, cachedResponse)
-        logRequest(cachedRequest)
-        logResponse(cachedRequest, cachedResponse)
+        logRequest(request = cachedRequest)
+        logResponse(request = cachedRequest, response = cachedResponse)
     }
 
     companion object {
@@ -70,8 +70,9 @@ class RequestLogFilter : OncePerRequestFilter() {
 
         fun getRequestBody(request: ContentCachingRequestWrapper): String {
             return try {
-                val inputStream = ByteArrayInputStream(request.contentAsByteArray)
-                StreamUtils.copyToString(inputStream, StandardCharsets.UTF_8)
+                ByteArrayInputStream(request.contentAsByteArray).use { inputStream ->
+                    StreamUtils.copyToString(inputStream, StandardCharsets.UTF_8)
+                }
             } catch (e: Exception) {
                 ""
             }
@@ -79,10 +80,11 @@ class RequestLogFilter : OncePerRequestFilter() {
 
         fun getResponseBody(response: ContentCachingResponseWrapper): String {
             return try {
-                val inputStream = response.contentInputStream
-                val responseBody = StreamUtils.copyToString(inputStream, StandardCharsets.UTF_8)
-                response.copyBodyToResponse()
-                responseBody
+                response.contentInputStream.use { inputStream ->
+                    val responseBody = StreamUtils.copyToString(inputStream, StandardCharsets.UTF_8)
+                    response.copyBodyToResponse()
+                    responseBody
+                }
             } catch (e: Exception) {
                 ""
             }

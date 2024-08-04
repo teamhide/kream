@@ -3,6 +3,7 @@ package com.teamhide.kream.common.exception
 import com.teamhide.kream.common.response.ApiResponse
 import com.teamhide.kream.common.response.FailBody
 import io.github.oshai.kotlinlogging.KotlinLogging
+import io.github.resilience4j.ratelimiter.RequestNotPermitted
 import org.springframework.http.converter.HttpMessageNotReadableException
 import org.springframework.security.core.AuthenticationException
 import org.springframework.web.HttpRequestMethodNotSupportedException
@@ -68,6 +69,13 @@ class GlobalExceptionHandler {
     @ExceptionHandler(NoResourceFoundException::class)
     fun handleNoResourceFoundException(e: NoResourceFoundException): ApiResponse<FailBody> {
         val errorConst = CommonErrorConst.AUTHENTICATION_ERROR
+        val body = FailBody(errorCode = errorConst.errorCode, message = errorConst.message)
+        return ApiResponse.fail(body, errorConst.statusCode)
+    }
+
+    @ExceptionHandler(RequestNotPermitted::class)
+    fun handleRequestNotPermittedException(e: RequestNotPermitted): ApiResponse<FailBody> {
+        val errorConst = CommonErrorConst.REQUEST_NOT_PERMITTED
         val body = FailBody(errorCode = errorConst.errorCode, message = errorConst.message)
         return ApiResponse.fail(body, errorConst.statusCode)
     }

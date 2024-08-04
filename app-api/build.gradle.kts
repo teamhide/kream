@@ -27,6 +27,13 @@ dependencies {
     implementation("org.flywaydb:flyway-mysql")
     implementation("org.springframework.kafka:spring-kafka")
     implementation("org.redisson:redisson-spring-boot-starter:3.26.0")
+    implementation("org.springframework.cloud:spring-cloud-starter-circuitbreaker-resilience4j")
     testImplementation("org.springframework.security:spring-security-test")
     testImplementation("org.springframework.kafka:spring-kafka-test")
+
+    dependencyManagement {
+        imports {
+            mavenBom("org.springframework.cloud:spring-cloud-dependencies:2023.0.3")
+        }
+    }
 }

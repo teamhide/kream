@@ -65,7 +65,6 @@ logging:
     org.apache.kafka.*: OFF
     kafka.*: OFF
     org.apache.zookeeper.*: OFF
-
 client:
   pg:
     url: http://localhost:8080

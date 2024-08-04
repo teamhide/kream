@@ -17,6 +17,7 @@ enum class CommonErrorConst(val errorCode: String, val message: String, val stat
     AUTHENTICATION_ERROR("AUTHENTICATION_ERROR", "Authentication error", HttpStatus.UNAUTHORIZED),
     NO_HANDLER_FOUND("NO_HANDLER_FOUND", "No endpoint GET URL", HttpStatus.NOT_FOUND),
     UNKNOWN("UNKNOWN", "Unknown", HttpStatus.INTERNAL_SERVER_ERROR),
+    REQUEST_NOT_PERMITTED("REQUEST_NOT_PERMITTED", "Request not permitted", HttpStatus.TOO_MANY_REQUESTS),
     MISSING_REQUEST_HEADER(
         "MISSING_REQUEST_HEADER", "Missing request header", HttpStatus.UNPROCESSABLE_ENTITY
     );

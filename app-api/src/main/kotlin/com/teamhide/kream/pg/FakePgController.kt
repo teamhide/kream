@@ -1,7 +1,8 @@
 package com.teamhide.kream.pg
 
-import com.teamhide.kream.client.pg.PgClient
+import com.teamhide.kream.common.resilience4j.RateLimiterConfig
 import com.teamhide.kream.common.response.ApiResponse
+import io.github.resilience4j.ratelimiter.annotation.RateLimiter
 import jakarta.validation.Valid
 import jakarta.validation.constraints.NotBlank
 import org.springframework.http.HttpStatus
@@ -20,9 +21,8 @@ data class PgCancelPaymentRequest(
 
 @RestController
 @RequestMapping("/pg")
-class FakePgController(
-    private val pgClient: PgClient,
-) {
+class FakePgController {
+    @RateLimiter(name = RateLimiterConfig.PG_ATTEMPT_PAYMENT)
     @PostMapping("/payment")
     fun attemptPayment(): ApiResponse<PgAttemptPaymentResponse> {
         val paymentId = UUID.randomUUID().toString()

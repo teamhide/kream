@@ -1,6 +1,7 @@
 package com.teamhide.kream.common.exception
 
 import com.teamhide.kream.common.security.JwtAuthenticationFailException
+import io.github.resilience4j.ratelimiter.RequestNotPermitted
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.shouldBe
 import io.mockk.mockk
@@ -16,7 +17,6 @@ import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.MissingRequestHeaderException
 import org.springframework.web.servlet.NoHandlerFoundException
 import org.springframework.web.servlet.resource.NoResourceFoundException
-import java.lang.Exception
 
 internal class GlobalExceptionHandlerTest : BehaviorSpec({
     Given("CustomException이 발생하는 경우") {
@@ -143,6 +143,22 @@ internal class GlobalExceptionHandlerTest : BehaviorSpec({
 
         When("예외 핸들러가 동작하면") {
             val sut = handler.handleAuthenticationException(e = exc)
+
+            Then("FailBody로 감싸서 반환된다") {
+                sut.body?.errorCode shouldBe errorConst.errorCode
+                sut.body?.message shouldBe errorConst.message
+                sut.statusCode shouldBe errorConst.statusCode
+            }
+        }
+    }
+
+    Given("RequestNotPermitted 발생하는 경우") {
+        val exc = mockk<RequestNotPermitted>()
+        val handler = GlobalExceptionHandler()
+        val errorConst = CommonErrorConst.REQUEST_NOT_PERMITTED
+
+        When("예외 핸들러가 동작하면") {
+            val sut = handler.handleRequestNotPermittedException(e = exc)
 
             Then("FailBody로 감싸서 반환된다") {
                 sut.body?.errorCode shouldBe errorConst.errorCode

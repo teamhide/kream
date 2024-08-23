@@ -50,7 +50,7 @@ class RedisLockAspect(
         return try {
             lock.tryLock(waitTime, leaseTime, timeUnit)
         } catch (e: InterruptedException) {
-            logger.error { "RedisLockAspect | Failed to acquire lock $e" }
+            logger.error(e) { "RedisLockAspect | Failed to acquire lock" }
             throw LockAcquireFailException()
         }
     }
@@ -59,7 +59,7 @@ class RedisLockAspect(
         try {
             lock.unlock()
         } catch (e: IllegalMonitorStateException) {
-            logger.warn { "RedisLockAspect | Failed to release lock $e" }
+            logger.warn(e) { "RedisLockAspect | Failed to release lock" }
         }
     }
 

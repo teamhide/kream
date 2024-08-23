@@ -13,11 +13,11 @@ internal class BiddingCompletedDeliveryConsumerTest : BehaviorSpec({
         initializedDeliveryUseCase = initializeDeliveryUseCase,
     )
 
-    Given("입찰 완료 메시지를") {
+    Given("BiddingCompletedDeliveryConsumer") {
         val event = BiddingCompletedEvent(productId = 1L, biddingId = 1L)
         every { initializeDeliveryUseCase.execute(any()) } returns Unit
 
-        When("컨슈밍하면") {
+        When("입찰 완료 메시지를 컨슈밍하면") {
             consumer.listen(message = event)
 
             Then("배송 초기 정보를 설정한다") {

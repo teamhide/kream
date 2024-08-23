@@ -27,121 +27,107 @@ internal class BidServiceTest(
 ) : BehaviorSpec({
     listeners(MysqlDbCleaner())
 
-    Given("동일한 가격의 구매 입찰이 있을 때") {
-        val price = 1000
-        val purchaseBidding = makeBidding(price = price, biddingType = BiddingType.PURCHASE)
-        biddingRepository.save(purchaseBidding)
+    Given("BidService") {
+        When("동일한 가격의 구매 입찰이 있을 때 판매 입찰을 시도하면") {
+            val price = 1000
+            val purchaseBidding = makeBidding(price = price, biddingType = BiddingType.PURCHASE)
+            biddingRepository.save(purchaseBidding)
 
-        val command = makeBidCommand(price = price, biddingType = BiddingType.SALE)
+            val command = makeBidCommand(price = price, biddingType = BiddingType.SALE)
 
-        When("판매 입찰을 시도하면") {
             Then("예외가 발생한다") {
                 shouldThrow<ImmediateTradeAvailableException> { bidService.execute(command = command) }
             }
         }
-    }
 
-    Given("동일한 가격의 판매 입찰이 있을 때") {
-        val price = 1000
-        val saleBidding = makeBidding(price = price, biddingType = BiddingType.SALE)
-        biddingRepository.save(saleBidding)
+        When("동일한 가격의 판매 입찰이 있을 때 구매 입찰을 시도하면") {
+            val price = 1000
+            val saleBidding = makeBidding(price = price, biddingType = BiddingType.SALE)
+            biddingRepository.save(saleBidding)
 
-        val command = makeBidCommand(price = price, biddingType = BiddingType.PURCHASE)
+            val command = makeBidCommand(price = price, biddingType = BiddingType.PURCHASE)
 
-        When("구매 입찰을 시도하면") {
             Then("예외가 발생한다") {
                 shouldThrow<ImmediateTradeAvailableException> { bidService.execute(command = command) }
             }
         }
-    }
 
-    Given("판매 입찰 가격이 가장 낮은 구매 입찰 가격보다 낮은 경우") {
-        val price = 2000
-        val saleBidding = makeBidding(price = price, biddingType = BiddingType.SALE)
-        biddingRepository.save(saleBidding)
+        When("판매 입찰 가격이 가장 낮은 구매 입찰 가격보다 낮을 때 판매 입찰을 시도하면") {
+            val price = 2000
+            val saleBidding = makeBidding(price = price, biddingType = BiddingType.SALE)
+            biddingRepository.save(saleBidding)
 
-        val command = makeBidCommand(price = 3000, biddingType = BiddingType.PURCHASE)
+            val command = makeBidCommand(price = 3000, biddingType = BiddingType.PURCHASE)
 
-        When("판매 입찰을 시도하면") {
             Then("예외가 발생한다") {
                 shouldThrow<ImmediateTradeAvailableException> { bidService.execute(command = command) }
             }
         }
-    }
 
-    Given("구매 입찰 가격이 가장 낮은 판매 입찰 가격보다 낮은 경우") {
-        val price = 3000
-        val purchaseBidding = makeBidding(price = price, biddingType = BiddingType.PURCHASE)
-        biddingRepository.save(purchaseBidding)
+        When("구매 입찰 가격이 가장 낮은 판매 입찰 가격보다 낮을 때 구매 입찰을 시도하면") {
+            val price = 3000
+            val purchaseBidding = makeBidding(price = price, biddingType = BiddingType.PURCHASE)
+            biddingRepository.save(purchaseBidding)
 
-        val command = makeBidCommand(price = 2000, biddingType = BiddingType.SALE)
+            val command = makeBidCommand(price = 2000, biddingType = BiddingType.SALE)
 
-        When("구매 입찰을 시도하면") {
             Then("예외가 발생한다") {
                 shouldThrow<ImmediateTradeAvailableException> { bidService.execute(command = command) }
             }
         }
-    }
 
-    Given("존재하지 않는 유저가") {
-        val saleBidding = makeBidding(price = 2000, biddingType = BiddingType.SALE)
-        biddingRepository.save(saleBidding)
+        When("존재하지 않는 유저가 구매 입찰을 시도하면") {
+            val saleBidding = makeBidding(price = 2000, biddingType = BiddingType.SALE)
+            biddingRepository.save(saleBidding)
 
-        val command = makeBidCommand(price = 1000, biddingType = BiddingType.PURCHASE)
+            val command = makeBidCommand(price = 1000, biddingType = BiddingType.PURCHASE)
 
-        When("구매 입찰을 시도하면") {
             Then("예외가 발생한다") {
                 shouldThrow<UserNotFoundException> { bidService.execute(command = command) }
             }
         }
-    }
 
-    Given("존재하지 않는 상품을 대상으로") {
-        val saleBidding = makeBidding(price = 2000, biddingType = BiddingType.SALE)
-        biddingRepository.save(saleBidding)
+        When("존재하지 않는 상품을 대상으로 구매 입찰을 시도하면") {
+            val saleBidding = makeBidding(price = 2000, biddingType = BiddingType.SALE)
+            biddingRepository.save(saleBidding)
 
-        val user = makeUser(id = 1L)
-        userRepository.save(user)
+            val user = makeUser(id = 1L)
+            userRepository.save(user)
 
-        val command = makeBidCommand(price = 1000, biddingType = BiddingType.PURCHASE, userId = user.id)
+            val command = makeBidCommand(price = 1000, biddingType = BiddingType.PURCHASE, userId = user.id)
 
-        When("구매 입찰을 시도하면") {
             Then("예외가 발생한다") {
                 shouldThrow<ProductNotFoundException> { bidService.execute(command = command) }
             }
         }
-    }
 
-    Given("0원 미만의 가격으로") {
-        val user = makeUser(id = 1L)
-        userRepository.save(user)
+        When("0원 미만의 가격으로 구매 입찰을 시도하면") {
+            val user = makeUser(id = 1L)
+            userRepository.save(user)
 
-        val product = makeProduct(id = 1L)
-        productRepository.save(product)
+            val product = makeProduct(id = 1L)
+            productRepository.save(product)
 
-        val command = makeBidCommand(
-            price = -1, biddingType = BiddingType.PURCHASE, userId = user.id, productId = 1L,
-        )
+            val command = makeBidCommand(
+                price = -1, biddingType = BiddingType.PURCHASE, userId = user.id, productId = 1L,
+            )
 
-        When("구매 입찰을 시도하면") {
             Then("예외가 발생한다") {
                 shouldThrow<InvalidBiddingPriceException> { bidService.execute(command = command) }
             }
         }
-    }
 
-    Given("동일한 판매 가격이 없는 상품을 대상으로") {
-        val user = makeUser(id = 1L)
-        userRepository.save(user)
+        When("동일한 판매 가격이 없는 상품을 대상으로 구매 입찰을 시도하면") {
+            val user = makeUser(id = 1L)
+            userRepository.save(user)
 
-        val product = makeProduct(id = 1L)
-        productRepository.save(product)
+            val product = makeProduct(id = 1L)
+            productRepository.save(product)
 
-        val command = makeBidCommand(
-            price = 1000, biddingType = BiddingType.PURCHASE, userId = user.id, productId = 1L,
-        )
+            val command = makeBidCommand(
+                price = 1000, biddingType = BiddingType.PURCHASE, userId = user.id, productId = 1L,
+            )
 
-        When("구매 입찰을 시도하면") {
             val sut = bidService.execute(command = command)
 
             Then("성공한다") {
@@ -152,20 +138,18 @@ internal class BidServiceTest(
                 sut.size shouldBe bidding.size
             }
         }
-    }
 
-    Given("동일한 구매 가격이 없는 상품을 대상으로") {
-        val user = makeUser(id = 1L)
-        userRepository.save(user)
+        When("동일한 구매 가격이 없는 상품을 대상으로 판매 입찰을 시도하면") {
+            val user = makeUser(id = 1L)
+            userRepository.save(user)
 
-        val product = makeProduct(id = 1L)
-        productRepository.save(product)
+            val product = makeProduct(id = 1L)
+            productRepository.save(product)
 
-        val command = makeBidCommand(
-            price = 1000, biddingType = BiddingType.SALE, userId = user.id, productId = 1L,
-        )
+            val command = makeBidCommand(
+                price = 1000, biddingType = BiddingType.SALE, userId = user.id, productId = 1L,
+            )
 
-        When("판매 입찰을 시도하면") {
             val sut = bidService.execute(command = command)
 
             Then("성공한다") {

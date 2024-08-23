@@ -28,26 +28,24 @@ internal class GetProductDetailServiceTest(
 ) : BehaviorSpec({
     listeners(MysqlDbCleaner())
 
-    Given("없는 상품을 대상으로") {
-        val query = GetProductDetailQuery(productId = 1L)
+    Given("GetProductDetailService") {
+        When("존재하지 않는 없는 상품을 대상으로 상세 정보 조회를 요청하면") {
+            val query = GetProductDetailQuery(productId = 1L)
 
-        When("상세 정보 조회를 요청하면") {
             Then("예외가 발생한다") {
                 shouldThrow<ProductNotFoundException> { getProductDetailService.execute(query = query) }
             }
         }
-    }
 
-    Given("입찰 정보가 없는 상품에 대해") {
-        val productBrand = productBrandRepository.save(makeProductBrand())
+        When("입찰 정보가 없는 상품에 대해 상세 정보 조회를 요청하면") {
+            val productBrand = productBrandRepository.save(makeProductBrand())
 
-        val productCategory = productCategoryRepository.save(makeProductCategory())
+            val productCategory = productCategoryRepository.save(makeProductCategory())
 
-        val product = productRepository.save(makeProduct(productBrand = productBrand, productCategory = productCategory))
+            val product = productRepository.save(makeProduct(productBrand = productBrand, productCategory = productCategory))
 
-        val query = GetProductDetailQuery(productId = product.id)
+            val query = GetProductDetailQuery(productId = product.id)
 
-        When("상세 정보 조회를 요청하면") {
             val sut = getProductDetailService.execute(query = query)
 
             Then("입찰 가격을 제외한 정보를 채워서 리턴된다") {
@@ -62,24 +60,22 @@ internal class GetProductDetailServiceTest(
                 sut.saleBidPrice shouldBe null
             }
         }
-    }
 
-    Given("상품에 대해") {
-        val productBrand = productBrandRepository.save(makeProductBrand())
+        When("존재하는 상품에 대해 상세 정보 조회를 요청하면") {
+            val productBrand = productBrandRepository.save(makeProductBrand())
 
-        val productCategory = productCategoryRepository.save(makeProductCategory())
+            val productCategory = productCategoryRepository.save(makeProductCategory())
 
-        val product = productRepository.save(makeProduct(productBrand = productBrand, productCategory = productCategory))
+            val product = productRepository.save(makeProduct(productBrand = productBrand, productCategory = productCategory))
 
-        val query = GetProductDetailQuery(productId = product.id)
+            val query = GetProductDetailQuery(productId = product.id)
 
-        val mostCheapestBidding = makeBidding(price = 1000, product = product, biddingType = BiddingType.SALE)
-        biddingRepository.save(mostCheapestBidding)
+            val mostCheapestBidding = makeBidding(price = 1000, product = product, biddingType = BiddingType.SALE)
+            biddingRepository.save(mostCheapestBidding)
 
-        val mostExpensiveBidding = makeBidding(price = 20000, product = product, biddingType = BiddingType.PURCHASE)
-        biddingRepository.save(mostExpensiveBidding)
+            val mostExpensiveBidding = makeBidding(price = 20000, product = product, biddingType = BiddingType.PURCHASE)
+            biddingRepository.save(mostExpensiveBidding)
 
-        When("상세 정보 조회를 요청하면") {
             val sut = getProductDetailService.execute(query = query)
 
             Then("모든 정보를 채워서 리턴된다") {

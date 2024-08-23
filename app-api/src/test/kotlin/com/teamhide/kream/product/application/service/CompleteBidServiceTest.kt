@@ -29,37 +29,33 @@ internal class CompleteBidServiceTest(
 ) : BehaviorSpec({
     listeners(MysqlDbCleaner())
 
-    Given("존재하지 않는 유저가") {
+    Given("CompleteBidService") {
         val command = makeCompleteBidCommand()
 
-        When("입찰 종료 요청을 하면") {
+        When("존재하지 않는 유저가 입찰 종료 요청을 하면") {
+
             Then("예외가 발생한다") {
                 shouldThrow<UserNotFoundException> { completeBidService.execute(command = command) }
             }
         }
-    }
 
-    Given("존재하지 않는 입찰에 대해") {
-        val command = makeCompleteBidCommand()
-        val user = makeUser()
-        userRepository.save(user)
+        When("존재하지 않는 입찰에 대해 입찰 종료 요청을 하면") {
+            val user = makeUser()
+            userRepository.save(user)
 
-        When("입찰 종료 요청을 하면") {
             Then("예외가 발생한다") {
                 shouldThrow<BiddingNotFoundException> { completeBidService.execute(command = command) }
             }
         }
-    }
 
-    Given("입찰에 대해") {
-        val bidding = biddingRepository.save(makeBidding(status = BiddingStatus.IN_PROGRESS))
+        When("정상 입찰에 대해 입찰 종료 요청을 하면") {
+            val bidding = biddingRepository.save(makeBidding(status = BiddingStatus.IN_PROGRESS))
 
-        val command = makeCompleteBidCommand(biddingId = bidding.id)
+            val validCommand = makeCompleteBidCommand(biddingId = bidding.id)
 
-        val user = userRepository.save(makeUser())
+            val user = userRepository.save(makeUser())
 
-        When("입찰 종료 요청을 하면") {
-            completeBidService.execute(command = command)
+            completeBidService.execute(command = validCommand)
 
             Then("입찰이 거래 완료 처리된다") {
                 val savedBidding = biddingRepository.findByIdOrNull(bidding.id)
@@ -81,6 +77,18 @@ internal class CompleteBidServiceTest(
                 savedOrder.user.id shouldBe user.id
                 savedOrder.status shouldBe OrderStatus.COMPLETE
                 savedOrder.paymentId shouldBe command.paymentId
+            }
+        }
+    }
+
+    Given("존재하지 않는 입찰에 대해") {
+        val command = makeCompleteBidCommand()
+        val user = makeUser()
+        userRepository.save(user)
+
+        When("입찰 종료 요청을 하면") {
+            Then("예외가 발생한다") {
+                shouldThrow<BiddingNotFoundException> { completeBidService.execute(command = command) }
             }
         }
     }

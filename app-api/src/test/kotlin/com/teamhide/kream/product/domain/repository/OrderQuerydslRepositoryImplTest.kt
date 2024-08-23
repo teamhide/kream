@@ -4,11 +4,12 @@ import com.teamhide.kream.product.makeBidding
 import com.teamhide.kream.product.makeOrder
 import com.teamhide.kream.product.makeProduct
 import com.teamhide.kream.support.test.JpaRepositoryTest
+import com.teamhide.kream.support.test.MysqlDbCleaner
 import com.teamhide.kream.user.domain.repository.UserRepository
 import com.teamhide.kream.user.makeUser
+import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
-import org.junit.jupiter.api.Test
 
 @JpaRepositoryTest
 internal class OrderQuerydslRepositoryImplTest(
@@ -16,9 +17,10 @@ internal class OrderQuerydslRepositoryImplTest(
     private val biddingRepository: BiddingRepository,
     private val productRepository: ProductRepository,
     private val userRepository: UserRepository,
-) {
-    @Test
-    fun `biddingId로 Order를 조회한다`() {
+) : StringSpec({
+    listeners(MysqlDbCleaner())
+
+    "biddingId로 Order를 조회한다" {
         // Given
         val user = userRepository.save(makeUser())
         val product = productRepository.save(makeProduct())
@@ -36,4 +38,4 @@ internal class OrderQuerydslRepositoryImplTest(
         sut.user.id shouldBe user.id
         sut.status shouldBe savedOrder.status
     }
-}
+})

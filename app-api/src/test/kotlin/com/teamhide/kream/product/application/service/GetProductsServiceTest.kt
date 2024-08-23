@@ -16,27 +16,27 @@ internal class GetProductsServiceTest(
 ) : BehaviorSpec({
     listeners(MysqlDbCleaner(), MongoDbCleaner())
 
-    Given("page와 size를 통해") {
-        val query = GetProductsQuery(page = 0, size = 20)
-        val product1 = makeProductDisplay(
-            productId = 1L,
-            name = "name1",
-            price = 20000,
-            brand = "NIKE",
-            category = "SHOES",
-            lastBiddingId = 1L,
-        )
-        val product2 = makeProductDisplay(
-            productId = 2L,
-            name = "name2",
-            price = 30000,
-            brand = "MONCLER",
-            category = "CLOTHES",
-            lastBiddingId = 2L,
-        )
-        productDisplayRepository.saveAll(listOf(product1, product2))
+    Given("GetProductsService") {
+        When("page와 size를 통해 상품 전시 목록을 요청하면") {
+            val query = GetProductsQuery(page = 0, size = 20)
+            val product1 = makeProductDisplay(
+                productId = 1L,
+                name = "name1",
+                price = 20000,
+                brand = "NIKE",
+                category = "SHOES",
+                lastBiddingId = 1L,
+            )
+            val product2 = makeProductDisplay(
+                productId = 2L,
+                name = "name2",
+                price = 30000,
+                brand = "MONCLER",
+                category = "CLOTHES",
+                lastBiddingId = 2L,
+            )
+            productDisplayRepository.saveAll(listOf(product1, product2))
 
-        When("상품 전시 목록을 요청하면") {
             val sut = getProductsService.execute(query = query)
 
             Then("리스트로 넘어온다") {

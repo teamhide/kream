@@ -47,63 +47,57 @@ internal class ImmediateSaleServiceTest(
     listeners(MysqlDbCleaner())
     isolationMode = IsolationMode.InstancePerLeaf
 
-    Given("존재하지 않는 구매 입찰에 대해") {
-        val command = makeImmediateSaleCommand()
+    Given("ImmediateSaleService") {
+        When("존재하지 않는 구매 입찰에 대해 즉시 판매 요청을 하면") {
+            val command = makeImmediateSaleCommand()
 
-        When("즉시 판매 요청을 하면") {
             Then("예외가 발생한다") {
                 shouldThrow<BiddingNotFoundException> { immediateSaleService.execute(command = command) }
             }
         }
-    }
 
-    Given("진행중이 아닌 구매 입찰에 대해") {
-        val command = makeImmediateSaleCommand()
+        When("진행중이 아닌 구매 입찰에 대해 즉시 판매 요청을 하면") {
+            val command = makeImmediateSaleCommand()
 
-        val bidding = makeBidding(biddingType = BiddingType.PURCHASE, status = BiddingStatus.COMPLETE)
-        biddingRepository.save(bidding)
+            val bidding = makeBidding(biddingType = BiddingType.PURCHASE, status = BiddingStatus.COMPLETE)
+            biddingRepository.save(bidding)
 
-        When("즉시 판매 요청을 하면") {
             Then("예외가 발생한다") {
                 shouldThrow<AlreadyCompleteBidException> { immediateSaleService.execute(command = command) }
             }
         }
-    }
 
-    Given("존재하지 유저가") {
-        val command = makeImmediateSaleCommand()
+        When("존재하지 유저가 즉시 판매를 요청 하면") {
+            val command = makeImmediateSaleCommand()
 
-        val bidding = makeBidding(biddingType = BiddingType.PURCHASE, status = BiddingStatus.IN_PROGRESS)
-        biddingRepository.save(bidding)
+            val bidding = makeBidding(biddingType = BiddingType.PURCHASE, status = BiddingStatus.IN_PROGRESS)
+            biddingRepository.save(bidding)
 
-        When("즉시 판매 요청을 하면") {
             Then("예외가 발생한다") {
                 shouldThrow<UserNotFoundException> { immediateSaleService.execute(command = command) }
             }
         }
-    }
 
-    Given("구매 입찰에 대해") {
-        val command = makeImmediateSaleCommand()
+        When("구매 입찰에 대해 즉시 판매를 요청하면") {
+            val command = makeImmediateSaleCommand()
 
-        val seller = userRepository.save(makeUser(id = 1L))
-        // purchaser
-        userRepository.save(makeUser(id = 2L))
+            val seller = userRepository.save(makeUser(id = 1L))
+            // purchaser
+            userRepository.save(makeUser(id = 2L))
 
-        val product = productRepository.save(makeProduct(id = 1L))
-        val bidding = makeBidding(
-            id = command.biddingId,
-            product = product,
-            user = seller,
-            biddingType = BiddingType.PURCHASE,
-            status = BiddingStatus.IN_PROGRESS,
-        )
-        val savedBidding = biddingRepository.save(bidding)
+            val product = productRepository.save(makeProduct(id = 1L))
+            val bidding = makeBidding(
+                id = command.biddingId,
+                product = product,
+                user = seller,
+                biddingType = BiddingType.PURCHASE,
+                status = BiddingStatus.IN_PROGRESS,
+            )
+            val savedBidding = biddingRepository.save(bidding)
 
-        val paymentId = "paymentId"
-        every { pgClient.attemptPayment(any()) } returns AttemptPaymentResponse(paymentId = paymentId)
+            val paymentId = "paymentId"
+            every { pgClient.attemptPayment(any()) } returns AttemptPaymentResponse(paymentId = paymentId)
 
-        When("즉시 판매 요청을 하면") {
             val sut = immediateSaleService.execute(command = command)
 
             Then("판매 정보가 리턴된다") {
@@ -146,6 +140,19 @@ internal class ImmediateSaleServiceTest(
                 val payload = AggregateTypeMapper.from<BiddingCompletedEvent>(outbox.payload)
                 payload.biddingId shouldBe savedBidding.id
                 payload.productId shouldBe product.id
+            }
+        }
+    }
+
+    Given("진행중이 아닌 구매 입찰에 대해") {
+        val command = makeImmediateSaleCommand()
+
+        val bidding = makeBidding(biddingType = BiddingType.PURCHASE, status = BiddingStatus.COMPLETE)
+        biddingRepository.save(bidding)
+
+        When("즉시 판매 요청을 하면") {
+            Then("예외가 발생한다") {
+                shouldThrow<AlreadyCompleteBidException> { immediateSaleService.execute(command = command) }
             }
         }
     }

@@ -19,46 +19,40 @@ internal class InitializeDeliveryServiceTest : BehaviorSpec({
         productExternalPort = productExternalPort,
     )
 
-    Given("존재하지 않는 입찰에 대해") {
-        val command = makeInitializeDeliveryCommand()
-        every { productExternalPort.findBiddingById(any()) } returns null
-
-        When("배송 초기 설정을 요청하면") {
+    Given("InitializeDeliveryService") {
+        When("존재하지 않는 입찰에 대해 배송 초기 설정을 요청하면") {
+            val command = makeInitializeDeliveryCommand()
+            every { productExternalPort.findBiddingById(any()) } returns null
             initializeDeliveryService.execute(command = command)
 
             Then("배송 정보를 설정하지 않는다") {
                 verify(exactly = 0) { deliveryRepositoryAdapter.save(any()) }
             }
         }
-    }
 
-    Given("존재하지 않는 상품에 대해") {
-        val command = makeInitializeDeliveryCommand()
-        val bidding = makeBidding()
-        every { productExternalPort.findBiddingById(any()) } returns bidding
-        every { productExternalPort.findProductById(any()) } returns null
-
-        When("배송 초기 설정을 요청하면") {
+        When("존재하지 않는 상품에 대해 배송 초기 설정을 요청하면") {
+            val command = makeInitializeDeliveryCommand()
+            val bidding = makeBidding()
+            every { productExternalPort.findBiddingById(any()) } returns bidding
+            every { productExternalPort.findProductById(any()) } returns null
             initializeDeliveryService.execute(command = command)
 
             Then("배송 정보를 설정하지 않는다") {
                 verify(exactly = 0) { deliveryRepositoryAdapter.save(any()) }
             }
         }
-    }
 
-    Given("완료된 입찰에 대해") {
-        val command = makeInitializeDeliveryCommand()
-        val bidding = makeBidding()
-        every { productExternalPort.findBiddingById(any()) } returns bidding
+        When("완료된 입찰에 대해 배송 초기 설정을 요청하면") {
+            val command = makeInitializeDeliveryCommand()
+            val bidding = makeBidding()
+            every { productExternalPort.findBiddingById(any()) } returns bidding
 
-        val product = makeProduct()
-        every { productExternalPort.findProductById(any()) } returns product
+            val product = makeProduct()
+            every { productExternalPort.findProductById(any()) } returns product
 
-        val delivery = makeDelivery()
-        every { deliveryRepositoryAdapter.save(any()) } returns delivery
+            val delivery = makeDelivery()
+            every { deliveryRepositoryAdapter.save(any()) } returns delivery
 
-        When("배송 초기 설정을 요청하면") {
             initializeDeliveryService.execute(command = command)
 
             Then("배송 정보를 설정한다") {

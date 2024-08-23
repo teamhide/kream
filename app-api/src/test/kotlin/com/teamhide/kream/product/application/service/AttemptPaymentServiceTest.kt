@@ -18,24 +18,21 @@ internal class AttemptPaymentServiceTest(
     private val attemptPaymentService: AttemptPaymentService,
     private val pgClient: PgClient,
 ) : BehaviorSpec({
-    Given("PG결제에서 에러가 발생할 때") {
+    Given("AttemptPaymentService") {
         val command = makeAttemptPaymentCommand()
-        every { pgClient.attemptPayment(any()) } throws WebClientException(
-            statusCode = HttpStatus.BAD_REQUEST, message = ""
-        )
 
-        When("결제 요청을 진행하면") {
+        When("PG결제에서 에러가 발생할 때 결제 요청을 진행하는 경우") {
+            every { pgClient.attemptPayment(any()) } throws WebClientException(
+                statusCode = HttpStatus.BAD_REQUEST, message = ""
+            )
+
             Then("성공한다") {
                 shouldThrow<WebClientException> { attemptPaymentService.execute(command = command) }
             }
         }
-    }
 
-    Given("특정 건에 대해") {
-        val command = makeAttemptPaymentCommand()
-        every { pgClient.attemptPayment(any()) } returns AttemptPaymentResponse(paymentId = "paymentId")
-
-        When("결제 요청을 진행하면") {
+        When("PG결제가 정상일 때 특정 건에 대해 결제 요청을 진행하면") {
+            every { pgClient.attemptPayment(any()) } returns AttemptPaymentResponse(paymentId = "paymentId")
             val sut = attemptPaymentService.execute(command = command)
 
             Then("성공한다") {

@@ -28,57 +28,50 @@ internal class RegisterProductServiceTest(
 ) : BehaviorSpec({
     listeners(MysqlDbCleaner(), MongoDbCleaner())
 
-    Given("brandId에 해당하는 브랜드가 없을 때") {
-        val command = makeRegisterProductCommand()
+    Given("RegisterProductService") {
+        When("brandId에 해당하는 브랜드가 없을 때 상품 등록을 요청하면") {
+            val command = makeRegisterProductCommand()
 
-        When("상품 등록을 요청하면") {
             Then("예외가 발생한다") {
                 shouldThrow<ProductBrandNotFoundException> { registerProductService.execute(command = command) }
             }
         }
-    }
 
-    Given("categoryId에 해당하는 카테고리가 없을 때") {
-        val command = makeRegisterProductCommand()
+        When("categoryId에 해당하는 카테고리가 없을 때 상품 생성을 요청하면") {
+            val command = makeRegisterProductCommand()
 
-        val productBrand = makeProductBrand()
-        productBrandRepository.save(productBrand)
+            val productBrand = makeProductBrand()
+            productBrandRepository.save(productBrand)
 
-        When("상품 생성을 요청하면") {
             Then("예외가 발생한다") {
                 shouldThrow<ProductCategoryNotFoundException> { registerProductService.execute(command = command) }
             }
         }
-    }
 
-    Given("상품 가격이 0원 미만일 때") {
-        val command = makeRegisterProductCommand(releasePrice = -1)
+        When("상품 가격이 0원 미만일 때 상품 등록을 요청하면") {
+            val command = makeRegisterProductCommand(releasePrice = -1)
 
-        val productBrand = makeProductBrand()
-        productBrandRepository.save(productBrand)
+            val productBrand = makeProductBrand()
+            productBrandRepository.save(productBrand)
 
-        val productCategory = makeProductCategory()
-        productCategoryRepository.save(productCategory)
+            val productCategory = makeProductCategory()
+            productCategoryRepository.save(productCategory)
 
-        When("상품 등록을 요청하면") {
             Then("예외가 발생한다") {
                 shouldThrow<InvalidReleasePriceException> { registerProductService.execute(command = command) }
             }
         }
-    }
 
-    Given("존재하는 브랜드/카테고리를 대상으로") {
-        val productBrand = productBrandRepository.save(makeProductBrand())
+        When("존재하는 브랜드/카테고리를 대상으로 상품 등록을 요청하면") {
+            val productBrand = productBrandRepository.save(makeProductBrand())
 
-        val productCategory = productCategoryRepository.save(makeProductCategory())
+            val productCategory = productCategoryRepository.save(makeProductCategory())
 
-        val command = makeRegisterProductCommand(
-            name = "test",
-            brandId = productBrand.id,
-            categoryId = productCategory.id,
-        )
-
-        When("상품 등록을 요청하면") {
+            val command = makeRegisterProductCommand(
+                name = "test",
+                brandId = productBrand.id,
+                categoryId = productCategory.id,
+            )
             val sut = registerProductService.execute(command = command)
             val savedProduct = productRepository.findAll()[0]
 

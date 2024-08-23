@@ -16,11 +16,11 @@ internal class GetUserByIdServiceTest(
 ) : BehaviorSpec({
     listeners(MysqlDbCleaner())
 
-    Given("유저 ID를 기반으로") {
+    Given("GetUserByIdService") {
         val query = GetUserByIdQuery(userId = 1L)
         val user = userRepository.save(makeUser())
 
-        When("조회하면") {
+        When("유저 ID를 기반으로 조회하면") {
             val sut = getUserByIdService.execute(query = query)
 
             Then("유저 정보가 반환된다") {

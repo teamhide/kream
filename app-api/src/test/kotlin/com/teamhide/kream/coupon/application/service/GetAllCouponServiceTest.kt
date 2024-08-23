@@ -16,7 +16,7 @@ class GetAllCouponServiceTest(
 ) : BehaviorSpec({
     listeners(MysqlDbCleaner())
 
-    Given("페이징 정보를 통해") {
+    Given("GetAllCouponService") {
         val couponGroup1 = makeCouponGroup(
             id = 1L, identifier = "first", remainQuantity = 0, status = CouponGroupStatus.ACTIVATED
         )

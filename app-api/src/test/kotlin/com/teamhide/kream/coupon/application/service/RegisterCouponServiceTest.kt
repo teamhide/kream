@@ -18,7 +18,7 @@ internal class RegisterCouponServiceTest(
 ) : BehaviorSpec({
     listeners(MysqlDbCleaner())
 
-    Given("특정 기간 동안 유효한") {
+    Given("RegisterCouponService") {
         val command = RegisterCouponCommand(
             discountType = CouponDiscountType.AMOUNT,
             discountValue = 10000,
@@ -27,7 +27,7 @@ internal class RegisterCouponServiceTest(
             period = 30,
         )
 
-        When("CouponGroup 생성을 요청하면") {
+        When("특정 기간 동안 유효한 CouponGroup 생성을 요청하면") {
             val sut = registerCouponService.execute(command = command)
 
             Then("CouponGroup이 생성되었다") {

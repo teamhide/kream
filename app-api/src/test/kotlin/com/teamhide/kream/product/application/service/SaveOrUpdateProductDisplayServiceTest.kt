@@ -26,28 +26,25 @@ internal class SaveOrUpdateProductDisplayServiceTest(
 ) : BehaviorSpec({
     listeners(MysqlDbCleaner(), MongoDbCleaner())
 
-    Given("전시 상품 정보가 존재하지 않고 상품도 존재하지 않을 때") {
-        val command = makeSaveOrUpdateProductDisplayCommand()
-
-        When("저장 또는 업데이트 요청을 하면") {
+    Given("SaveOrUpdateProductDisplayService") {
+        When("전시 상품 정보가 존재하지 않고 상품도 존재하지 않을 때 저장 또는 업데이트 요청을 하면") {
+            val command = makeSaveOrUpdateProductDisplayCommand()
             saveOrUpdateProductDisplayService.execute(command = command)
 
             Then("저장하지 않는다") {
                 productDisplayRepository.findAll().size shouldBe 0
             }
         }
-    }
 
-    Given("전시 상품 정보가 존재하지 않을 때") {
-        val productBrand = productBrandRepository.save(makeProductBrand())
+        When("전시 상품 정보가 존재하지 않을 때 저장 또는 업데이트 요청을 하면") {
+            val productBrand = productBrandRepository.save(makeProductBrand())
 
-        val productCategory = productCategoryRepository.save(makeProductCategory())
+            val productCategory = productCategoryRepository.save(makeProductCategory())
 
-        val product = productRepository.save(makeProduct(productBrand = productBrand, productCategory = productCategory))
+            val product = productRepository.save(makeProduct(productBrand = productBrand, productCategory = productCategory))
 
-        val command = makeSaveOrUpdateProductDisplayCommand()
+            val command = makeSaveOrUpdateProductDisplayCommand()
 
-        When("저장 또는 업데이트 요청을 하면") {
             saveOrUpdateProductDisplayService.execute(command = command)
 
             Then("전시 상품 정보를 저장한다") {
@@ -61,14 +58,12 @@ internal class SaveOrUpdateProductDisplayServiceTest(
                 sut.lastBiddingId shouldBe command.biddingId
             }
         }
-    }
 
-    Given("전시 상품 정보가 존재하지만 새로운 가격보다 저렴한 경우") {
-        val productDisplay = productDisplayRepository.save(makeProductDisplay(price = 10000))
+        When("전시 상품 정보가 존재하지만 새로운 가격보다 저렴한 경우 저장 또는 업데이트 요청을 하면") {
+            val productDisplay = productDisplayRepository.save(makeProductDisplay(price = 10000))
 
-        val command = makeSaveOrUpdateProductDisplayCommand(price = 20000)
+            val command = makeSaveOrUpdateProductDisplayCommand(price = 20000)
 
-        When("저장 또는 업데이트 요청을 하면") {
             saveOrUpdateProductDisplayService.execute(command = command)
 
             Then("전시 상품 정보를 업데이트 하지않는다") {
@@ -77,14 +72,12 @@ internal class SaveOrUpdateProductDisplayServiceTest(
                 sut.price shouldBe productDisplay.price
             }
         }
-    }
 
-    Given("전시 상품 정보가 존재하고 새로운 가격보다 저렴한 경우") {
-        val productDisplay = productDisplayRepository.save(makeProductDisplay(price = 30000))
+        When("전시 상품 정보가 존재하고 새로운 가격보다 저렴한 경우 저장 또는 업데이트 요청을 하면") {
+            val productDisplay = productDisplayRepository.save(makeProductDisplay(price = 30000))
 
-        val command = makeSaveOrUpdateProductDisplayCommand(price = 20000)
+            val command = makeSaveOrUpdateProductDisplayCommand(price = 20000)
 
-        When("저장 또는 업데이트 요청을 하면") {
             saveOrUpdateProductDisplayService.execute(command = command)
 
             Then("전시 상품 정보를 업데이트한다") {

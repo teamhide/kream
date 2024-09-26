@@ -18,18 +18,8 @@ class ProductDetailV1Controller(
     @GetMapping("/{productId}")
     fun getProductDetail(@PathVariable("productId") productId: Long): ApiResponse<GetProductResponse> {
         val query = GetProductDetailQuery(productId = productId)
-        val response = getProductDetailUseCase.execute(query = query).let {
-            GetProductResponse(
-                productId = it.productId,
-                releasePrice = it.releasePrice,
-                modelNumber = it.modelNumber,
-                name = it.name,
-                brand = it.brand,
-                category = it.category,
-                purchaseBidPrice = it.purchaseBidPrice,
-                saleBidPrice = it.saleBidPrice,
-            )
-        }
+        val productDetail = getProductDetailUseCase.execute(query = query)
+        val response = GetProductResponse.from(productDetail = productDetail)
         return ApiResponse.success(body = response, statusCode = HttpStatus.OK)
     }
 }

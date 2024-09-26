@@ -3,7 +3,6 @@ package com.teamhide.kream.product.ui.api
 import com.teamhide.kream.common.response.ApiResponse
 import com.teamhide.kream.product.domain.usecase.GetProductsQuery
 import com.teamhide.kream.product.domain.usecase.GetProductsUseCase
-import com.teamhide.kream.product.domain.usecase.RegisterProductCommand
 import com.teamhide.kream.product.domain.usecase.RegisterProductUseCase
 import com.teamhide.kream.product.ui.api.dto.GetProductsResponse
 import com.teamhide.kream.product.ui.api.dto.RegisterProductRequest
@@ -35,27 +34,9 @@ class ProductV1Controller(
 
     @PostMapping("")
     fun registerProduct(@RequestBody @Valid body: RegisterProductRequest): ApiResponse<RegisterProductResponse> {
-        val command = body.let {
-            RegisterProductCommand(
-                name = it.name,
-                releasePrice = it.releasePrice,
-                modelNumber = it.modelNumber,
-                sizeType = it.sizeType,
-                brandId = it.brandId,
-                categoryId = it.categoryId,
-            )
-        }
-        val response = registerProductUseCase.execute(command = command).let {
-            RegisterProductResponse(
-                id = it.id,
-                name = it.name,
-                releasePrice = it.releasePrice,
-                modelNumber = it.modelNumber,
-                sizeType = it.sizeType,
-                brand = it.brand,
-                category = it.category,
-            )
-        }
+        val command = body.toCommand()
+        val productResponseDto = registerProductUseCase.execute(command = command)
+        val response = RegisterProductResponse.from(productDto = productResponseDto)
         return ApiResponse.success(body = response, statusCode = HttpStatus.OK)
     }
 }

@@ -3,7 +3,6 @@ package com.teamhide.kream.coupon.ui.api
 import com.teamhide.kream.common.response.ApiResponse
 import com.teamhide.kream.coupon.domain.usecase.GetAllCouponQuery
 import com.teamhide.kream.coupon.domain.usecase.GetAllCouponUseCase
-import com.teamhide.kream.coupon.domain.usecase.RegisterCouponCommand
 import com.teamhide.kream.coupon.domain.usecase.RegisterCouponUseCase
 import com.teamhide.kream.coupon.ui.api.dto.GetAllCouponResponse
 import com.teamhide.kream.coupon.ui.api.dto.RegisterCouponRequest
@@ -32,21 +31,9 @@ class CouponV1Controller(
 
     @PostMapping("")
     fun registerCoupon(@RequestBody @Valid body: RegisterCouponRequest): ApiResponse<RegisterCouponResponse> {
-        val command = body.let {
-            RegisterCouponCommand(
-                discountType = it.discountType,
-                discountValue = it.discountValue,
-                quantity = it.quantity,
-                periodType = it.periodType,
-                period = it.period,
-            )
-        }
-        val response = registerCouponUseCase.execute(command = command).let {
-            RegisterCouponResponse(
-                identifier = it.identifier,
-                quantity = it.quantity,
-            )
-        }
+        val command = body.toCommand()
+        val registeredCoupon = registerCouponUseCase.execute(command = command)
+        val response = RegisterCouponResponse.from(coupon = registeredCoupon)
         return ApiResponse.success(body = response, statusCode = HttpStatus.OK)
     }
 }

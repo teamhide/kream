@@ -2,9 +2,7 @@ package com.teamhide.kream.product.ui.api
 
 import com.teamhide.kream.common.response.ApiResponse
 import com.teamhide.kream.common.security.CurrentUser
-import com.teamhide.kream.product.domain.usecase.ImmediatePurchaseCommand
 import com.teamhide.kream.product.domain.usecase.ImmediatePurchaseUseCase
-import com.teamhide.kream.product.domain.usecase.ImmediateSaleCommand
 import com.teamhide.kream.product.domain.usecase.ImmediateSaleUseCase
 import com.teamhide.kream.product.ui.api.dto.ImmediatePurchaseRequest
 import com.teamhide.kream.product.ui.api.dto.ImmediatePurchaseResponse
@@ -29,13 +27,9 @@ class ImmediateBidV1Controller(
         @AuthenticationPrincipal currentUser: CurrentUser,
         @RequestBody @Valid body: ImmediatePurchaseRequest
     ): ApiResponse<ImmediatePurchaseResponse> {
-        val command = ImmediatePurchaseCommand(biddingId = body.biddingId, userId = currentUser.id)
-        val response = immediatePurchaseUseCase.execute(command = command).let {
-            ImmediatePurchaseResponse(
-                biddingId = it.biddingId,
-                price = it.price,
-            )
-        }
+        val command = body.toCommand(userId = currentUser.id)
+        val purchaseResult = immediatePurchaseUseCase.execute(command = command)
+        val response = ImmediatePurchaseResponse.from(responseDto = purchaseResult)
         return ApiResponse.success(body = response, statusCode = HttpStatus.OK)
     }
 
@@ -44,13 +38,9 @@ class ImmediateBidV1Controller(
         @AuthenticationPrincipal currentUser: CurrentUser,
         @RequestBody @Valid body: ImmediateSaleRequest,
     ): ApiResponse<ImmediateSaleResponse> {
-        val command = ImmediateSaleCommand(biddingId = body.biddingId, userId = currentUser.id)
-        val response = immediateSaleUseCase.execute(command = command).let {
-            ImmediateSaleResponse(
-                biddingId = it.biddingId,
-                price = it.price,
-            )
-        }
+        val command = body.toCommand(userId = currentUser.id)
+        val saleResponse = immediateSaleUseCase.execute(command = command)
+        val response = ImmediateSaleResponse.from(responseDto = saleResponse)
         return ApiResponse.success(body = response, statusCode = HttpStatus.OK)
     }
 }

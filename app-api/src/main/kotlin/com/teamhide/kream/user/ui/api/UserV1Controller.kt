@@ -1,7 +1,6 @@
 package com.teamhide.kream.user.ui.api
 
 import com.teamhide.kream.common.response.ApiResponse
-import com.teamhide.kream.user.domain.usecase.RegisterUserCommand
 import com.teamhide.kream.user.domain.usecase.RegisterUserUseCase
 import com.teamhide.kream.user.ui.api.dto.RegisterUserRequest
 import com.teamhide.kream.user.ui.api.dto.RegisterUserResponse
@@ -19,23 +18,9 @@ class UserV1Controller(
 ) {
     @PostMapping("")
     fun registerUser(@RequestBody @Valid body: RegisterUserRequest): ApiResponse<RegisterUserResponse> {
-        val command = with(body) {
-            RegisterUserCommand(
-                email = email,
-                nickname = nickname,
-                password1 = password1,
-                password2 = password2,
-                baseAddress = baseAddress,
-                detailAddress = detailAddress,
-            )
-        }
+        val command = body.toCommand()
         val user = registerUserUseCase.execute(command = command)
-        val response = with(user) {
-            RegisterUserResponse(
-                email = email,
-                nickname = nickname,
-            )
-        }
+        val response = RegisterUserResponse.from(user = user)
         return ApiResponse.success(body = response, statusCode = HttpStatus.OK)
     }
 }

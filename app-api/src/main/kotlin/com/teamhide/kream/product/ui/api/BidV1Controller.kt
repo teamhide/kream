@@ -2,7 +2,6 @@ package com.teamhide.kream.product.ui.api
 
 import com.teamhide.kream.common.response.ApiResponse
 import com.teamhide.kream.common.security.CurrentUser
-import com.teamhide.kream.product.domain.usecase.BidCommand
 import com.teamhide.kream.product.domain.usecase.BidUseCase
 import com.teamhide.kream.product.ui.api.dto.BidRequest
 import com.teamhide.kream.product.ui.api.dto.BidResponse
@@ -24,23 +23,9 @@ class BidV1Controller(
         @AuthenticationPrincipal currentUser: CurrentUser,
         @RequestBody @Valid body: BidRequest
     ): ApiResponse<BidResponse> {
-        val command = body.let {
-            BidCommand(
-                productId = it.productId,
-                price = it.price,
-                size = it.size,
-                biddingType = it.biddingType,
-                userId = currentUser.id,
-            )
-        }
-        val response = bidUseCase.execute(command = command).let {
-            BidResponse(
-                biddingId = it.biddingId,
-                price = it.price,
-                size = it.size,
-                biddingType = it.biddingType,
-            )
-        }
+        val command = body.toCommand(userId = currentUser.id)
+        val bidResponseDto = bidUseCase.execute(command = command)
+        val response = BidResponse.from(bidResponseDto = bidResponseDto)
         return ApiResponse.success(body = response, statusCode = HttpStatus.OK)
     }
 }

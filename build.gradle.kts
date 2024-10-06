@@ -84,6 +84,8 @@ subprojects {
         useJUnitPlatform()
         systemProperties["spring.profiles.active"] = "test"
         outputs.dir(snippetsDir)
+        minHeapSize = "2048m"
+        maxHeapSize = "2048m"
     }
 
     tasks.register("testUnit", Test::class) {

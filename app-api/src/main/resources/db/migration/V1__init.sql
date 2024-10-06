@@ -120,3 +120,13 @@ CREATE TABLE coupon_history(
     created_at DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
     updated_at DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6)
 );
+
+CREATE TABLE coupon_condition(
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    coupon_id BIGINT NOT NULL,
+    condition_type VARCHAR(50) NULL,
+    condition_value VARCHAR(30) NOT NULL,
+    condition_value_type VARCHAR(10) NOT NULL,
+    created_at DATETIME(6) NOT NULL,
+    updated_at DATETIME(6) NOT NULL
+);

@@ -22,7 +22,7 @@ class CouponConditionTest : BehaviorSpec({
             }
         }
 
-        When("ConditionValueType이 LIST_INT 때 ConditionValue가 List<Int> 타입이 아닌 경우") {
+        When("ConditionValueType이 LIST_LONG 때 ConditionValue가 List<Int> 타입이 아닌 경우") {
             val coupon = makeCoupon()
 
             Then("예외가 발생한다") {
@@ -31,7 +31,7 @@ class CouponConditionTest : BehaviorSpec({
                         coupon = coupon,
                         conditionType = ConditionType.ONLY_FOR_SPECIFIC_USERS,
                         conditionValue = "abc",
-                        conditionValueType = ConditionValueType.LIST_INT,
+                        conditionValueType = ConditionValueType.LIST_LONG,
                     )
                 }
             }
@@ -68,14 +68,14 @@ class CouponConditionTest : BehaviorSpec({
             }
         }
 
-        When("LIST_INT 타입을 변환하면") {
+        When("LIST_LONG 타입을 변환하면") {
             val coupon = makeCoupon()
 
             val condition = CouponCondition(
                 coupon = coupon,
                 conditionType = ConditionType.ONLY_FOR_SPECIFIC_USERS,
                 conditionValue = "[1,2,3]",
-                conditionValueType = ConditionValueType.LIST_INT,
+                conditionValueType = ConditionValueType.LIST_LONG,
             )
             val sut = condition.getTypedValue<List<Int>>()
 
@@ -84,7 +84,7 @@ class CouponConditionTest : BehaviorSpec({
             }
         }
 
-        When("LIST_INT 타입 변환 시 ConditionValue가 [ 로 시작하지 않는 경우") {
+        When("LIST_LONG 타입 변환 시 ConditionValue가 [ 로 시작하지 않는 경우") {
             Then("예외가 발생한다") {
                 val coupon = makeCoupon()
 
@@ -93,13 +93,13 @@ class CouponConditionTest : BehaviorSpec({
                         coupon = coupon,
                         conditionType = ConditionType.ONLY_FOR_SPECIFIC_USERS,
                         conditionValue = "1,2,3]",
-                        conditionValueType = ConditionValueType.LIST_INT,
+                        conditionValueType = ConditionValueType.LIST_LONG,
                     ).getTypedValue<List<Int>>()
                 }
             }
         }
 
-        When("LIST_INT 타입 변환 시 ConditionValue가 ] 로 끝나지 않는 경우") {
+        When("LIST_LONG 타입 변환 시 ConditionValue가 ] 로 끝나지 않는 경우") {
             val coupon = makeCoupon()
 
             Then("예외가 발생한다") {
@@ -108,13 +108,13 @@ class CouponConditionTest : BehaviorSpec({
                         coupon = coupon,
                         conditionType = ConditionType.ONLY_FOR_SPECIFIC_USERS,
                         conditionValue = "[1,2,3",
-                        conditionValueType = ConditionValueType.LIST_INT,
+                        conditionValueType = ConditionValueType.LIST_LONG,
                     ).getTypedValue<List<Int>>()
                 }
             }
         }
 
-        When("LIST_INT 타입 변환 후 결과가 빈 리스트라면") {
+        When("LIST_LONG 타입 변환 후 결과가 빈 리스트라면") {
             val coupon = makeCoupon()
 
             Then("예외가 발생한다") {
@@ -123,7 +123,7 @@ class CouponConditionTest : BehaviorSpec({
                         coupon = coupon,
                         conditionType = ConditionType.ONLY_FOR_SPECIFIC_USERS,
                         conditionValue = "[]",
-                        conditionValueType = ConditionValueType.LIST_INT,
+                        conditionValueType = ConditionValueType.LIST_LONG,
                     ).getTypedValue<List<Int>>()
                 }
             }

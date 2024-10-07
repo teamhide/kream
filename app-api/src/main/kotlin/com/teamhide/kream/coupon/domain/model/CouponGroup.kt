@@ -76,3 +76,9 @@ class CouponGroup(
         }
     }
 }
+
+fun List<CouponGroup>.commonFilter(): List<CouponGroup> {
+    return this.filter {
+        it.remainQuantity > 0 && it.isAvailable()
+    }
+}

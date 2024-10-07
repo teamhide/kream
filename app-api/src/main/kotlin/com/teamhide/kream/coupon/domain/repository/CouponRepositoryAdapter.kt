@@ -1,6 +1,7 @@
 package com.teamhide.kream.coupon.domain.repository
 
 import com.teamhide.kream.coupon.domain.model.Coupon
+import com.teamhide.kream.coupon.domain.model.CouponCondition
 import com.teamhide.kream.coupon.domain.model.CouponGroup
 import com.teamhide.kream.coupon.domain.model.CouponHistory
 import org.springframework.data.domain.PageRequest
@@ -11,6 +12,7 @@ class CouponRepositoryAdapter(
     private val couponGroupRepository: CouponGroupRepository,
     private val couponRepository: CouponRepository,
     private val couponHistoryRepository: CouponHistoryRepository,
+    private val couponConditionRepository: CouponConditionRepository,
 ) {
     fun findCouponGroupByIdentifier(identifier: String): CouponGroup? = couponGroupRepository.findByIdentifier(identifier = identifier)
 
@@ -23,5 +25,9 @@ class CouponRepositoryAdapter(
     fun findAllCouponGroupBy(pageSize: Int, offset: Int): List<CouponGroup> {
         val pageRequest = PageRequest.of(offset, pageSize)
         return couponGroupRepository.findAll(pageRequest).toList()
+    }
+
+    fun findAllConditionByCouponGroupId(couponGroupId: Long): List<CouponCondition> {
+        return couponConditionRepository.findAllByCouponGroupId(couponGroupId = couponGroupId)
     }
 }

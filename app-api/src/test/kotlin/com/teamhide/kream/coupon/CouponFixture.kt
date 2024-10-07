@@ -1,6 +1,9 @@
 package com.teamhide.kream.coupon
 
+import com.teamhide.kream.coupon.domain.model.ConditionType
+import com.teamhide.kream.coupon.domain.model.ConditionValueType
 import com.teamhide.kream.coupon.domain.model.Coupon
+import com.teamhide.kream.coupon.domain.model.CouponCondition
 import com.teamhide.kream.coupon.domain.model.CouponGroup
 import com.teamhide.kream.coupon.domain.model.CouponHistory
 import com.teamhide.kream.coupon.domain.usecase.AcquireCouponCommand
@@ -71,5 +74,21 @@ fun makeCouponHistory(
         userId = userId,
         coupon = coupon,
         status = status,
+    )
+}
+
+fun makeCouponCondition(
+    id: Long = 1L,
+    couponGroup: CouponGroup = makeCouponGroup(),
+    conditionType: ConditionType = ConditionType.FIRST_DOWNLOAD,
+    conditionValue: String = "true",
+    conditionValueType: ConditionValueType = ConditionValueType.BOOLEAN,
+): CouponCondition {
+    return CouponCondition(
+        id = id,
+        couponGroup = couponGroup,
+        conditionType = conditionType,
+        conditionValue = conditionValue,
+        conditionValueType = conditionValueType,
     )
 }

@@ -3,6 +3,7 @@ package com.teamhide.kream.coupon.domain.repository
 import com.teamhide.kream.coupon.domain.model.CouponGroup
 import com.teamhide.kream.coupon.domain.vo.CouponGroupStatus
 import com.teamhide.kream.coupon.makeCoupon
+import com.teamhide.kream.coupon.makeCouponCondition
 import com.teamhide.kream.coupon.makeCouponGroup
 import com.teamhide.kream.coupon.makeCouponHistory
 import io.kotest.core.spec.style.StringSpec
@@ -17,10 +18,12 @@ internal class CouponRepositoryAdapterTest : StringSpec({
     val couponRepository = mockk<CouponRepository>()
     val couponGroupRepository = mockk<CouponGroupRepository>()
     val couponHistoryRepository = mockk<CouponHistoryRepository>()
+    val couponConditionRepository = mockk<CouponConditionRepository>()
     val couponRepositoryAdapter = CouponRepositoryAdapter(
         couponGroupRepository = couponGroupRepository,
         couponRepository = couponRepository,
         couponHistoryRepository = couponHistoryRepository,
+        couponConditionRepository = couponConditionRepository,
     )
 
     "identifier로 CouponGroup을 조회한다" {
@@ -121,5 +124,21 @@ internal class CouponRepositoryAdapterTest : StringSpec({
         result[2].id shouldBe couponGroup3.id
         result[2].remainQuantity shouldBe couponGroup3.remainQuantity
         result[2].status shouldBe couponGroup3.status
+    }
+
+    "쿠폰 그룹ID로 모든 CouponCondition을 조회한다" {
+        // Given
+        val couponGroupId = 1L
+        val condition1 = makeCouponCondition(id = 1L)
+        val condition2 = makeCouponCondition(id = 2L)
+        every { couponConditionRepository.findAllByCouponGroupId(any()) } returns listOf(condition1, condition2)
+
+        // When
+        val sut = couponRepositoryAdapter.findAllConditionByCouponGroupId(couponGroupId = couponGroupId)
+
+        // Then
+        sut.size shouldBe 2
+        sut[0].id shouldBe condition1.id
+        sut[1].id shouldBe condition2.id
     }
 })

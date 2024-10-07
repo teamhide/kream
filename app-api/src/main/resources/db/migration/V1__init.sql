@@ -123,7 +123,7 @@ CREATE TABLE coupon_history(
 
 CREATE TABLE coupon_condition(
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
-    coupon_id BIGINT NOT NULL,
+    coupon_group_id BIGINT NOT NULL,
     condition_type VARCHAR(50) NULL,
     condition_value VARCHAR(30) NOT NULL,
     condition_value_type VARCHAR(10) NOT NULL,

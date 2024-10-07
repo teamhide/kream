@@ -16,8 +16,8 @@ import jakarta.persistence.Table
 @Table(name = "coupon_condition")
 class CouponCondition(
     @ManyToOne
-    @JoinColumn(name = "coupon_id", nullable = false)
-    val coupon: Coupon,
+    @JoinColumn(name = "coupon_group_id", nullable = false)
+    val couponGroup: CouponGroup,
 
     @Enumerated(EnumType.STRING)
     @Column(name = "condition_type", length = 50, nullable = false)

@@ -4,7 +4,7 @@ import com.teamhide.kream.coupon.domain.model.ConditionType
 import com.teamhide.kream.coupon.domain.model.ConditionValueType
 import com.teamhide.kream.coupon.domain.model.CouponCondition
 import com.teamhide.kream.coupon.domain.usecase.ConditionContext
-import com.teamhide.kream.coupon.makeCoupon
+import com.teamhide.kream.coupon.makeCouponGroup
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.shouldBe
 
@@ -14,9 +14,9 @@ class OnlyForSpecificUsersStrategyTest : BehaviorSpec({
     Given("isSatisfied") {
         When("context의 값이 condition에 부합하면") {
             val userId = 1L
-            val coupon = makeCoupon()
+            val couponGroup = makeCouponGroup()
             val condition = CouponCondition(
-                coupon = coupon,
+                couponGroup = couponGroup,
                 conditionType = ConditionType.ONLY_FOR_SPECIFIC_USERS,
                 conditionValue = "[$userId,2,3]",
                 conditionValueType = ConditionValueType.LIST_LONG,

@@ -39,27 +39,28 @@ class CouponCondition(
     }
 
     companion object {
-        inline fun <reified T> getTypedValue(conditionValueType: ConditionValueType, conditionValue: String): T {
-            return when (conditionValueType) {
-                ConditionValueType.BOOLEAN -> conditionValue.toBooleanStrictOrNull() as? T
-                ConditionValueType.LIST_INT -> conditionValue.toListOfInt() as? T
-            } ?: throw InvalidConditionTypeException()
-        }
+    }
 
-        fun String.toListOfInt(): List<Int> {
-            if (!this.startsWith("[") || !this.endsWith("]")) throw InvalidConditionTypeException()
+    fun toListOfInt(value: String): List<Int> {
+        if (!value.startsWith("[") || !value.endsWith("]")) throw InvalidConditionTypeException()
 
-            return this.substring(1, this.length - 1)
-                .split(",")
-                .mapNotNull { it.trim().toIntOrNull() }
-                .also { if (it.isEmpty()) throw InvalidConditionTypeException() }
-        }
+        return value.substring(1, value.length - 1)
+            .split(",")
+            .mapNotNull { it.trim().toIntOrNull() }
+            .also { if (it.isEmpty()) throw InvalidConditionTypeException() }
+    }
+
+    final inline fun <reified T : Any> getTypedValue(): T {
+        return when (this.conditionValueType) {
+            ConditionValueType.BOOLEAN -> this.conditionValue.toBooleanStrictOrNull() as? T
+            ConditionValueType.LIST_INT -> toListOfInt(value = this.conditionValue) as? T
+        } ?: throw InvalidConditionTypeException()
     }
 
     private fun validateValueType() {
         when (conditionType.valueType) {
-            ConditionValueType.BOOLEAN -> getTypedValue<Boolean>(conditionValueType, conditionValue)
-            ConditionValueType.LIST_INT -> getTypedValue<List<Int>>(conditionValueType, conditionValue)
+            ConditionValueType.BOOLEAN -> getTypedValue<Boolean>()
+            ConditionValueType.LIST_INT -> getTypedValue<List<Int>>()
         }
     }
 }

@@ -29,7 +29,7 @@ class CouponConditionTest : BehaviorSpec({
                 shouldThrow<InvalidConditionTypeException> {
                     CouponCondition(
                         coupon = coupon,
-                        conditionType = ConditionType.FIRST_DOWNLOAD,
+                        conditionType = ConditionType.ONLY_FOR_SPECIFIC_USERS,
                         conditionValue = "abc",
                         conditionValueType = ConditionValueType.LIST_INT,
                     )
@@ -53,10 +53,15 @@ class CouponConditionTest : BehaviorSpec({
 
     Given("getTypedValue") {
         When("ConditionValue를 ConditionValueType에 맞게 변환요청하면") {
-            val sut = CouponCondition.getTypedValue<Boolean>(
+            val coupon = makeCoupon()
+
+            val condition = CouponCondition(
+                coupon = coupon,
+                conditionType = ConditionType.FIRST_DOWNLOAD,
                 conditionValue = "true",
                 conditionValueType = ConditionValueType.BOOLEAN,
             )
+            val sut = condition.getTypedValue<Boolean>()
 
             Then("변환된 값이 리턴된다") {
                 sut shouldBe true
@@ -64,10 +69,15 @@ class CouponConditionTest : BehaviorSpec({
         }
 
         When("LIST_INT 타입을 변환하면") {
-            val sut = CouponCondition.getTypedValue<List<Int>>(
+            val coupon = makeCoupon()
+
+            val condition = CouponCondition(
+                coupon = coupon,
+                conditionType = ConditionType.ONLY_FOR_SPECIFIC_USERS,
                 conditionValue = "[1,2,3]",
                 conditionValueType = ConditionValueType.LIST_INT,
             )
+            val sut = condition.getTypedValue<List<Int>>()
 
             Then("변환된 값이 리턴된다") {
                 sut shouldBe listOf(1, 2, 3)
@@ -76,33 +86,45 @@ class CouponConditionTest : BehaviorSpec({
 
         When("LIST_INT 타입 변환 시 ConditionValue가 [ 로 시작하지 않는 경우") {
             Then("예외가 발생한다") {
+                val coupon = makeCoupon()
+
                 shouldThrow<InvalidConditionTypeException> {
-                    CouponCondition.getTypedValue<List<Int>>(
+                    CouponCondition(
+                        coupon = coupon,
+                        conditionType = ConditionType.ONLY_FOR_SPECIFIC_USERS,
                         conditionValue = "1,2,3]",
                         conditionValueType = ConditionValueType.LIST_INT,
-                    )
+                    ).getTypedValue<List<Int>>()
                 }
             }
         }
 
         When("LIST_INT 타입 변환 시 ConditionValue가 ] 로 끝나지 않는 경우") {
+            val coupon = makeCoupon()
+
             Then("예외가 발생한다") {
                 shouldThrow<InvalidConditionTypeException> {
-                    CouponCondition.getTypedValue<List<Int>>(
+                    CouponCondition(
+                        coupon = coupon,
+                        conditionType = ConditionType.ONLY_FOR_SPECIFIC_USERS,
                         conditionValue = "[1,2,3",
                         conditionValueType = ConditionValueType.LIST_INT,
-                    )
+                    ).getTypedValue<List<Int>>()
                 }
             }
         }
 
         When("LIST_INT 타입 변환 후 결과가 빈 리스트라면") {
+            val coupon = makeCoupon()
+
             Then("예외가 발생한다") {
                 shouldThrow<InvalidConditionTypeException> {
-                    CouponCondition.getTypedValue<List<Int>>(
+                    CouponCondition(
+                        coupon = coupon,
+                        conditionType = ConditionType.ONLY_FOR_SPECIFIC_USERS,
                         conditionValue = "[]",
                         conditionValueType = ConditionValueType.LIST_INT,
-                    )
+                    ).getTypedValue<List<Int>>()
                 }
             }
         }

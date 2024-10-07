@@ -44,7 +44,7 @@ class CouponCondition(
     fun toListOfInt(value: String): List<Long> {
         if (!value.startsWith("[") || !value.endsWith("]")) throw InvalidConditionTypeException()
 
-        return value.substring(1, value.length - 1)
+        return value.removeSurrounding("[", "]")
             .split(",")
             .mapNotNull { it.trim().toLongOrNull() }
             .also { if (it.isEmpty()) throw InvalidConditionTypeException() }

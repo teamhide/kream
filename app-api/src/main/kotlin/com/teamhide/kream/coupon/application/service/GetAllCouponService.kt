@@ -1,6 +1,8 @@
 package com.teamhide.kream.coupon.application.service
 
-import com.teamhide.kream.coupon.domain.model.commonFilter
+import com.teamhide.kream.coupon.domain.model.CouponCondition
+import com.teamhide.kream.coupon.domain.model.CouponGroup
+import com.teamhide.kream.coupon.domain.model.applyDefaultFilter
 import com.teamhide.kream.coupon.domain.repository.CouponRepositoryAdapter
 import com.teamhide.kream.coupon.domain.usecase.ConditionContext
 import com.teamhide.kream.coupon.domain.usecase.CouponGroupDto
@@ -22,14 +24,18 @@ class GetAllCouponService(
         val context = ConditionContext(userId = 1L, isFirstDownload = true)
 
         return coupons
-            .commonFilter()
-            .filter { couponGroup ->
-                val conditions = couponRepositoryAdapter.findAllConditionByCouponGroupId(couponGroupId = couponGroup.id)
-                conditions.all { condition ->
-                    val strategy = couponConditionStrategyFactory.getStrategy(conditionType = condition.conditionType)
-                    strategy.isSatisfied(condition = condition, context = context)
-                }
-            }
+            .applyDefaultFilter()
+            .filter { couponGroup -> isCouponGroupValid(couponGroup, context) }
             .map { CouponGroupDto.from(couponGroup = it) }
+    }
+
+    private fun isCouponGroupValid(couponGroup: CouponGroup, context: ConditionContext): Boolean {
+        val conditions = couponRepositoryAdapter.findAllConditionByCouponGroupId(couponGroupId = couponGroup.id)
+        return conditions.all { condition -> isConditionSatisfied(condition, context) }
+    }
+
+    private fun isConditionSatisfied(condition: CouponCondition, context: ConditionContext): Boolean {
+        val strategy = couponConditionStrategyFactory.getStrategy(conditionType = condition.conditionType)
+        return strategy?.isSatisfied(condition = condition, context = context) ?: true
     }
 }

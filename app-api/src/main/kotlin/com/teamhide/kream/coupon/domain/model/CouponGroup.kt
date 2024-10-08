@@ -77,7 +77,7 @@ class CouponGroup(
     }
 }
 
-fun List<CouponGroup>.commonFilter(): List<CouponGroup> {
+fun List<CouponGroup>.applyDefaultFilter(): List<CouponGroup> {
     return this.filter {
         it.remainQuantity > 0 && it.isAvailable()
     }

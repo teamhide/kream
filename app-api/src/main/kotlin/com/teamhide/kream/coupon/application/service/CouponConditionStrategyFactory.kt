@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component
 class CouponConditionStrategyFactory(
     private val strategies: List<CouponConditionStrategy>,
 ) {
-    fun getStrategy(conditionType: ConditionType): CouponConditionStrategy {
-        return strategies.first { it.isSupport(conditionType = conditionType) }
+    fun getStrategy(conditionType: ConditionType): CouponConditionStrategy? {
+        return strategies.firstOrNull { it.isSupport(conditionType = conditionType) }
     }
 }

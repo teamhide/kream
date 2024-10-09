@@ -27,7 +27,7 @@ class CouponRepositoryAdapter(
         return couponGroupRepository.findAll(pageRequest).toList()
     }
 
-    fun findAllConditionByCouponGroupId(couponGroupId: Long): List<CouponCondition> {
-        return couponConditionRepository.findAllByCouponGroupId(couponGroupId = couponGroupId)
+    fun findAllConditionByCouponGroupIds(couponGroupIds: List<Long>): List<CouponCondition> {
+        return couponConditionRepository.findAllByCouponGroupIds(couponGroupIds = couponGroupIds)
     }
 }

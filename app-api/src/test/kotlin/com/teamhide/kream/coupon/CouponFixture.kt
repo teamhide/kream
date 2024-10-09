@@ -15,7 +15,7 @@ import com.teamhide.kream.coupon.domain.vo.CouponStatus
 import java.time.LocalDateTime
 
 fun makeCouponGroup(
-    id: Long = 1L,
+    id: Long = 0L,
     identifier: String = "identifier",
     discountType: CouponDiscountType = CouponDiscountType.AMOUNT,
     discountValue: Int = 1000,
@@ -38,7 +38,7 @@ fun makeCouponGroup(
 }
 
 fun makeCoupon(
-    id: Long = 1L,
+    id: Long = 0L,
     couponGroup: CouponGroup = makeCouponGroup(),
     userId: Long = 1L,
     status: CouponStatus = CouponStatus.ISSUED,
@@ -64,7 +64,7 @@ fun makeAcquireCouponCommand(
 }
 
 fun makeCouponHistory(
-    id: Long = 1L,
+    id: Long = 0L,
     userId: Long = 1L,
     coupon: Coupon = makeCoupon(),
     status: CouponStatus = CouponStatus.ISSUED,
@@ -78,7 +78,7 @@ fun makeCouponHistory(
 }
 
 fun makeCouponCondition(
-    id: Long = 1L,
+    id: Long = 0L,
     couponGroup: CouponGroup = makeCouponGroup(),
     conditionType: ConditionType = ConditionType.FIRST_DOWNLOAD,
     conditionValue: String = "true",

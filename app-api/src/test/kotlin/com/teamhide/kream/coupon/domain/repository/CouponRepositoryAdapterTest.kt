@@ -126,15 +126,15 @@ internal class CouponRepositoryAdapterTest : StringSpec({
         result[2].status shouldBe couponGroup3.status
     }
 
-    "쿠폰 그룹ID로 모든 CouponCondition을 조회한다" {
+    "쿠폰 그룹ID 목록으로 모든 CouponCondition을 조회한다" {
         // Given
         val couponGroupId = 1L
         val condition1 = makeCouponCondition(id = 1L)
         val condition2 = makeCouponCondition(id = 2L)
-        every { couponConditionRepository.findAllByCouponGroupId(any()) } returns listOf(condition1, condition2)
+        every { couponConditionRepository.findAllByCouponGroupIds(any()) } returns listOf(condition1, condition2)
 
         // When
-        val sut = couponRepositoryAdapter.findAllConditionByCouponGroupId(couponGroupId = couponGroupId)
+        val sut = couponRepositoryAdapter.findAllConditionByCouponGroupIds(couponGroupIds = listOf(couponGroupId))
 
         // Then
         sut.size shouldBe 2

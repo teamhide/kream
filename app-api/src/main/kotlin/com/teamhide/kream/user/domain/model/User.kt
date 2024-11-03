@@ -34,7 +34,13 @@ class User(
     val id: Long = 0L,
 ) : BaseTimestampEntity() {
     companion object {
-        fun create(email: String, nickname: String, password1: String, password2: String, address: Address): User {
+        operator fun invoke(
+            email: String,
+            nickname: String,
+            password1: String,
+            password2: String,
+            address: Address
+        ): User {
             if (password1 != password2) {
                 throw PasswordDoesNotMatchException()
             }

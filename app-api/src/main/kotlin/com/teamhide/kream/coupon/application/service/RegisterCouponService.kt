@@ -15,7 +15,7 @@ class RegisterCouponService(
     private val couponRepositoryAdapter: CouponRepositoryAdapter,
 ) : RegisterCouponUseCase {
     override fun execute(command: RegisterCouponCommand): RegisterCouponDto {
-        val couponGroup = CouponGroup.create(
+        val couponGroup = CouponGroup(
             identifier = makeIdentifier(),
             discountType = command.discountType,
             discountValue = command.discountValue,

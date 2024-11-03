@@ -64,16 +64,12 @@ fun makeAcquireCouponCommand(
 }
 
 fun makeCouponHistory(
-    id: Long = 0L,
     userId: Long = 1L,
     coupon: Coupon = makeCoupon(),
-    status: CouponStatus = CouponStatus.ISSUED,
 ): CouponHistory {
-    return CouponHistory(
-        id = id,
+    return CouponHistory.issued(
         userId = userId,
         coupon = coupon,
-        status = status,
     )
 }
 

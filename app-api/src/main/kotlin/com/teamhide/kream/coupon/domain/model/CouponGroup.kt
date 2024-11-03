@@ -56,7 +56,7 @@ class CouponGroup(
     }
 
     companion object {
-        fun create(
+        operator fun invoke(
             identifier: String,
             discountType: CouponDiscountType,
             discountValue: Int,

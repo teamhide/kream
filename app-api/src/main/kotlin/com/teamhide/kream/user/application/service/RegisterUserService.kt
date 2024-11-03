@@ -15,7 +15,7 @@ class RegisterUserService(
     private val userRepositoryAdapter: UserRepositoryAdapter,
 ) : RegisterUserUseCase {
     override fun execute(command: RegisterUserCommand): User {
-        val user = User.create(
+        val user = User(
             email = command.email,
             nickname = command.nickname,
             password1 = command.password1,

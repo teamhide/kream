@@ -1,19 +1,21 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm") version "1.9.20"
-    kotlin("kapt") version "1.9.20"
-    kotlin("plugin.spring") version "1.9.20" apply false
-    kotlin("plugin.jpa") version "1.9.20" apply false
-    id("org.jetbrains.kotlin.plugin.allopen") version "1.9.20" apply false
+    kotlin("jvm") version "1.9.25"
+    kotlin("kapt") version "1.9.25"
+    kotlin("plugin.spring") version "1.9.25" apply false
+    kotlin("plugin.jpa") version "1.9.25" apply false
+    id("org.jetbrains.kotlin.plugin.allopen") version "1.9.25" apply false
     id("jacoco")
-    id("org.springframework.boot") version "3.2.0" apply false
-    id("io.spring.dependency-management") version "1.1.4" apply false
+    id("org.springframework.boot") version "3.3.2" apply false
+    id("io.spring.dependency-management") version "1.1.7" apply false
     id("org.jlleitschuh.gradle.ktlint") version "10.2.0" apply false
 }
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_17
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
 }
 
 allprojects {
@@ -63,7 +65,7 @@ subprojects {
     tasks.withType<KotlinCompile> {
         kotlinOptions {
             freeCompilerArgs += "-Xjsr305=strict"
-            jvmTarget = "17"
+            jvmTarget = "21"
         }
     }
 
